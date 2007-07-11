@@ -1,0 +1,59 @@
+<POCKETIRC VERSION="1.1" SCRIPTENGINE="JScript">
+<!-- Prototype config file setup. -->
+
+<MENU TYPE="Status">
+	<MENUITEM NAME="Join..." DEFAULT="1">
+		var sChannel = GetWord(InputBar.Text, 0);
+		if(IsChannel(sChannel))
+		{
+			var sKey = GetWord(InputBar.Text, 1);
+			Join(sChannel, sKey);
+			InputBar.Clear();
+		}
+		else
+		{
+			Beep();
+		}
+	</MENUITEM>
+<SEPARATOR/>
+	<MENUITEM NAME="Query...">
+		if(IsUser(InputBar.Text))
+		{
+			OpenQuery(InputBar.GetText());
+		}
+		else
+		{
+			Beep();
+		}
+	</MENUITEM>
+	<MENUITEM NAME="Whois...">
+		if(IsUser(InputBar.Text))
+		{
+			Whois(InputBar.GetText());
+		}
+		else
+		{
+			Beep();
+		}
+	</MENUITEM>
+	<MENUITEM NAME="Nick...">
+		if(IsUser(InputBar.Text))
+		{
+			Nick(InputBar.GetText());
+		}
+		else 
+		{
+			Beep();
+		}
+	</MENUITEM>
+<SEPARATOR/>
+	<MENUITEM NAME="Raw...">
+		Raw(InputBar.GetText());
+	</MENUITEM>
+<SEPARATOR/>
+	<MENUITEM NAME="Quit...">
+		Quit(InputBar.GetText());
+	</MENUITEM>
+</MENU>
+
+</POCKETIRC>
