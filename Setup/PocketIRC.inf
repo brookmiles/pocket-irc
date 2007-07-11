@@ -1,0 +1,79 @@
+[Version]
+Signature = "$Windows NT$"
+Provider = "Code North"
+CESignature = "$Windows CE$"
+
+[CEStrings]
+AppName="PocketIRC"
+CompanyName="Code North"
+InstallDir=%CE1%\%AppName%
+
+[Strings]
+;armcpu = 1824
+;sh3_cpu = 10003
+;sh4_cpu = 10005
+;mips_cpu = 4000
+strongarm_cpu = 2577
+reg_path = Software\%CompanyName%\%AppName%
+
+[CEDevice]
+;UnsupportedPlatforms = "Jupiter","HPC"  ; Does not support pltfrm1
+VersionMin = 4.2
+VersionMax = 5.1
+BuildMax = 0xE0000000
+
+;[CEDevice.ARM]
+;ProcessorType = %arm_cpu%
+
+;[CEDevice.MIPS] 
+;ProcessorType = %mips_cpu%
+
+;[CEDevice.SH3]
+;ProcessorType = %sh3_cpu%
+
+[CEDevice.SA]
+ProcessorType = %strongarm_cpu%
+
+[DefaultInstall]
+CopyFiles = Files.Application,Files.Help
+AddReg = RegSettings
+CEShortcuts = Shortcuts,Shortcuts.Help
+
+[SourceDisksNames]
+1 = ,"Help files",,../Doc
+
+[SourceDisksNames.SA]
+2 = ,"ARM files",,../bin/pocket pc 2003 (armv4)/release
+
+;[SourceDisksNames.MIPS]
+;2 = ,"MIPS files",,../MIPSRel
+
+;[SourceDisksNames.SH3]
+;2 = ,"SH3 files",,../SH3Rel
+
+[SourceDisksFiles]
+PocketIRC.htm = 1
+PocketIRC.bmp = 1
+PocketIRC.exe = 2
+
+[DestinationDirs]
+Files.Application = 0,%InstallDir%
+Files.Help        = 0,%CE2%        ;\Windows
+Shortcuts         = 0,%CE17%       ;\Windows\Start Menu
+Shortcuts.Help    = 0,%CE2%\Help       ;\Windows\Help
+
+[Files.Application]
+"PocketIRC.exe",,,0x00000001
+
+[Files.Help]
+"PocketIRC.htm",,,0x00000000
+"PocketIRC.bmp",,,0x00000000
+
+[Shortcuts]
+%AppName%,0,PocketIRC.exe
+
+[Shortcuts.Help]
+Pocket IRC,0,PocketIRC.htm
+
+[RegSettings]
+;HKLM,Windows CE Services\Synchronization\Objects\YourAppSync,Store,0,\Windows\DevYourAppSync.dll

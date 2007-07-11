@@ -1,0 +1,767 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Canada) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENC)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,2,4,0
+ PRODUCTVERSION 1,2,4,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "100904b0"
+        BEGIN
+            VALUE "Comments", "pres butan"
+            VALUE "CompanyName", "Code North Software"
+            VALUE "FileDescription", "PocketIRC"
+            VALUE "FileVersion", "1, 2, 4, 0"
+            VALUE "InternalName", "PocketIRC"
+            VALUE "LegalCopyright", "Copyright © 2006 Brook Miles"
+            VALUE "OriginalFilename", "PocketIRC.exe"
+            VALUE "ProductName", "Code North Pocket IRC"
+            VALUE "ProductVersion", "1, 2, 4, 0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x1009, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENUBAR MENU 
+BEGIN
+    POPUP "IRC"
+    BEGIN
+        MENUITEM "&Server",                     ID_IRC_CONTEXT, GRAYED
+        MENUITEM "C&hannels",                   ID_IRC_CHANNELS
+        MENUITEM SEPARATOR
+        MENUITEM "&Connect",                    ID_IRC_CONNECT
+        MENUITEM "&Options...",                 ID_IRC_OPTIONS
+        POPUP "&View"
+        BEGIN
+            MENUITEM "&Full Screen",                ID_IRC_VIEW_FULLSCREEN
+            MENUITEM "&Hide",                       ID_IRC_VIEW_HIDE
+            MENUITEM SEPARATOR
+            MENUITEM "&DCC List",                   ID_IRC_VIEW_DCCLIST
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_IRC_EXIT
+    END
+END
+
+IDR_STATUSMENU MENU 
+BEGIN
+    POPUP "&Status"
+    BEGIN
+        MENUITEM "&Join...",                    ID_STATUS_JOIN
+        MENUITEM SEPARATOR
+        MENUITEM "&Query...",                   ID_STATUS_QUERY
+        MENUITEM "&Whois...",                   ID_STATUS_WHOIS
+        MENUITEM "&Nick...",                    ID_STATUS_NICK
+        MENUITEM "N&ickServ...",                ID_STATUS_NICKSERV
+        MENUITEM "&Mode (self) ...",            ID_STATUS_MODESELF
+        MENUITEM SEPARATOR
+        MENUITEM "&Raw...",                     ID_STATUS_RAW
+        MENUITEM SEPARATOR
+        MENUITEM "Q&uit...",                    ID_STATUS_QUIT
+    END
+END
+
+IDR_CHANNELMENU MENU 
+BEGIN
+    POPUP "Channel"
+    BEGIN
+        MENUITEM "Show &User List",             ID_CHANNEL_SHOWUSERLIST
+        MENUITEM "&Favourite Channel",          ID_CHANNEL_FAVOURITECHANNEL
+        MENUITEM "Auto &Join On Connect",       ID_CHANNEL_AUTOJOINONCONNECT
+        MENUITEM SEPARATOR
+        MENUITEM "&Mode...",                    ID_CHANNEL_MODE
+        MENUITEM "&Topic...",                   ID_CHANNEL_TOPIC
+        MENUITEM "&Invite...",                  ID_CHANNEL_INVITE
+        MENUITEM SEPARATOR
+        MENUITEM "&Say...",                     ID_CHANNEL_SAY
+        MENUITEM "&Act...",                     ID_CHANNEL_ACT
+        MENUITEM "&Notice...",                  ID_CHANNEL_NOTICE
+        MENUITEM SEPARATOR
+        MENUITEM "&Part",                       ID_CHANNEL_PART
+        MENUITEM "&Rejoin",                     ID_CHANNEL_REJOIN
+    END
+END
+
+IDR_QUERYMENU MENU 
+BEGIN
+    POPUP "&Query"
+    BEGIN
+        MENUITEM "&Say...",                     ID_QUERY_SAY
+        MENUITEM "&Act...",                     ID_QUERY_ACT
+        MENUITEM "&Notice...",                  ID_QUERY_NOTICE
+        MENUITEM "C&TCP...",                    ID_QUERY_CTCP
+        MENUITEM "&Invite...",                  ID_QUERY_INVITE
+        MENUITEM SEPARATOR
+        MENUITEM "&DCC Send...",                ID_QUERY_DCCSEND
+        MENUITEM "DCC C&hat",                   ID_QUERY_DCCCHAT
+        MENUITEM SEPARATOR
+        MENUITEM "&Whois",                      ID_QUERY_WHOIS
+        MENUITEM SEPARATOR
+        MENUITEM "&Query",                      ID_QUERY_QUERY
+        MENUITEM "&Close Query",                ID_QUERY_CLOSE
+    END
+END
+
+IDR_EDITMENU MENU 
+BEGIN
+    POPUP "Edit"
+    BEGIN
+        POPUP "Color"
+        BEGIN
+            MENUITEM "Choose...",                   ID_EDIT_COLOR_CHOOSE
+            MENUITEM SEPARATOR
+            MENUITEM "Bold",                        ID_EDIT_COLOR_BOLD
+            MENUITEM "Underline",                   ID_EDIT_COLOR_UNDERLINE
+            MENUITEM "Inverse",                     ID_EDIT_COLOR_INVERSE
+            MENUITEM "Normal",                      ID_EDIT_COLOR_NORMAL
+            MENUITEM SEPARATOR
+            MENUITEM "Remove All",                  ID_EDIT_COLOR_REMOVEALL
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Cut",                         ID_EDIT_CUT
+        MENUITEM "Copy",                        ID_EDIT_COPY
+        MENUITEM "Paste",                       ID_EDIT_PASTE
+        MENUITEM "Delete",                      ID_EDIT_DELETE
+        MENUITEM SEPARATOR
+        MENUITEM "Select All",                  ID_EDIT_SELECTALL
+        MENUITEM "Clear",                       ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "Undo",                        ID_EDIT_UNDO
+    END
+END
+
+IDR_OFFCHANNELMENU MENU 
+BEGIN
+    POPUP "Channel"
+    BEGIN
+        MENUITEM "&Join",                       ID_CHANNEL_JOIN
+    END
+END
+
+IDR_CHANNELUSERMENU MENU 
+BEGIN
+    POPUP "Channel User"
+    BEGIN
+        MENUITEM "&Op",                         ID_CHANNELUSER_OP
+        MENUITEM "&DeOp",                       ID_CHANNELUSER_DEOP
+        MENUITEM "&Voice",                      ID_CHANNELUSER_VOICE
+        MENUITEM "D&eVoice",                    ID_CHANNELUSER_DEVOICE
+        MENUITEM SEPARATOR
+        MENUITEM "&Kick...",                    ID_CHANNELUSER_KICK
+        MENUITEM "&Ban",                        ID_CHANNELUSER_BAN
+        MENUITEM "K&ick/Ban...",                ID_CHANNELUSER_KICKBAN
+        MENUITEM SEPARATOR
+        MENUITEM "&Query",                      ID_CHANNELUSER_QUERY
+        MENUITEM "&Whois",                      ID_CHANNELUSER_WHOIS
+        MENUITEM SEPARATOR
+        MENUITEM "DCC &Send...",                ID_CHANNELUSER_DCCSEND
+        MENUITEM "DCC &Chat",                   ID_CHANNELUSER_DCCCHAT
+    END
+END
+
+IDR_DCCMENU MENU 
+BEGIN
+    POPUP "DCC"
+    BEGIN
+        MENUITEM "&Hide DCC List",              ID_DCC_CLOSEDCCLIST
+    END
+END
+
+IDR_URLMENU MENU 
+BEGIN
+    POPUP "Url"
+    BEGIN
+        MENUITEM "&Browse",                     ID_URL_BROWSE
+    END
+END
+
+IDR_DCCCHATMENU MENU 
+BEGIN
+    POPUP "DCC Chat"
+    BEGIN
+        MENUITEM "&Say",                        ID_DCCCHAT_SAY
+        MENUITEM "&Act",                        ID_DCCCHAT_ACT
+        MENUITEM SEPARATOR
+        MENUITEM "DCC Send...",                 ID_DCCCHAT_DCCSEND
+        MENUITEM SEPARATOR
+        MENUITEM "&Close",                      ID_DCCCHAT_CLOSE
+    END
+END
+
+IDR_DCCLISTMENU MENU 
+BEGIN
+    POPUP "DCC List"
+    BEGIN
+        MENUITEM "&Accept",                     ID_DCCLIST_ACCEPT
+        MENUITEM SEPARATOR
+        MENUITEM "&Close",                      ID_DCCLIST_CLOSE
+        MENUITEM "Close &All",                  ID_DCCLIST_CLOSEALL
+        MENUITEM SEPARATOR
+        MENUITEM "C&lear",                      ID_DCCLIST_CLEAR
+    END
+END
+
+IDR_FAVCHANMENU MENU 
+BEGIN
+    POPUP "Favourite Channel"
+    BEGIN
+        MENUITEM "&Join Now",                   ID_FAVOURITECHANNEL_JOINNOW
+        MENUITEM SEPARATOR
+        MENUITEM "&New",                        ID_FAVOURITECHANNEL_NEW
+        MENUITEM "&Delete",                     ID_FAVOURITECHANNEL_DELETE
+        MENUITEM "&Rename",                     ID_FAVOURITECHANNEL_RENAME
+        MENUITEM SEPARATOR
+        MENUITEM "&Auto Join On Connect",       ID_FAVOURITECHANNEL_AUTOJOINONCONNECT
+    END
+END
+
+IDR_CHANLISTMENU MENU 
+BEGIN
+    POPUP "Channel List"
+    BEGIN
+        MENUITEM "&Join Now",                   ID_CHANNELLIST_JOINNOW
+        MENUITEM SEPARATOR
+        MENUITEM "&Clear List",                 ID_CHANNELLIST_CLEARLIST
+        MENUITEM SEPARATOR
+        MENUITEM "&Favourite Channel",          ID_CHANNELLIST_FAVOURITECHANNEL
+        MENUITEM "&Auto Join On Connect",       ID_CHANNELLIST_AUTOJOINONCONNECT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RCDATA
+//
+
+IDR_MENUBAR RCDATA 
+BEGIN
+    0x0065, 0x0002, 0xfffe, 0x9c41, 0x0004, 0x0018, 0x9c43, 0x0000, 0x0000, 
+    0x0000, 0x9c49, 0x0000, 0x0010, 0xf8b0, 0x0000, 0x0001
+END
+
+IDR_STATUSMENU RCDATA 
+BEGIN
+    0x006c, 0x0001, 0xfffe, 0x9c55, 0x0004, 0x0018, 0x9c57, 0x0000, 0x0000
+
+END
+
+IDR_CHANNELMENU RCDATA 
+BEGIN
+    0x006d, 0x0001, 0xfffe, 0x9c59, 0x0004, 0x0018, 0x9c5b, 0x0000, 0x0000
+
+END
+
+IDR_QUERYMENU RCDATA 
+BEGIN
+    0x006e, 0x0001, 0xfffe, 0x9c5d, 0x0004, 0x0018, 0x9c5f, 0x0000, 0x0000
+
+END
+
+IDR_EDITMENU RCDATA 
+BEGIN
+    0x0074, 0x0001, 0xfffe, 0x9c75, 0x0004, 0x0018, 0x9c77, 0x0000, 0x0000
+
+END
+
+IDR_OFFCHANNELMENU RCDATA 
+BEGIN
+    0x0079, 0x0001, 0xfffe, 0x9c59, 0x0004, 0x0018, 0x9c5b, 0x0000, 0x0000
+
+END
+
+IDR_CHANNELUSERMENU RCDATA 
+BEGIN
+    0x007d, 0x0001, 0xfffe, 0x9c91, 0x0004, 0x0018, 0x9c93, 0x0000, 0x0000
+
+END
+
+IDR_DCCMENU RCDATA 
+BEGIN
+    0x007e, 0x0001, 0xfffe, 0x9c9e, 0x0004, 0x0018, 0x9ca0, 0x0000, 0x0000
+
+END
+
+IDR_URLMENU RCDATA 
+BEGIN
+    0x0080, 0x0001, 0xfffe, 0x9ca3, 0x0004, 0x0018, 0x9ca5, 0x0000, 0x0000
+
+END
+
+IDR_DCCCHATMENU RCDATA 
+BEGIN
+    0x0081, 0x0001, 0xfffe, 0x9ca7, 0x0004, 0x0018, 0x9ca9, 0x0000, 0x0000
+
+END
+
+IDR_DCCLISTMENU RCDATA 
+BEGIN
+    0x0082, 0x0001, 0xfffe, 0x9cad, 0x0004, 0x0018, 0x9caf, 0x0000, 0x0000
+
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_OPTIONS_SERVER DIALOG  0, 0, 155, 100
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD | WS_GROUP
+FONT 8, "Tahoma"
+BEGIN
+    LTEXT           "Nickname",IDC_STATIC,3,3,56,8
+    EDITTEXT        IDC_OPTIONS_NICKNAME,3,12,56,14,ES_AUTOHSCROLL
+    LTEXT           "Real Name",IDC_STATIC,58,3,94,8
+    EDITTEXT        IDC_OPTIONS_REALNAME,61,12,91,14,ES_AUTOHSCROLL
+    LTEXT           "Server",IDC_STATIC,3,28,22,8
+    COMBOBOX        IDC_OPTIONS_SERVERNAME,3,37,107,99,CBS_DROPDOWN | CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Port",IDC_STATIC,119,28,14,8
+    EDITTEXT        IDC_OPTIONS_SERVERPORT,114,36,38,14,ES_AUTOHSCROLL
+    LTEXT           "Password (optional)",IDC_STATIC,3,52,89,8
+    EDITTEXT        IDC_OPTIONS_SERVERPASS,3,61,70,14,ES_PASSWORD | ES_AUTOHSCROLL
+    PUSHBUTTON      "Remove",IDC_OPTIONS_REMOVESERVER,102,53,50,14,WS_GROUP
+    LTEXT           "Default Quit Message",IDC_STATIC,3,77,96,8
+    EDITTEXT        IDC_OPTIONS_QUITMSG,3,86,149,14,ES_AUTOHSCROLL
+END
+
+IDD_OPTIONS_IDENT DIALOG  0, 0, 155, 57
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD | WS_GROUP
+FONT 8, "Tahoma"
+BEGIN
+    LTEXT           "Username",IDC_STATIC,3,3,33,8
+    EDITTEXT        IDC_IDENT_USERNAME,3,12,77,14
+    LTEXT           "IDENT Port",IDC_STATIC,3,29,36,8
+    EDITTEXT        IDC_IDENT_PORT,3,39,47,14,ES_NUMBER
+    CONTROL         "Enable IDENT Server",IDC_IDENT_ENABLE,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,69,40,83,10
+END
+
+IDD_OPTIONS_FORMAT DIALOG  0, 0, 155, 150
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD | WS_GROUP
+FONT 8, "Tahoma"
+BEGIN
+    LTEXT           "Event",IDC_STATIC,3,3,20,8
+    COMBOBOX        IDC_FORMAT_EVENT,3,11,88,99,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Display Event",IDC_FORMAT_ENABLE,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,93,13,59,10
+    LTEXT           "Format String",IDC_STATIC,3,26,84,8
+    EDITTEXT        IDC_FORMAT_STRING,3,35,149,14,ES_AUTOHSCROLL
+    LTEXT           "Example",IDC_STATIC,3,52,28,8
+    CONTROL         "Owner Drawn Format Example",IDC_FORMAT_EXAMPLE,"Button",BS_OWNERDRAW,3,62,149,19,WS_EX_STATICEDGE
+    PUSHBUTTON      "Reset",IDC_FORMAT_RESET,50,83,50,14,WS_GROUP
+    PUSHBUTTON      "Reset All",IDC_FORMAT_RESETALL,102,83,50,14
+    LTEXT           "Font",IDC_STATIC,3,99,16,8
+    COMBOBOX        IDC_FORMAT_FONT,3,109,105,88,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Size",IDC_STATIC,115,99,14,8
+    EDITTEXT        IDC_FORMAT_FONTSIZE,112,109,40,13,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_FORMAT_FONTSIZE_SPIN,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,141,116,11,14
+    LTEXT           "Default Colors",IDC_STATIC,3,126,75,8
+    LTEXT           "Text",IDC_STATIC,3,137,18,8
+    RTEXT           "Background",IDC_STATIC,66,137,43,8
+    CONTROL         "Text Color",IDC_FORMAT_TEXTCOLOR,"Button",BS_OWNERDRAW,23,137,40,10,WS_EX_STATICEDGE
+    CONTROL         "Back Color",IDC_FORMAT_BACKCOLOR,"Button",BS_OWNERDRAW,112,137,40,10,WS_EX_STATICEDGE
+END
+
+IDD_OPTIONS_DISPLAY DIALOG  0, 0, 155, 100
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD | WS_GROUP
+FONT 8, "Tahoma"
+BEGIN
+    EDITTEXT        IDC_DISPLAY_BACKGROUND,2,12,150,14,ES_AUTOHSCROLL
+    CONTROL         "Top",IDC_DISPLAY_BACKALIGNTOP,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,23,30,28,10
+    CONTROL         "Bottom",IDC_DISPLAY_BACKALIGNBOTTOM,"Button",BS_AUTORADIOBUTTON,54,30,39,10
+    PUSHBUTTON      "Browse...",IDC_DISPLAY_BROWSE,102,28,50,14,WS_GROUP
+    CONTROL         "Use full screen",IDC_DISPLAY_USEFULLSCREEN,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,2,51,63,10
+    CONTROL         "Strip colors from incoming events",IDC_DISPLAY_STRIPINCOMING,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,2,63,121,10
+    CONTROL         "Use default colors only",IDC_DISPLAY_STRIPALL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,2,75,89,10
+    CONTROL         "Timestamp messages",IDC_DISPLAY_TIMESTAMP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,2,88,83,10
+    LTEXT           "Background Image",IDC_STATIC,2,3,60,8
+    LTEXT           "Align",IDC_STATIC,2,30,16,8
+END
+
+IDD_OPTIONS DIALOG  0, 0, 160, 150
+STYLE DS_SETFONT | DS_SETFOREGROUND | WS_POPUP | WS_VISIBLE
+FONT 8, "Tahoma"
+BEGIN
+    CONTROL         "Tab1",IDC_OPTIONS_TAB,"SysTabControl32",TCS_BOTTOM | 0x8,0,76,149,74
+    SCROLLBAR       IDC_OPTIONS_VSCROLL,150,0,10,150,SBS_VERT
+    LTEXT           "",IDC_OPTIONS_PANE,8,6,135,64,0,WS_EX_CONTROLPARENT
+END
+
+IDD_OPTIONS_ABOUT DIALOG  0, 0, 160, 100
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD | WS_GROUP
+FONT 8, "Tahoma"
+BEGIN
+    LTEXT           "IM IN UR POCKETS CHATTING UR IRCS",IDC_STATIC,3,81,154,19
+    LTEXT           "1.2",IDC_ABOOT_VERSION,66,9,88,8
+    EDITTEXT        IDC_ABOOT_REGCODE,3,66,154,14,ES_AUTOHSCROLL
+    LTEXT           "Registration Code",IDC_STATIC,3,56,154,8
+    LTEXT           "http://pocketirc.com/",IDC_STATIC,25,42,132,8
+    LTEXT           "Code North Software",IDC_STATIC,26,18,77,8
+    LTEXT           "Copyright © 2007 Brook Miles",IDC_STATIC,26,27,132,8
+    LTEXT           "Pocket IRC",IDC_STATIC,26,9,38,8
+    ICON            IDI_APP,IDC_STATIC,3,9,20,20
+END
+
+IDD_CHOOSECOLOR DIALOG  0, 0, 160, 150
+STYLE DS_SETFONT | DS_SETFOREGROUND | WS_POPUP | WS_VISIBLE
+FONT 8, "Tahoma"
+BEGIN
+    LTEXT           "Red",IDC_STATIC,9,28,14,8
+    EDITTEXT        IDC_CHOOSECOLOR_RED,37,25,40,14,ES_NUMBER
+    CONTROL         "Spin1",IDC_CHOOSECOLOR_RED_SPIN,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,71,25,11,14
+    LTEXT           "Green",IDC_STATIC,9,44,20,8
+    EDITTEXT        IDC_CHOOSECOLOR_GREEN,37,42,40,14,ES_NUMBER
+    CONTROL         "Spin2",IDC_CHOOSECOLOR_GREEN_SPIN,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,71,42,11,14
+    LTEXT           "Blue",IDC_STATIC,9,61,14,8
+    EDITTEXT        IDC_CHOOSECOLOR_BLUE,37,59,40,14,ES_NUMBER
+    CONTROL         "Spin3",IDC_CHOOSECOLOR_BLUE_SPIN,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,71,59,11,14
+    LTEXT           "New Color",IDC_STATIC,113,6,37,8
+    LTEXT           "Old Color",IDC_STATIC,113,41,37,8
+    CONTROL         "New",IDC_CHOOSECOLOR_NEW,"Button",BS_OWNERDRAW,113,16,31,24,WS_EX_STATICEDGE
+    CONTROL         "Old",IDC_CHOOSECOLOR_OLD,"Button",BS_OWNERDRAW,113,50,31,24,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF1,"Button",BS_OWNERDRAW | WS_TABSTOP,89,3,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF2,"Button",BS_OWNERDRAW | WS_TABSTOP,89,12,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF3,"Button",BS_OWNERDRAW | WS_TABSTOP,89,21,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF4,"Button",BS_OWNERDRAW | WS_TABSTOP,89,30,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF5,"Button",BS_OWNERDRAW | WS_TABSTOP,89,39,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF6,"Button",BS_OWNERDRAW | WS_TABSTOP,89,48,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF7,"Button",BS_OWNERDRAW | WS_TABSTOP,89,57,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF8,"Button",BS_OWNERDRAW | WS_TABSTOP,89,66,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF9,"Button",BS_OWNERDRAW | WS_TABSTOP,98,3,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF10,"Button",BS_OWNERDRAW | WS_TABSTOP,98,12,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF11,"Button",BS_OWNERDRAW | WS_TABSTOP,98,21,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF12,"Button",BS_OWNERDRAW | WS_TABSTOP,98,30,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF13,"Button",BS_OWNERDRAW | WS_TABSTOP,98,39,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF14,"Button",BS_OWNERDRAW | WS_TABSTOP,98,48,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF15,"Button",BS_OWNERDRAW | WS_TABSTOP,98,57,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF16,"Button",BS_OWNERDRAW | WS_TABSTOP,98,66,8,8,WS_EX_STATICEDGE
+    LTEXT           "Custom Color",IDC_STATIC,9,10,44,8
+END
+
+IDD_CHOOSECOLOR_MINI DIALOG  0, 0, 78, 23
+STYLE DS_SETFONT | DS_MODALFRAME | DS_SETFOREGROUND | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Choose Color"
+FONT 8, "Tahoma"
+BEGIN
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF1,"Button",BS_OWNERDRAW | WS_TABSTOP,3,3,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF2,"Button",BS_OWNERDRAW | WS_TABSTOP,12,3,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF3,"Button",BS_OWNERDRAW | WS_TABSTOP,21,3,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF4,"Button",BS_OWNERDRAW | WS_TABSTOP,30,3,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF5,"Button",BS_OWNERDRAW | WS_TABSTOP,39,3,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF6,"Button",BS_OWNERDRAW | WS_TABSTOP,48,3,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF7,"Button",BS_OWNERDRAW | WS_TABSTOP,57,3,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF8,"Button",BS_OWNERDRAW | WS_TABSTOP,66,3,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF9,"Button",BS_OWNERDRAW | WS_TABSTOP,3,12,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF10,"Button",BS_OWNERDRAW | WS_TABSTOP,12,12,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF11,"Button",BS_OWNERDRAW | WS_TABSTOP,21,12,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF12,"Button",BS_OWNERDRAW | WS_TABSTOP,30,12,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF13,"Button",BS_OWNERDRAW | WS_TABSTOP,39,12,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF14,"Button",BS_OWNERDRAW | WS_TABSTOP,48,12,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF15,"Button",BS_OWNERDRAW | WS_TABSTOP,57,12,8,8,WS_EX_STATICEDGE
+    CONTROL         "Def",IDC_CHOOSECOLOR_DEF16,"Button",BS_OWNERDRAW | WS_TABSTOP,66,12,8,8,WS_EX_STATICEDGE
+END
+
+IDD_DCCLIST DIALOG  0, 0, 160, 150
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD | WS_VISIBLE
+FONT 8, "Tahoma"
+BEGIN
+    LTEXT           "User",IDC_STATIC,3,3,49,8
+    EDITTEXT        IDC_DCCLIST_USER,3,13,75,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Chat",IDC_DCCLIST_CHAT,81,13,36,14
+    PUSHBUTTON      "Send...",IDC_DCCLIST_SEND,121,13,36,14
+    LTEXT           "DCC Connections",IDC_STATIC,3,29,77,8
+    PUSHBUTTON      "Accept",IDC_DCCLIST_ACCEPT,3,39,36,14
+    PUSHBUTTON      "Close",IDC_DCCLIST_CLOSE,42,39,36,14
+    PUSHBUTTON      "Close All",IDC_DCCLIST_CLOSEALL,81,39,36,14
+    CONTROL         "List1",IDC_DCCLIST_LIST,"SysListView32",LVS_REPORT | LVS_SHOWSELALWAYS | LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,3,56,154,91
+    PUSHBUTTON      "Clear",IDC_DCCLIST_CLEAR,121,39,36,14
+END
+
+IDD_OPTIONS_DCC DIALOG  0, 0, 155, 100
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD | WS_GROUP
+FONT 8, "Tahoma"
+BEGIN
+    EDITTEXT        IDC_DCC_FIRSTPORT,57,3,40,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_DCC_LASTPORT,112,3,40,14,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP
+    CONTROL         "Use this IP address:",IDC_DCC_USECUSTOMIP,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,3,23,80,10
+    CONTROL         "Use local IP address",IDC_DCC_USELOCALIP,"Button",BS_AUTORADIOBUTTON,3,36,80,10
+    CONTROL         "Get IP from server",IDC_DCC_USEREMOTEIP,"Button",BS_AUTORADIOBUTTON,3,49,75,10
+    EDITTEXT        IDC_DCC_CUSTOMIP,85,20,67,14,ES_AUTOHSCROLL | WS_GROUP
+    CONTROL         "SEND",IDC_DCC_IGNORESEND,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,40,63,33,10
+    CONTROL         "CHAT",IDC_DCC_IGNORECHAT,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,74,63,34,10
+    LTEXT           "Use ports from",IDC_STATIC,3,6,48,8
+    RTEXT           "(unknown)",IDC_DCC_LOCALIP,84,37,68,8
+    RTEXT           "(unknown)",IDC_DCC_REMOTEIP,80,50,72,8
+    CTEXT           "to",IDC_STATIC,98,6,13,8
+    LTEXT           "To SEND files and CHATs, your IP address and firewall (if any) must be configured correctly.",IDC_STATIC,3,82,149,18
+    LTEXT           "Ignore all",IDC_STATIC,3,63,35,8
+    LTEXT           "requests",IDC_STATIC,109,63,34,8
+END
+
+IDD_CHANNELS_LIST DIALOG  0, 0, 160, 150
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD | WS_GROUP
+FONT 8, "Tahoma"
+BEGIN
+    PUSHBUTTON      "&Get List",IDC_CHANNELS_LIST_REFRESH,3,3,50,14,WS_GROUP
+    RTEXT           "Min. Users",IDC_STATIC,55,6,43,8
+    EDITTEXT        IDC_CHANNELS_LIST_MINUSERS,100,3,21,13,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER
+    RTEXT           "0",IDC_CHANNELS_LIST_COUNT,129,6,28,8
+    CONTROL         "",IDC_CHANNELS_LIST_LIST,"SysListView32",LVS_REPORT | LVS_SHOWSELALWAYS | LVS_SORTASCENDING | LVS_EDITLABELS | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,3,18,154,128
+END
+
+IDD_CHANNELS DIALOG  0, 0, 160, 150
+STYLE DS_SETFONT | DS_SETFOREGROUND | WS_POPUP | WS_VISIBLE
+FONT 8, "Tahoma"
+BEGIN
+    CONTROL         "",IDC_CHANNELS_TAB,"SysTabControl32",TCS_BOTTOM | 0x8,0,0,159,150
+END
+
+IDD_CHANNELS_FAVOURITES DIALOG  0, 0, 160, 150
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD | WS_GROUP
+FONT 8, "Tahoma"
+BEGIN
+    CONTROL         "",IDC_CHANNELS_FAVOURITES_LIST,"SysListView32",LVS_REPORT | LVS_SHOWSELALWAYS | LVS_SORTASCENDING | LVS_EDITLABELS | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,3,19,154,76
+    PUSHBUTTON      "&Set Key",IDC_CHANNELS_FAVOURITES_SETKEY,3,3,46,14,WS_GROUP
+    EDITTEXT        IDC_CHANNELS_FAVOURITES_KEY,53,3,46,14,ES_AUTOHSCROLL | WS_GROUP
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_OPTIONS_SERVER, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        RIGHTMARGIN, 152
+        TOPMARGIN, 3
+    END
+
+    IDD_OPTIONS_IDENT, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        RIGHTMARGIN, 152
+        TOPMARGIN, 3
+        BOTTOMMARGIN, 53
+    END
+
+    IDD_OPTIONS_FORMAT, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        RIGHTMARGIN, 152
+        TOPMARGIN, 3
+        BOTTOMMARGIN, 147
+    END
+
+    IDD_OPTIONS_DISPLAY, DIALOG
+    BEGIN
+        LEFTMARGIN, 2
+        RIGHTMARGIN, 152
+        TOPMARGIN, 3
+    END
+
+    IDD_OPTIONS_ABOUT, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        RIGHTMARGIN, 157
+        TOPMARGIN, 3
+    END
+
+    IDD_CHOOSECOLOR, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        RIGHTMARGIN, 157
+        TOPMARGIN, 3
+        BOTTOMMARGIN, 147
+    END
+
+    IDD_CHOOSECOLOR_MINI, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        RIGHTMARGIN, 75
+        TOPMARGIN, 3
+        BOTTOMMARGIN, 20
+    END
+
+    IDD_DCCLIST, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        RIGHTMARGIN, 157
+        TOPMARGIN, 3
+        BOTTOMMARGIN, 147
+    END
+
+    IDD_OPTIONS_DCC, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        RIGHTMARGIN, 152
+        TOPMARGIN, 3
+    END
+
+    IDD_CHANNELS_LIST, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        RIGHTMARGIN, 157
+        TOPMARGIN, 3
+        BOTTOMMARGIN, 146
+    END
+
+    IDD_CHANNELS_FAVOURITES, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        RIGHTMARGIN, 157
+        TOPMARGIN, 3
+        BOTTOMMARGIN, 147
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_TOOLBAR             BITMAP                  "toolbar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_APP                 ICON                    "PocketIRC.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// CEUX
+//
+
+HI_RES_AWARE            CEUX                    "ceux1.bin"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_CAP_IRC             "IRC"
+    IDS_CAP_SAY             "Say"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_CAP_STATUS          "&Status"
+    IDS_CAP_CHANNEL         "Channel"
+    IDS_CAP_QUERY           "&Query"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_CAP_EDIT            "Edit"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_CAP_CHANNELUSER     "Channel User"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_CAP_DCC             "DCC"
+    IDS_CAP_URL             "Url"
+    IDS_CAP_DCCCHAT         "DCC Chat"
+    IDS_CAP_DCCLIST         "DCC List"
+END
+
+#endif    // English (Canada) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
