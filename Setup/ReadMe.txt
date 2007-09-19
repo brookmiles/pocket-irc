@@ -9,6 +9,9 @@ o Starting with version 1.2, older Pocket PC 2000 and Pocket PC 2002 devices are
 
 VERSION HISTORY
 
+1.2.5 (2007-??-??)
+o FIXED: Query windows improperly sent messages to the old nick after a user changed their nickname
+
 1.2.4 (2007-07-07)
 o NEW: Landscape and Square mode screen support
 o NEW: Optional message timestamps

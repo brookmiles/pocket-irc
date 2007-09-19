@@ -1,10 +1,15 @@
 
 BUGS
 
+o User changes nick with query open can no longer talk to that user
+o Channel list breaks on non-breaking spaces in nicknames !#%#@  (irc.visp.ru, #sarovnet, "Dr Geegle")
 o Doesn't properly parse user mode flags like % and &, general problem of any non-EFNet server flag compatibility
+o Can't Send/Receive files from storage card
+o DCC not recognised in some formats, notice type maybe?
 
 TODO
 
+o Unlamify "Trying..." and other status messages
 o Auto Reconnect on Disconnection
 o Secondary/generated nick
 
@@ -15,6 +20,7 @@ o Network server lists
 o Server capability parsing
 o DNS lookup on server provided host info
 o Make /list window headers sortable
+o Show user list by default
 
 o Notify list
 o Ignore list
@@ -24,9 +30,12 @@ o Key combinations for navigating the interface, tabs
 o Scroll dialogs into view when tabbing to controls off screen
 o Tweak scroll behavior when SIP raised/lowered, try to maintain view
 o Auto Rejoin on Kick
+o DCC Progress meter
+o Open/Run/Play files from DCC window
 
 o Simply socket sink to a single callback with messages
 
+? Auto-connect on run
 ? Single thread socket handling
 ? DLL Plugins
 ? Event scripts
@@ -34,7 +43,9 @@ o Simply socket sink to a single callback with messages
 ? Tray Notifications
 ? Audio/Vibration notifications?
 ? Have TabStrip autosize itself instead of MainWindow doing so
-
+? Double click nick to query
+? General perform on connect script
+? Per network join on connect and perform
 
 x Make DCC List window landscape/square friendly
 ? drano - can't add favourite to channel (with key?)
