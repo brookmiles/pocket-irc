@@ -494,8 +494,8 @@ void MainWindow::OnNick(const NetworkEvent& event)
 	const String& sNewNick = event.GetParam(0);
 
 	//If there is an open query to this user, change it over to the new nick
-	IDisplayWindow* pQuery = GetDisplayWindow(sUser);
-	if(pQuery)
+	IDisplayWindow* pWindow = GetDisplayWindow(sUser);
+	if(pWindow)
 	{
 		// But don't change it over if there is already a query to the new nick!
 		// otherwise we'd have duplicate queries to one person and that would break
@@ -504,8 +504,8 @@ void MainWindow::OnNick(const NetworkEvent& event)
 		IDisplayWindow* pExistingQuery = GetDisplayWindow(sNewNick);
 		if(pExistingQuery == NULL)
 		{
-			pQuery->SetKey(sNewNick);
-			pQuery->SetTitle(sNewNick);
+			QueryWindow* pQuery = static_cast<QueryWindow*>(pWindow);
+			pQuery->SetUser(sNewNick);
 		}
 	}
 
