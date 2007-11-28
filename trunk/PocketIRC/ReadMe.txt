@@ -1,8 +1,6 @@
 
 BUGS
 
-o User changes nick with query open can no longer talk to that user
-o Channel list breaks on non-breaking spaces in nicknames !#%#@  (irc.visp.ru, #sarovnet, "Dr Geegle")
 o Doesn't properly parse user mode flags like % and &, general problem of any non-EFNet server flag compatibility
 o Can't Send/Receive files from storage card
 o DCC not recognised in some formats, notice type maybe?
@@ -21,6 +19,8 @@ o Server capability parsing
 o DNS lookup on server provided host info
 o Make /list window headers sortable
 o Show user list by default
+o Hold to scroll right/left through tabs
+o Highlight tab arrow with highest notification colour
 
 o Notify list
 o Ignore list
@@ -47,6 +47,8 @@ o Simply socket sink to a single callback with messages
 ? General perform on connect script
 ? Per network join on connect and perform
 
+x Channel list breaks on non-breaking spaces in nicknames !#%#@  (irc.visp.ru, #sarovnet, "Dr Geegle")
+x User changes nick with query open can no longer talk to that user
 x Make DCC List window landscape/square friendly
 ? drano - can't add favourite to channel (with key?)
 x psyBNC compat, has usernames starting with -, ( and )

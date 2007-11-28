@@ -166,7 +166,7 @@ UINT StringFormat::FindWordBreak(LPCTSTR psz, UINT nFit)
 
 	for(UINT i = nFit; (i > 0) && (nFit - i < POCKETIRC_WORDWRAP_BIAS); --i)
 	{
-		if(_istspace(psz[i - 1]))
+		if(psz[i - 1] == ' ')
 		{
 			return i;
 		}

@@ -53,8 +53,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,2,4,0
- PRODUCTVERSION 1,2,4,0
+ FILEVERSION 1,2,5,0
+ PRODUCTVERSION 1,2,5,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -72,12 +72,12 @@ BEGIN
             VALUE "Comments", "pres butan"
             VALUE "CompanyName", "Code North Software"
             VALUE "FileDescription", "PocketIRC"
-            VALUE "FileVersion", "1, 2, 4, 0"
+            VALUE "FileVersion", "1, 2, 5, 0"
             VALUE "InternalName", "PocketIRC"
-            VALUE "LegalCopyright", "Copyright © 2006 Brook Miles"
+            VALUE "LegalCopyright", "Copyright © 2007 Brook Miles"
             VALUE "OriginalFilename", "PocketIRC.exe"
             VALUE "ProductName", "Code North Pocket IRC"
-            VALUE "ProductVersion", "1, 2, 4, 0"
+            VALUE "ProductVersion", "1, 2, 5, 0"
         END
     END
     BLOCK "VarFileInfo"

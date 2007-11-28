@@ -207,13 +207,13 @@ public:
 			while(nWordsUsed <= nWord && nCharStart < nSize)
 			{
 				// Skip whitespace
-				while(nCharStart < nSize && _istspace(m_psz[nCharStart]))
+				while(nCharStart < nSize && m_psz[nCharStart] == ' ')
 					nCharStart++;
 
 				nCharEnd = nCharStart;
 
 				// Find word length
-				while(nCharEnd < nSize && !_istspace(m_psz[nCharEnd]))
+				while(nCharEnd < nSize && !(m_psz[nCharEnd] == ' '))
 					nCharEnd++;
 
 				if(nWordsUsed == nWord && nCharEnd > nCharStart)

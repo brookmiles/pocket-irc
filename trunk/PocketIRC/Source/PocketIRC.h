@@ -32,7 +32,7 @@
 #define HANDLEMSG(m, h) case m: h(wParam, lParam); break
 
 #define APP_NAME _T("Pocket IRC")
-#define APP_VERSION_STRING _T("1.2.4")
+#define APP_VERSION_STRING _T("1.2.5")
 #define APP_URL _T("http://pocketirc.com/")
 
 #define POCKETIRC_REG_HKEY_ROOT HKEY_CURRENT_USER
