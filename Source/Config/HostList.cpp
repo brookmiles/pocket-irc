@@ -23,12 +23,7 @@ HostList::~HostList()
 {
 //	_TRACE("HostList(0x%08X)::~HostList()", this);
 
-	if(m_listHosts.Size() > 0)
-	{
-		Clear();
-	}
-
-	m_listHosts.Free();
+	Clear();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -65,20 +60,20 @@ const HostList& HostList::operator=(HostList& from)
 //	Interface
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT HostList::FindHost(const String& sAddress, Host** ppFoundHost)
+HRESULT HostList::FindHost(const tstring& sAddress, Host** ppFoundHost)
 {
 	_ASSERTE(ppFoundHost != NULL);
 
-//	_TRACE("HostList(0x%08X)::FindHost(%s, 0x%08X)", this, sAddress.Str(), ppFoundHost);
+//	_TRACE("HostList(0x%08X)::FindHost(%s, 0x%08X)", this, sAddress.c_str(), ppFoundHost);
 
 	HRESULT hr = S_FALSE;
 
-	for(UINT i = 0; i < m_listHosts.Size(); ++i)
+	for(UINT i = 0; i < m_listHosts.size(); ++i)
 	{
 		Host* pHost = m_listHosts[i];
 		_ASSERTE(pHost != NULL);
 
-		if(sAddress.Compare(pHost->GetAddress(), false))
+		if(_tcsicmp(sAddress.c_str(), pHost->GetAddress().c_str()) == 0)
 		{
 			*ppFoundHost = pHost;
 			hr = S_OK;
@@ -89,16 +84,16 @@ HRESULT HostList::FindHost(const String& sAddress, Host** ppFoundHost)
 	return hr;
 }
 
-HRESULT HostList::AddHost(const String& sAddress, USHORT usPort, Host** ppNewHost)
+HRESULT HostList::AddHost(const tstring& sAddress, USHORT usPort, Host** ppNewHost)
 {
 	_ASSERTE(ppNewHost != NULL);
 
-//	_TRACE("HostList(0x%08X)::AddHost(%s, %u, 0x%08X)", this, sAddress.Str(), usPort, ppNewHost);
+//	_TRACE("HostList(0x%08X)::AddHost(%s, %u, 0x%08X)", this, sAddress.c_str(), usPort, ppNewHost);
 
 	*ppNewHost = new Host(sAddress, usPort);
 	_ASSERTE(*ppNewHost != NULL);
 
-	m_listHosts[m_listHosts.Size()] = *ppNewHost;
+	m_listHosts.push_back(*ppNewHost);
 
 	return S_OK;
 }
@@ -113,7 +108,7 @@ HRESULT HostList::AddHost(Host* pHost, Host** ppNewHost)
 	*ppNewHost = new Host(*pHost);
 	_ASSERTE(*ppNewHost != NULL);
 
-	m_listHosts[m_listHosts.Size()] = *ppNewHost;
+	m_listHosts.push_back(*ppNewHost);
 
 	return S_OK;
 }
@@ -125,12 +120,11 @@ HRESULT HostList::RemoveHost(Host* pHost)
 
 	HRESULT hr = E_INVALIDARG;
 
-	for(UINT i = 0; i < m_listHosts.Size(); ++i)
+	for(listtype_t::iterator i = m_listHosts.begin(); i != m_listHosts.end(); ++i)
 	{
-		if(m_listHosts[i] == pHost)
+		if(*i == pHost)
 		{
-			bool bEraseOk = m_listHosts.Erase(i);
-			_ASSERTE(bEraseOk);
+			m_listHosts.erase(i);
 
 			if(pHost == m_pDefault)
 			{
@@ -150,19 +144,19 @@ void HostList::Clear()
 {
 //	_TRACE("HostList(0x%08X)::Clear()", this);
 
-	for(UINT i = 0; i < m_listHosts.Size(); ++i)
+	for(UINT i = 0; i < m_listHosts.size(); ++i)
 	{
 		delete m_listHosts[i];
 	}
 
-	m_listHosts.Shrink(0);
+	m_listHosts.clear();
 }
 
 
 UINT HostList::Count()
 {
 //	_TRACE("HostList(0x%08X)::Count()", this);
-	return m_listHosts.Size();
+	return m_listHosts.size();
 }
 
 HRESULT HostList::Item(UINT nIndex, Host** ppHost)
@@ -172,7 +166,7 @@ HRESULT HostList::Item(UINT nIndex, Host** ppHost)
 	
 	HRESULT hr = E_INVALIDARG;
 	
-	if(nIndex < m_listHosts.Size())
+	if(nIndex < m_listHosts.size())
 	{
 		*ppHost = m_listHosts[nIndex];
 		hr = S_OK;

@@ -23,7 +23,7 @@ ChannelsDlg::~ChannelsDlg()
 
 void ChannelsDlg::OnEvent(const NetworkEvent& networkEvent)
 {
-	_TRACE("ChannelsDlg(0x%08X)::OnEvent(\"%s\")", this, networkEvent.GetEvent().Str());
+	_TRACE("ChannelsDlg(0x%08X)::OnEvent(\"%s\")", this, networkEvent.GetEvent().c_str());
 
 	#define HANDLE_IRC_EVENT(id, h) case id: h(networkEvent); break;
 
@@ -57,11 +57,11 @@ void ChannelsDlg::OnRplList(const NetworkEvent& event)
 
 	EnableWindow(GetDlgItem(hTab, IDC_CHANNELS_LIST_REFRESH), FALSE);
 
-	String sChannel = event.GetParam(1);
-	String sUsers = event.GetParam(2);
-	String sTopic = event.GetParam(3);
+	tstring sChannel = event.GetParam(1);
+	tstring sUsers = event.GetParam(2);
+	tstring sTopic = event.GetParam(3);
 
-	if(sTopic[0] == '[' && sTopic[sTopic.Size() - 1] == ']')
+	if(sTopic[0] == '[' && sTopic[sTopic.size() - 1] == ']')
 		sTopic = _T("");
 	sTopic = StringFormat::StripFormatting(sTopic);
 
@@ -71,7 +71,7 @@ void ChannelsDlg::OnRplList(const NetworkEvent& event)
 	}
 }
 
-void ChannelsDlg::AddChannelListEntry(String& sChannel, String& sUsers, String& sTopic)
+void ChannelsDlg::AddChannelListEntry(tstring& sChannel, tstring& sUsers, tstring& sTopic)
 {
 	HWND hTab = GetDlgItem(m_hwnd, IDC_CHANNELS_LISTDLG);
 	_ASSERTE(IsWindow(hTab));
@@ -79,21 +79,21 @@ void ChannelsDlg::AddChannelListEntry(String& sChannel, String& sUsers, String& 
 	HWND hChanList = GetDlgItem(hTab, IDC_CHANNELS_LIST_LIST);
 
 	UINT minUsers = GetDlgItemInt(hTab, IDC_CHANNELS_LIST_MINUSERS, NULL, FALSE);
-	UINT userCount = _tcstoul(sUsers.Str(), NULL, 10);
+	UINT userCount = _tcstoul(sUsers.c_str(), NULL, 10);
 
 	if(userCount >= minUsers)
 	{
 		LVITEM lvi = {LVIF_TEXT};
 		lvi.iItem = ListView_GetItemCount(hChanList);
 		lvi.iSubItem = 0;
-		lvi.pszText = sChannel.Str();
+		lvi.pszText = const_cast<LPTSTR>(sChannel.c_str());
 
 		int index = ListView_InsertItem(hChanList, &lvi);
 		_ASSERTE(index != -1);
 		if(index != -1)
 		{
-			ListView_SetItemText(hChanList, index, 1, sUsers.Str());
-			ListView_SetItemText(hChanList, index, 2, sTopic.Str());
+			ListView_SetItemText(hChanList, index, 1, const_cast<LPTSTR>(sUsers.c_str()));
+			ListView_SetItemText(hChanList, index, 2, const_cast<LPTSTR>(sTopic.c_str()));
 		}
 
 		int count = ListView_GetItemCount(hChanList);
@@ -130,13 +130,13 @@ void ChannelsDlg::RefreshFavouriteChannelsList()
 		LVITEM lvi = {LVIF_TEXT | LVIF_PARAM};
 		lvi.iItem = iChan;
 		lvi.iSubItem = 0;
-		lvi.pszText = chan->Name.Str();
+		lvi.pszText = const_cast<LPTSTR>(chan->Name.c_str());
 		lvi.lParam = (LPARAM)chan;
 
 		int index = ListView_InsertItem(hChanList, &lvi);
 		_ASSERTE(index != -1);
 		ListView_SetItemText(hChanList, index, 1, chan->AutoJoin ? _T("Yes") : _T("No"));
-		ListView_SetItemText(hChanList, index, 2, chan->Key.Str());
+		ListView_SetItemText(hChanList, index, 2, const_cast<LPTSTR>(chan->Key.c_str()));
 	}
 }
 
@@ -336,8 +336,8 @@ void ChannelsDlg::OnInitDialog(WPARAM wParam, LPARAM lParam)
 	lvc.cx = cxKey;
 	SendDlgItemMessage(hDlgList, IDC_CHANNELS_LIST_LIST, LVM_INSERTCOLUMN, lvc.iSubItem, (LPARAM)&lvc);
 
-	const Vector<Session::ChannelListEntry*>& channelList = m_pSession->GetChannelList();
-	for(UINT i = 0; i < channelList.Size(); ++i)
+	const std::vector<Session::ChannelListEntry*>& channelList = m_pSession->GetChannelList();
+	for(UINT i = 0; i < channelList.size(); ++i)
 	{
 		Session::ChannelListEntry* chan = channelList[i];
 		_ASSERTE(chan);
@@ -738,7 +738,7 @@ void ChannelsDlg::OnFavouriteChannelSelChange()
 	HWND hList = GetDlgItem(hTab, IDC_CHANNELS_FAVOURITES_LIST);
 	_ASSERTE(IsWindow(hList));
 
-	String sKey;
+	tstring sKey;
 
 	int count = ListView_GetItemCount(hList);
 	for(int i = 0; i < count; ++i)
@@ -754,7 +754,7 @@ void ChannelsDlg::OnFavouriteChannelSelChange()
 		}
 	}
 
-	SetDlgItemText(hTab, IDC_CHANNELS_FAVOURITES_KEY, sKey.Str());
+	SetDlgItemText(hTab, IDC_CHANNELS_FAVOURITES_KEY, sKey.c_str());
 }
 
 void ChannelsDlg::OnFavouriteChannelSetKey()
@@ -765,7 +765,7 @@ void ChannelsDlg::OnFavouriteChannelSetKey()
 	HWND hList = GetDlgItem(hTab, IDC_CHANNELS_FAVOURITES_LIST);
 	_ASSERTE(IsWindow(hList));
 
-	String sKey;
+	tstring sKey;
 	GetDlgItemString(hTab, IDC_CHANNELS_FAVOURITES_KEY, sKey);
 
 	int count = ListView_GetItemCount(hList);
@@ -778,7 +778,7 @@ void ChannelsDlg::OnFavouriteChannelSetKey()
 
 			chan->Key = sKey;
 
-			ListView_SetItemText(hList, i, 2, chan->Key.Str());
+			ListView_SetItemText(hList, i, 2, const_cast<LPTSTR>(chan->Key.c_str()));
 		}
 	}
 }
@@ -791,7 +791,7 @@ void ChannelsDlg::OnFavouriteJoinNow()
 	HWND hList = GetDlgItem(hTab, IDC_CHANNELS_FAVOURITES_LIST);
 	_ASSERTE(IsWindow(hList));
 
-	String sKey;
+	tstring sKey;
 	GetDlgItemString(hTab, IDC_CHANNELS_FAVOURITES_KEY, sKey);
 
 	bool bAnyJoined = false;
@@ -827,7 +827,7 @@ void ChannelsDlg::OnListChannelAuto()
 	HWND hList = GetDlgItem(hTab, IDC_CHANNELS_LIST_LIST);
 	_ASSERTE(IsWindow(hList));
 
-	String sKey;
+	tstring sKey;
 	// Removed for space considerations, want to join with a key?  use /join
 	//GetDlgItemString(hTab, IDC_CHANNELS_LIST_KEY, sKey); 
 
@@ -838,13 +838,14 @@ void ChannelsDlg::OnListChannelAuto()
 	{
 		if(ListView_GetItemState(hList, i, LVIS_FOCUSED) & LVIS_FOCUSED)
 		{
-			String sChannel;
-			sChannel.Reserve(POCKETIRC_MAX_IRC_LINE_LEN);
+			tstring sChannel;
+			TCHAR buf[POCKETIRC_MAX_IRC_LINE_LEN];
 
-			ListView_GetItemText(hList, i, 0, sChannel.Str(), sChannel.Capacity());
-			_ASSERTE(sChannel.Size() > 0);
+			ListView_GetItemText(hList, i, 0, buf, sizeof(buf)/sizeof(buf[0]));
+			sChannel = buf;
+			_ASSERTE(sChannel.size() > 0);
 
-			if(sChannel.Size() > 0)
+			if(sChannel.size() > 0)
 			{
 				FavouriteChannel* chan = m_pOptions->GetFavouriteChannelList().FindChannel(sChannel);
 				if(chan)
@@ -865,13 +866,14 @@ void ChannelsDlg::OnListChannelAuto()
 	{
 		if(ListView_GetItemState(hList, i, LVIS_SELECTED) & LVIS_SELECTED)
 		{
-			String sChannel;
-			sChannel.Reserve(POCKETIRC_MAX_IRC_LINE_LEN);
+			tstring sChannel;
+			TCHAR buf[POCKETIRC_MAX_IRC_LINE_LEN];
 
-			ListView_GetItemText(hList, i, 0, sChannel.Str(), sChannel.Capacity());
-			_ASSERTE(sChannel.Size() > 0);
+			ListView_GetItemText(hList, i, 0, buf, sizeof(buf)/sizeof(buf[0]));
+			sChannel = buf;
+			_ASSERTE(sChannel.size() > 0);
 
-			if(sChannel.Size() > 0)
+			if(sChannel.size() > 0)
 			{
 				FavouriteChannel* chan = m_pOptions->GetFavouriteChannelList().FindChannel(sChannel);
 				if(chan)
@@ -898,7 +900,7 @@ void ChannelsDlg::OnListChannelFavourite()
 	HWND hList = GetDlgItem(hTab, IDC_CHANNELS_LIST_LIST);
 	_ASSERTE(IsWindow(hList));
 
-	String sKey;
+	tstring sKey;
 	//GetDlgItemString(hTab, IDC_CHANNELS_LIST_KEY, sKey);
 
 	bool curFav = false;
@@ -908,13 +910,14 @@ void ChannelsDlg::OnListChannelFavourite()
 	{
 		if(ListView_GetItemState(hList, i, LVIS_FOCUSED) & LVIS_FOCUSED)
 		{
-			String sChannel;
-			sChannel.Reserve(POCKETIRC_MAX_IRC_LINE_LEN);
+			tstring sChannel;
+			TCHAR buf[POCKETIRC_MAX_IRC_LINE_LEN];
 
-			ListView_GetItemText(hList, i, 0, sChannel.Str(), sChannel.Capacity());
-			_ASSERTE(sChannel.Size() > 0);
+			ListView_GetItemText(hList, i, 0, buf, sizeof(buf)/sizeof(buf[0]));
+			sChannel = buf;
+			_ASSERTE(sChannel.size() > 0);
 
-			if(sChannel.Size() > 0)
+			if(sChannel.size() > 0)
 			{
 				FavouriteChannel* chan = m_pOptions->GetFavouriteChannelList().FindChannel(sChannel);
 				curFav = (chan != NULL);
@@ -928,13 +931,14 @@ void ChannelsDlg::OnListChannelFavourite()
 	{
 		if(ListView_GetItemState(hList, i, LVIS_SELECTED) & LVIS_SELECTED)
 		{
-			String sChannel;
-			sChannel.Reserve(POCKETIRC_MAX_IRC_LINE_LEN);
+			tstring sChannel;
+			TCHAR buf[POCKETIRC_MAX_IRC_LINE_LEN];
 
-			ListView_GetItemText(hList, i, 0, sChannel.Str(), sChannel.Capacity());
-			_ASSERTE(sChannel.Size() > 0);
+			ListView_GetItemText(hList, i, 0, buf, sizeof(buf)/sizeof(buf[0]));
+			sChannel = buf;
+			_ASSERTE(sChannel.size() > 0);
 
-			if(sChannel.Size() > 0)
+			if(sChannel.size() > 0)
 			{
 				FavouriteChannel* chan = m_pOptions->GetFavouriteChannelList().FindChannel(sChannel);
 				if(chan)
@@ -977,7 +981,7 @@ void ChannelsDlg::OnListChannelJoin()
 	HWND hList = GetDlgItem(hTab, IDC_CHANNELS_LIST_LIST);
 	_ASSERTE(IsWindow(hList));
 
-	String sKey;
+	tstring sKey;
 	//GetDlgItemString(hTab, IDC_CHANNELS_LIST_KEY, sKey);
 
 	bool bAnyJoined = false;
@@ -987,13 +991,14 @@ void ChannelsDlg::OnListChannelJoin()
 	{
 		if(ListView_GetItemState(hList, i, LVIS_SELECTED) & LVIS_SELECTED)
 		{
-			String sChannel;
-			sChannel.Reserve(POCKETIRC_MAX_IRC_LINE_LEN);
+			tstring sChannel;
+			TCHAR buf[POCKETIRC_MAX_IRC_LINE_LEN];
 
-			ListView_GetItemText(hList, i, 0, sChannel.Str(), sChannel.Capacity());
-			_ASSERTE(sChannel.Size() > 0);
+			ListView_GetItemText(hList, i, 0, buf, sizeof(buf)/sizeof(buf[0]));
+			sChannel = buf;
+			_ASSERTE(sChannel.size() > 0);
 
-			if(sChannel.Size() > 0)
+			if(sChannel.size() > 0)
 			{
 				FavouriteChannel* chan = m_pOptions->GetFavouriteChannelList().FindChannel(sChannel);
 				if(chan)

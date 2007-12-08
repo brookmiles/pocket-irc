@@ -1,8 +1,6 @@
 #ifndef _WRITER_H_INCLUDED_
 #define _WRITER_H_INCLUDED_
 
-#include "StringT.h"
-
 #include "Network\ITransport.h"
 
 #include "IWriteNetworkEvent.h"
@@ -20,7 +18,7 @@ public:
 
 
 protected:
-	void Raw(const String& sMsg);
+	void Write(const tstring& sMsg);
 	ITransportWrite* m_pTransport;
 };
 

@@ -1,15 +1,12 @@
 #ifndef _VIEW_H_INCLUDED_
 #define _VIEW_H_INCLUDED_
 
-#include "StringT.h"
-#include "Vector.h"
-
 #include "Window.h"
 #include "Formatter.h"
 
 struct ViewMsg
 {
-	String msg;
+	tstring msg;
 	UINT cy;
 };
 
@@ -23,17 +20,17 @@ public:
 
 	HRESULT Create(HWND hParent, UINT iID, int x, int y, int w, int h);
 
-	void AddLine(const String& sText);
+	void AddLine(const tstring& sText);
 	void Update(bool bUpdateBounds = false);
 	void ScrollIndex(UINT iScroll);
 
 	void Clear();
 
 	bool HitTestMsg(WORD x, WORD y, UINT* piMsgStart, UINT* piCharStart);
-	String GetWordAtChar(UINT iMsg, UINT iChar);
-	String GetWordAtPoint(POINT pt);
+	tstring GetWordAtChar(UINT iMsg, UINT iChar);
+	tstring GetWordAtPoint(POINT pt);
 
-	String GetSelectedWord();
+	tstring GetSelectedWord();
 
 private:
 	LRESULT WndProc(UINT msg, WPARAM wParam, LPARAM lParam);
@@ -72,7 +69,7 @@ private:
 	} m_sel;
 
 	UINT m_iStart;
-	Vector<ViewMsg*> m_vecMsgs;
+	std::vector<ViewMsg*> m_vecMsgs;
 	Formatter m_Formatter;
 
 	RECT m_rcOldClient;

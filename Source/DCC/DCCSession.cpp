@@ -2,7 +2,7 @@
 
 #include "IDCCSession.h"
 
-String GetDCCStateString(DCC_STATE state)
+tstring GetDCCStateString(DCC_STATE state)
 {
 	static TCHAR* STATES[] = 
 	{

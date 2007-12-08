@@ -2,6 +2,8 @@
 #include "DCCHandler.h"
 
 #include "IrcString.h"
+#include "StringUtil.h"
+
 #include "Config\Options.h"
 #include "DCCChat.h"
 #include "DCCSend.h"
@@ -63,25 +65,25 @@ void DCCHandler::OnEvent(const NetworkEvent &event)
 	{
 		_TRACE("DCCHandler(0x%08X)::OnEvent()", this);
 
-		const String& sParams = event.GetParam(1);
-		String sCmd = sParams.GetWord(0);
+		const tstring& sParams = event.GetParam(1);
+		tstring sCmd = GetWord(sParams, 0);
 
-		if(sCmd.Compare(_T("SEND"), false))
+		if(Compare(sCmd, _T("SEND"), false))
 		{
 			if(!g_Options.GetIgnoreSend())
 			{
-				String sFileName = sParams.GetWord(1);
-				ULONG ulAddr = _tcstoul(sParams.GetWord(2).Str(), NULL, 10);
-				USHORT usPort = (USHORT)_tcstoul(sParams.GetWord(3).Str(), NULL, 10);
-				ULONG ulSize = _tcstoul(sParams.GetWord(4).Str(), NULL, 10);
+				tstring sFileName = GetWord(sParams, 1);
+				ULONG ulAddr = _tcstoul(GetWord(sParams, 2).c_str(), NULL, 10);
+				USHORT usPort = (USHORT)_tcstoul(GetWord(sParams, 3).c_str(), NULL, 10);
+				ULONG ulSize = _tcstoul(GetWord(sParams, 4).c_str(), NULL, 10);
 
-				TCHAR* pszFile = _tcsrchr(sFileName.Str(), '/');
+				TCHAR* pszFile = _tcsrchr(sFileName.c_str(), '/');
 				if(pszFile == NULL)
-					 pszFile = _tcsrchr(sFileName.Str(), '\\');
+					 pszFile = _tcsrchr(sFileName.c_str(), '\\');
 				if(pszFile != NULL && pszFile[0] != NULL)
 				{
-					UINT nFileName = pszFile - sFileName.Str() + 1;
-					sFileName = sFileName.SubStr(nFileName + 1);
+					UINT nFileName = pszFile - sFileName.c_str() + 1;
+					sFileName = sFileName.substr(nFileName + 1);
 				}
 
 				_ASSERTE(usPort != 0);
@@ -89,9 +91,9 @@ void DCCHandler::OnEvent(const NetworkEvent &event)
 
 				if(ulAddr == 0 || usPort == 0)
 				{
-					_TRACE("...INVALID ADDR OR PORT (%s):(%s)", sParams.GetWord(3).Str(), sParams.GetWord(4).Str());
+					_TRACE("...INVALID ADDR OR PORT (%s):(%s)", GetWord(sParams, 3).c_str(), GetWord(sParams, 4).c_str());
 				}
-				else if(sFileName.Size() == 0)
+				else if(sFileName.size() == 0)
 				{
 					_TRACE("...INVALID FILENAME");
 				}
@@ -101,24 +103,24 @@ void DCCHandler::OnEvent(const NetworkEvent &event)
 				}
 			}
 		}
-		else if(sCmd.Compare(_T("CHAT"), false))
+		else if(Compare(sCmd, _T("CHAT"), false))
 		{
 			if(!g_Options.GetIgnoreChat())
 			{
-				String sType = sParams.GetWord(1);
-				ULONG ulAddr = _tcstoul(sParams.GetWord(2).Str(), NULL, 10);
-				USHORT usPort = (USHORT)_tcstoul(sParams.GetWord(3).Str(), NULL, 10);
+				tstring sType = GetWord(sParams, 1);
+				ULONG ulAddr = _tcstoul(GetWord(sParams, 2).c_str(), NULL, 10);
+				USHORT usPort = (USHORT)_tcstoul(GetWord(sParams, 3).c_str(), NULL, 10);
 
 				_ASSERTE(usPort != 0);
 				_ASSERTE(ulAddr != 0 && ulAddr != -1);
 
 				if(ulAddr == 0 || usPort == 0)
 				{
-					_TRACE("...INVALID ADDR OR PORT (%s):(%s)", sParams.GetWord(3).Str(), sParams.GetWord(4).Str());
+					_TRACE("...INVALID ADDR OR PORT (%s):(%s)", GetWord(sParams, 3).c_str(), GetWord(sParams, 4).c_str());
 				}
-				else if(!sType.Compare(_T("CHAT"), false))
+				else if(!Compare(sType, _T("CHAT"), false))
 				{
-					_TRACE("...INVALID CHAT TYPE (%s)", sType.Str());
+					_TRACE("...INVALID CHAT TYPE (%s)", sType.c_str());
 				}
 				else
 				{
@@ -126,36 +128,36 @@ void DCCHandler::OnEvent(const NetworkEvent &event)
 				}
 			}
 		}
-		else if(sCmd.Compare(_T("RESUME"), false) || sCmd.Compare(_T("ACCEPT"), false))
+		else if(Compare(sCmd, _T("RESUME"), false) || Compare(sCmd, _T("ACCEPT"), false))
 		{
-			if(m_Sessions.Size())
+			if(m_Sessions.size())
 			{
-				String sFileName = sParams.GetWord(1);
-				USHORT usPort = (USHORT)_tcstoul(sParams.GetWord(2).Str(), NULL, 10);
-				ULONG ulSize = _tcstoul(sParams.GetWord(3).Str(), NULL, 10);
+				tstring sFileName = GetWord(sParams, 1);
+				USHORT usPort = (USHORT)_tcstoul(GetWord(sParams, 2).c_str(), NULL, 10);
+				ULONG ulSize = _tcstoul(GetWord(sParams, 3).c_str(), NULL, 10);
 
-				TCHAR* pszFile = _tcsrchr(sFileName.Str(), '/');
+				TCHAR* pszFile = _tcsrchr(sFileName.c_str(), '/');
 				if(pszFile == NULL)
-					 pszFile = _tcsrchr(sFileName.Str(), '\\');
+					 pszFile = _tcsrchr(sFileName.c_str(), '\\');
 				if(pszFile != NULL && pszFile[0] != NULL)
 				{
-					UINT nFileName = pszFile - sFileName.Str() + 1;
-					sFileName = sFileName.SubStr(nFileName + 1);
+					UINT nFileName = pszFile - sFileName.c_str() + 1;
+					sFileName = sFileName.substr(nFileName + 1);
 				}
 
 				_ASSERTE(usPort != 0);
 
 				if(usPort == 0)
 				{
-					_TRACE("...INVALID PORT (%s)", sParams.GetWord(3).Str());
+					_TRACE("...INVALID PORT (%s)", GetWord(sParams, 3).c_str());
 				}
-				else if(sFileName.Size() == 0)
+				else if(sFileName.size() == 0)
 				{
 					_TRACE("...INVALID FILENAME");
 				}
 				else
 				{
-					if(sCmd.Compare(_T("RESUME"), false))
+					if(Compare(sCmd, _T("RESUME"), false))
 					{
 						OnResume(event.GetPrefix(), sFileName, usPort, ulSize);
 					}
@@ -168,7 +170,7 @@ void DCCHandler::OnEvent(const NetworkEvent &event)
 		}
 		else
 		{
-			_TRACE("...UNKNOWN COMMAND (%s)", sCmd.Str());
+			_TRACE("...UNKNOWN COMMAND (%s)", sCmd.c_str());
 		}
 	}
 }
@@ -177,9 +179,9 @@ void DCCHandler::OnEvent(const NetworkEvent &event)
 //	Command Handlers
 /////////////////////////////////////////////////////////////////////////////
 
-bool DCCHandler::OnSend(const String& sPrefix, const String& sFileName, ULONG ulAddr, USHORT usPort, ULONG ulSize)
+bool DCCHandler::OnSend(const tstring& sPrefix, const tstring& sFileName, ULONG ulAddr, USHORT usPort, ULONG ulSize)
 {
-	_TRACE("DCCHandler(0x%08X)::OnSend(\"%s\", \r\n\t\"%s\", 0x%08X, %u, %u)", this, sPrefix.Str(), sFileName.Str(), ulAddr, usPort, ulSize);
+	_TRACE("DCCHandler(0x%08X)::OnSend(\"%s\", \r\n\t\"%s\", 0x%08X, %u, %u)", this, sPrefix.c_str(), sFileName.c_str(), ulAddr, usPort, ulSize);
 
 	DCCListWindow* pDCCWnd = GetDCCListWindow(true);
 	_ASSERTE(pDCCWnd != NULL);
@@ -188,16 +190,16 @@ bool DCCHandler::OnSend(const String& sPrefix, const String& sFileName, ULONG ul
 	pSend->SetDCCHandler(this);
 	pSend->IncomingRequest(sPrefix, ulAddr, usPort, sFileName, ulSize);
 
-	m_Sessions.Append(pSend);
+	m_Sessions.push_back(pSend);
 
 	pDCCWnd->AddSession(pSend);
 
 	return true;
 }
 
-bool DCCHandler::OnChat(const String& sPrefix, const String& sType, ULONG ulAddr, USHORT usPort)
+bool DCCHandler::OnChat(const tstring& sPrefix, const tstring& sType, ULONG ulAddr, USHORT usPort)
 {
-	_TRACE("DCCHandler(0x%08X)::OnChat(\"%s\", \r\n\t\"%s\", 0x%08X, %u)", this, sPrefix.Str(), sType.Str(), ulAddr, usPort);
+	_TRACE("DCCHandler(0x%08X)::OnChat(\"%s\", \r\n\t\"%s\", 0x%08X, %u)", this, sPrefix.c_str(), sType.c_str(), ulAddr, usPort);
 
 	DCCListWindow* pDCCWnd = GetDCCListWindow(true);
 	_ASSERTE(pDCCWnd != NULL);
@@ -206,21 +208,21 @@ bool DCCHandler::OnChat(const String& sPrefix, const String& sType, ULONG ulAddr
 	pChat->SetDCCHandler(this);
 	pChat->IncomingRequest(sPrefix, ulAddr, usPort);
 
-	m_Sessions.Append(pChat);
+	m_Sessions.push_back(pChat);
 
 	pDCCWnd->AddSession(pChat);
 
 	return true;
 }
 
-bool DCCHandler::OnResume(const String& sPrefix, const String& sFileName, USHORT usPort, ULONG ulSize)
+bool DCCHandler::OnResume(const tstring& sPrefix, const tstring& sFileName, USHORT usPort, ULONG ulSize)
 {
-	for(UINT i = 0; i < m_Sessions.Size(); ++i)
+	for(UINT i = 0; i < m_Sessions.size(); ++i)
 	{
 		IDCCSession *pSession = m_Sessions[i];
 		_ASSERTE(pSession != NULL);
 
-		String sNick = GetPrefixNick(sPrefix);
+		tstring sNick = GetPrefixNick(sPrefix);
 		if((pSession->GetType() == DCC_SEND) && !pSession->IsIncoming() && (pSession->GetState() == DCC_STATE_WAITING) && 
 			(pSession->GetLocalPort() == usPort) && (pSession->GetRemoteUser() == sNick))
 		{
@@ -228,7 +230,7 @@ bool DCCHandler::OnResume(const String& sPrefix, const String& sFileName, USHORT
 			if(pDCCSend->Resume(ulSize))
 			{
 				TCHAR buf[POCKETIRC_MAX_IRC_LINE_LEN];
-				_sntprintf(buf, sizeof(buf), _T("ACCEPT %s %u %u"), sFileName.Str(), usPort, ulSize);
+				_sntprintf(buf, sizeof(buf), _T("ACCEPT %s %u %u"), sFileName.c_str(), usPort, ulSize);
 				buf[sizeof(buf) - 1] = 0;
 
 				m_pSession->CTCP(sNick, _T("DCC"), buf);
@@ -238,14 +240,14 @@ bool DCCHandler::OnResume(const String& sPrefix, const String& sFileName, USHORT
 	return true;
 }
 
-bool DCCHandler::OnAccept(const String& sPrefix, const String& sFileName, USHORT usPort, ULONG ulSize)
+bool DCCHandler::OnAccept(const tstring& sPrefix, const tstring& sFileName, USHORT usPort, ULONG ulSize)
 {
-	for(UINT i = 0; i < m_Sessions.Size(); ++i)
+	for(UINT i = 0; i < m_Sessions.size(); ++i)
 	{
 		IDCCSession *pSession = m_Sessions[i];
 		_ASSERTE(pSession != NULL);
 
-		String sNick = GetPrefixNick(sPrefix);
+		tstring sNick = GetPrefixNick(sPrefix);
 		if((pSession->GetType() == DCC_SEND) && pSession->IsIncoming() && (pSession->GetState() == DCC_STATE_WAITING) &&
 			(pSession->GetRemotePort() == usPort) && (pSession->GetRemoteUser() == sNick))
 		{
@@ -285,12 +287,12 @@ void DCCHandler::ShowDCCListWindow(bool bShow)
 
 UINT DCCHandler::GetSessionCount()
 {
-	return m_Sessions.Size();
+	return m_Sessions.size();
 }
 
 IDCCSession* DCCHandler::GetSession(UINT i)
 {
-	_ASSERTE(i < m_Sessions.Size());
+	_ASSERTE(i < m_Sessions.size());
 
 	return m_Sessions[i];
 }
@@ -299,16 +301,16 @@ void DCCHandler::RemoveSession(IDCCSession* pSession)
 {
 	_TRACE("DCCHandler(0x%08X)::RemoveSession(0x%08X)", this, pSession);
 
-	UINT index = m_Sessions.Find(pSession);
-	if(index != -1)
+	std::vector<IDCCSession*>::iterator i = std::find(m_Sessions.begin(), m_Sessions.end(), pSession);
+	if(i != m_Sessions.end())
 	{
 		if(m_pDCCListWindow)
 		{
-			m_pDCCListWindow->RemoveSession(pSession);
+			m_pDCCListWindow->RemoveSession(*i);
 		}
 
-		delete pSession;
-		m_Sessions.Erase(index);
+		delete *i;
+		m_Sessions.erase(i);
 	}
 }
 
@@ -317,12 +319,12 @@ void DCCHandler::AddSession(IDCCSession* pSession)
 	_TRACE("DCCHandler(0x%08X)::AddSession(0x%08X)", this, pSession);
 	_ASSERTE(pSession != NULL);
 
-	m_Sessions.Append(pSession);
+	m_Sessions.push_back(pSession);
 }
 
-void DCCHandler::Chat(const String& sUser)
+void DCCHandler::Chat(const tstring& sUser)
 {
-	_TRACE("DCCHandler(0x%08X)::Chat(\"%s\")", this, sUser.Str());
+	_TRACE("DCCHandler(0x%08X)::Chat(\"%s\")", this, sUser.c_str());
 
 	DCCListWindow* pDCCWnd = GetDCCListWindow(true);
 	_ASSERTE(pDCCWnd != NULL);
@@ -334,13 +336,13 @@ void DCCHandler::Chat(const String& sUser)
 	{
 		USES_CONVERSION;
 
-		m_Sessions.Append(pChat);
+		m_Sessions.push_back(pChat);
 		pDCCWnd->AddSession(pChat);
 
 		USHORT usPort = pChat->GetLocalPort();
-		String sAddr = g_Options.GetAddress();
+		tstring sAddr = g_Options.GetAddress();
 
-		ULONG ulAddr = inet_addr(T2CA(sAddr.Str()));
+		ULONG ulAddr = inet_addr(T2CA(sAddr.c_str()));
 		ulAddr = htonl(ulAddr);
 
 		TCHAR buf[100];
@@ -350,9 +352,9 @@ void DCCHandler::Chat(const String& sUser)
 	}
 }
 
-void DCCHandler::Send(const String& sUser)
+void DCCHandler::Send(const tstring& sUser)
 {
-	_TRACE("DCCHandler(0x%08X)::Send(\"%s\")", this, sUser.Str());
+	_TRACE("DCCHandler(0x%08X)::Send(\"%s\")", this, sUser.c_str());
 
 	DCCListWindow* pDCCWnd = GetDCCListWindow(true);
 	_ASSERTE(pDCCWnd != NULL);
@@ -364,17 +366,17 @@ void DCCHandler::Send(const String& sUser)
 	{
 		USES_CONVERSION;
 
-		m_Sessions.Append(pSend);
+		m_Sessions.push_back(pSend);
 		pDCCWnd->AddSession(pSend);
 
 		USHORT usPort = pSend->GetLocalPort();
-		String sAddr = g_Options.GetAddress();
+		tstring sAddr = g_Options.GetAddress();
 
-		ULONG ulAddr = inet_addr(T2CA(sAddr.Str()));
+		ULONG ulAddr = inet_addr(T2CA(sAddr.c_str()));
 		ulAddr = htonl(ulAddr);
 
 		TCHAR buf[POCKETIRC_MAX_IRC_LINE_LEN];
-		_sntprintf(buf, sizeof(buf), _T("SEND %s %u %u %u"), pSend->GetFileName().Str(), ulAddr, usPort, pSend->GetFileSize());
+		_sntprintf(buf, sizeof(buf), _T("SEND %s %u %u %u"), pSend->GetFileName().c_str(), ulAddr, usPort, pSend->GetFileSize());
 		buf[sizeof(buf) - 1] = 0;
 
 		m_pSession->CTCP(sUser, _T("DCC"), buf);

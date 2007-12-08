@@ -48,7 +48,7 @@ const FormatList& FormatList::operator=(FormatList& from)
 
 Format* FormatList::GetFormat(int idEvent, bool bIncoming)
 {
-	UINT nFormats = m_vecFormats.Size();
+	UINT nFormats = m_vecFormats.size();
 	for(UINT i = 0; i < nFormats; ++i)
 	{
 		Format* pFormat = m_vecFormats[i];
@@ -87,12 +87,12 @@ Format* FormatList::GetFormat(int idEvent, bool bIncoming)
 
 void FormatList::AddFormat(Format* pFormat)
 {
-	m_vecFormats.Append(pFormat);
+	m_vecFormats.push_back(pFormat);
 }
 
 UINT FormatList::Count()
 {
-	return m_vecFormats.Size();
+	return m_vecFormats.size();
 }
 
 Format* FormatList::Item(UINT nIndex)
@@ -102,10 +102,10 @@ Format* FormatList::Item(UINT nIndex)
 
 void FormatList::Clear()
 {
-	UINT nFormats = m_vecFormats.Size();
+	UINT nFormats = m_vecFormats.size();
 	for(UINT i = 0; i < nFormats; ++i)
 	{
 		delete m_vecFormats[i];
 	}
-	m_vecFormats.Clear();
+	m_vecFormats.clear();
 }

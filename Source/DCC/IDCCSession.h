@@ -1,8 +1,6 @@
 #ifndef _IDCCSESSION_H_INCLUDED_
 #define _IDCCSESSION_H_INCLUDED_
 
-#include "StringT.h"
-
 typedef enum _DCC_TYPE
 {
 	DCC_INVALID,
@@ -33,14 +31,14 @@ public:
 	virtual void Accept() = 0;
 	virtual void Close() = 0;
 
-	virtual String GetRemoteUser() = 0;
-	virtual String GetRemoteHost() = 0;
+	virtual tstring GetRemoteUser() = 0;
+	virtual tstring GetRemoteHost() = 0;
 	virtual USHORT GetRemotePort() = 0;
 	virtual USHORT GetLocalPort() = 0;
 
-	virtual String GetDescription() = 0;
+	virtual tstring GetDescription() = 0;
 };
 
-String GetDCCStateString(DCC_STATE state);
+tstring GetDCCStateString(DCC_STATE state);
 
 #endif//_IDCCSESSION_H_INCLUDED_

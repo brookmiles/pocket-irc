@@ -2,6 +2,8 @@
 #include "MainWindow.h"
 
 #include "IrcString.h"
+#include "StringUtil.h"
+#include "VectorUtil.h"
 #include "Config\Options.h"
 #include "OptionDlg.h"
 #include "ChannelsDlg.h"
@@ -194,15 +196,15 @@ void MainWindow::OptionsChanged()
 
 	UpdateSize();
 
-	for(UINT i = 0; i < m_vecChildren.Size(); ++i)
+	for(UINT i = 0; i < m_vecChildren.size(); ++i)
 	{
 		m_vecChildren[i]->OnOptionsChanged();
 	}
 }
 
-void MainWindow::SetCurrentTarget(const String& sTarget) 
+void MainWindow::SetCurrentTarget(const tstring& sTarget) 
 { 
-	_TRACE("MainWindow(0x%08X)::SetCurrentTarget(\"%s\")", this, sTarget.Str());
+	_TRACE("MainWindow(0x%08X)::SetCurrentTarget(\"%s\")", this, sTarget.c_str());
 	m_sCurrentTarget = sTarget; 
 }
 
@@ -212,7 +214,7 @@ bool MainWindow::ProcessSlashCommand()
 	typedef struct _SLASHMAP
 	{
 		TCHAR* name;
-		void (MainWindow::*cmd)(const String& s);
+		void (MainWindow::*cmd)(const tstring& s);
 	} SLASHMAP;
 
 	SLASHMAP slashMap[] = 
@@ -241,35 +243,35 @@ bool MainWindow::ProcessSlashCommand()
 		{ _T("server"), &MainWindow::SlashServer },
 	};
 
-	String sInput = GetInput();
-	if(sInput.Size() > 0 && sInput[0] == _T('/'))
+	tstring sInput = GetInput();
+	if(sInput.size() > 0 && sInput[0] == _T('/'))
 	{
-		String sCmd = sInput.GetWord(0).SubStr(1);
+		tstring sCmd = GetWord(sInput, 0).substr(1);
 
 		for(int i = 0; i < sizeof(slashMap)/sizeof(*slashMap); ++i)
 		{
-			if(sCmd.Compare(slashMap[i].name, false))
+			if(Compare(sCmd, slashMap[i].name, false))
 			{
-				String params = sInput.GetWord(1, true);
+				tstring params = GetWord(sInput, 1, true);
 				(this->*slashMap[i].cmd)(params);
 				ClearInput();
 				return true;
 			}
 		}
 
-		SlashRaw(sInput.SubStr(1));
+		SlashRaw(sInput.substr(1));
 		ClearInput();
 		return true;
 	}
 	return false;
 }
 
-void MainWindow::SlashPart(const String& s)
+void MainWindow::SlashPart(const tstring& s)
 {
-	String sChannel = s.GetWord(0);
-	String sMsg = s.GetWord(1, true);
+	tstring sChannel = GetWord(s, 0);
+	tstring sMsg = GetWord(s, 1, true);
 
-	if(!sChannel.Size())
+	if(!sChannel.size())
 	{
 		sChannel = GetCurrentTarget();
 	}
@@ -277,134 +279,134 @@ void MainWindow::SlashPart(const String& s)
 	m_pSession->Part(sChannel, sMsg);
 }
 
-void MainWindow::SlashRaw(const String& s)
+void MainWindow::SlashRaw(const tstring& s)
 {
 	m_pSession->Raw(s);
 }
 
-void MainWindow::SlashQuit(const String& s)
+void MainWindow::SlashQuit(const tstring& s)
 {
-	String msg = s;
-	if(msg.Size() == 0)
+	tstring msg = s;
+	if(msg.size() == 0)
 	{
 		msg = g_Options.GetQuitMsg();
 	}
 	m_pSession->Quit(msg);
 }
 
-void MainWindow::SlashMsg(const String& s)
+void MainWindow::SlashMsg(const tstring& s)
 {
-	String sTo = s.GetWord(0);
-	String sMsg = s.GetWord(1, true);
+	tstring sTo = GetWord(s, 0);
+	tstring sMsg = GetWord(s, 1, true);
 	m_pSession->PrivMsg(sTo, sMsg);
 }
 
-void MainWindow::SlashQuery(const String& s)
+void MainWindow::SlashQuery(const tstring& s)
 {
-	String sTo = s.GetWord(0);
+	tstring sTo = GetWord(s, 0);
 	OpenQuery(sTo);
 }
 
-void MainWindow::SlashClose(const String& s)
+void MainWindow::SlashClose(const tstring& s)
 {
-	String sQuery = GetCurrentTarget();
+	tstring sQuery = GetCurrentTarget();
 	CloseQuery(sQuery);
 }
 
-void MainWindow::SlashSay(const String& s)
+void MainWindow::SlashSay(const tstring& s)
 {
-	String sTo = GetCurrentTarget();
+	tstring sTo = GetCurrentTarget();
 	m_pSession->PrivMsg(sTo, s);
 }
 
-void MainWindow::SlashMe(const String& s)
+void MainWindow::SlashMe(const tstring& s)
 {
-	String sTo = GetCurrentTarget();
+	tstring sTo = GetCurrentTarget();
 	m_pSession->Action(sTo, s);
 }
 
-void MainWindow::SlashKick(const String& s)
+void MainWindow::SlashKick(const tstring& s)
 {
-	String sTarget = s.GetWord(0);
-	String sUser = s.GetWord(1);
-	String sReason = s.GetWord(2, true);
+	tstring sTarget = GetWord(s, 0);
+	tstring sUser = GetWord(s, 1);
+	tstring sReason = GetWord(s, 2, true);
 	m_pSession->Kick(sTarget, sUser, sReason);
 }
 
-void MainWindow::SlashInvite(const String& s)
+void MainWindow::SlashInvite(const tstring& s)
 {
-	String sUser = s.GetWord(0);
-	String sTarget = s.GetWord(1);
-	if(!sTarget.Size())
+	tstring sUser = GetWord(s, 0);
+	tstring sTarget = GetWord(s, 1);
+	if(!sTarget.size())
 	{
 		sTarget = GetCurrentTarget();
 	}
 	m_pSession->Invite(sUser, sTarget);
 }
 
-void MainWindow::SlashNotice(const String& s)
+void MainWindow::SlashNotice(const tstring& s)
 {
-	String sTo = s.GetWord(0);
-	String sMsg = s.GetWord(1, true);
+	tstring sTo = GetWord(s, 0);
+	tstring sMsg = GetWord(s, 1, true);
 	m_pSession->Notice(sTo, sMsg);
 }
 
 
-void MainWindow::SlashTopic(const String& s)
+void MainWindow::SlashTopic(const tstring& s)
 {
-	String sTarget = s.GetWord(0);
-	String sTopic = s.GetWord(1, true);
+	tstring sTarget = GetWord(s, 0);
+	tstring sTopic = GetWord(s, 1, true);
 	m_pSession->Topic(sTarget, sTopic);
 }
 
-void MainWindow::SlashExit(const String& s)
+void MainWindow::SlashExit(const tstring& s)
 {
 	PostMessage(m_hwnd, WM_CLOSE, 0, 0);
 }
 
-void MainWindow::SlashAway(const String& s)
+void MainWindow::SlashAway(const tstring& s)
 {
-	String sMsg = s.GetWord(0, true);
+	tstring sMsg = GetWord(s, 0, true);
 	m_pSession->Away(sMsg);
 }
 
-void MainWindow::SlashPing(const String& s)
+void MainWindow::SlashPing(const tstring& s)
 {
-	String sTarget = s.GetWord(0);
+	tstring sTarget = GetWord(s, 0);
 	m_pSession->CTCPPing(sTarget);
 }
 
-void MainWindow::SlashCTCP(const String& s)
+void MainWindow::SlashCTCP(const tstring& s)
 {
-	String sTarget = s.GetWord(0);
-	String sCmd = s.GetWord(1);
-	String sMsg = s.GetWord(2, true);
+	tstring sTarget = GetWord(s, 0);
+	tstring sCmd = GetWord(s, 1);
+	tstring sMsg = GetWord(s, 2, true);
 	m_pSession->CTCP(sTarget, sCmd, sMsg);
 }
 
-void MainWindow::SlashConnect(const String& s)
+void MainWindow::SlashConnect(const tstring& s)
 {
 	Connect();
 }
 
-void MainWindow::SlashDisconnect(const String& s)
+void MainWindow::SlashDisconnect(const tstring& s)
 {
 	Disconnect();
 }
 
-void MainWindow::SlashServer(const String& s)
+void MainWindow::SlashServer(const tstring& s)
 {
-	String sHost = s.GetWord(0);
-	String sPass = s.GetWord(1);
+	tstring sHost = GetWord(s, 0);
+	tstring sPass = GetWord(s, 1);
 
 	USHORT uPort = POCKETIRC_DEFAULT_PORT;
-	String sServer = sHost;
+	tstring sServer = sHost;
 
-	TCHAR* port = _tcschr(sHost.Str(), ':');
+	TCHAR* port = _tcschr(sHost.c_str(), ':');
 	if(port)
 	{
 		uPort = (USHORT)_tcstoul(port + 1, NULL, 10);
-		sServer = sHost.SubStr(0, port - sHost.Str() - 1);
+		sServer = sHost.substr(0, port - sHost.c_str() - 1);
 	}
 
 	g_Options.SetDefaultHost(sServer, uPort, sPass);
@@ -436,8 +438,8 @@ void MainWindow::OnConnectStateChange(const NetworkEvent &e)
 
 		if(m_bConnected)
 		{
-			const String &sPass = pHost->GetPass();
-			if(sPass.Size())
+			const tstring &sPass = pHost->GetPass();
+			if(sPass.size())
 			{
 				m_pSession->Pass(sPass);
 			}
@@ -459,8 +461,8 @@ void MainWindow::OnJoin(const NetworkEvent& event)
 {
 	_TRACE("MainWindow(0x%08X)::OnJoin()", this);
 
-	String sUser = GetPrefixNick(event.GetPrefix());
-	const String& sChannel = event.GetParam(0);
+	tstring sUser = GetPrefixNick(event.GetPrefix());
+	const tstring& sChannel = event.GetParam(0);
 
 	if(m_pSession->IsMe(sUser))
 	{
@@ -476,22 +478,22 @@ void MainWindow::OnPart(const NetworkEvent& event)
 {
 	_TRACE("MainWindow(0x%08X)::OnPart()", this);
 
-	String sUser = GetPrefixNick(event.GetPrefix());
-	const String& sChannel = event.GetParam(0);
+	tstring sUser = GetPrefixNick(event.GetPrefix());
+	const tstring& sChannel = event.GetParam(0);
 }
 
 void MainWindow::OnKick(const NetworkEvent& event)
 {
 	_TRACE("MainWindow(0x%08X)::OnKick()", this);
-	const String& sChannel = event.GetParam(0);
-	const String& sUser = event.GetParam(1);
+	const tstring& sChannel = event.GetParam(0);
+	const tstring& sUser = event.GetParam(1);
 }
 
 void MainWindow::OnNick(const NetworkEvent& event)
 {
 	_TRACE("MainWindow(0x%08X)::OnNick()", this);
-	String sUser = GetPrefixNick(event.GetPrefix());
-	const String& sNewNick = event.GetParam(0);
+	tstring sUser = GetPrefixNick(event.GetPrefix());
+	const tstring& sNewNick = event.GetParam(0);
 
 	//If there is an open query to this user, change it over to the new nick
 	IDisplayWindow* pWindow = GetDisplayWindow(sUser);
@@ -516,7 +518,7 @@ void MainWindow::OnQuit(const NetworkEvent& event)
 {
 	_TRACE("MainWindow(0x%08X)::OnQuit()", this);
 
-	String sUser = GetPrefixNick(event.GetPrefix());
+	tstring sUser = GetPrefixNick(event.GetPrefix());
 
 	if(m_pSession->IsMe(sUser))
 	{
@@ -532,8 +534,8 @@ void MainWindow::OnPrivMsg(const NetworkEvent& event)
 {
 	//_TRACE("MainWindow(0x%08X)::OnPrivMsg()", this);
 
-	String sUser = GetPrefixNick(event.GetPrefix());
-	const String& sTarget = event.GetParam(0);
+	tstring sUser = GetPrefixNick(event.GetPrefix());
+	const tstring& sTarget = event.GetParam(0);
 
 	if(m_pSession->IsMe(sTarget))
 	{
@@ -545,8 +547,8 @@ void MainWindow::OnRplWelcome(const NetworkEvent& event)
 {
 	_TRACE("MainWindow(0x%08X)::OnRplWelcome()", this);
 
-	const String& sMe = event.GetParam(0);
-	_ASSERTE(sMe.Size());
+	const tstring& sMe = event.GetParam(0);
+	_ASSERTE(sMe.size());
 
 	m_pSession->UserHost(sMe);
 
@@ -567,15 +569,15 @@ void MainWindow::OnRplUserHost(const NetworkEvent& event)
 {
 	_TRACE("MainWindow(0x%08X)::OnRplUserHost()", this);
 
-	String sHost = event.GetParam(1);
+	tstring sHost = event.GetParam(1);
 
-	TCHAR* user = _tcschr(sHost.Str(), '=');
-	if(user && user > sHost.Str())
+	TCHAR* user = _tcschr(sHost.c_str(), '=');
+	if(user && user > sHost.c_str())
 	{
-		String sUser = sHost.SubStr(0, user - sHost.Str());
+		tstring sUser = sHost.substr(0, user - sHost.c_str());
 		if(m_pSession->IsMe(sUser))
 		{
-			TCHAR* ip = _tcschr(sHost.Str(), '@');
+			TCHAR* ip = _tcschr(sHost.c_str(), '@');
 			if(ip)
 			{
 				USES_CONVERSION;
@@ -600,7 +602,7 @@ void MainWindow::OnRplUserHost(const NetworkEvent& event)
 
 void MainWindow::OnEvent(const NetworkEvent &networkEvent)
 {
-	//_TRACE("MainWindow(0x%08X)::OnEvent(\"%s\")", this, networkEvent.GetEvent().Str());
+	//_TRACE("MainWindow(0x%08X)::OnEvent(\"%s\")", this, networkEvent.GetEvent().c_str());
 
 	#define HANDLE_IRC_EVENT(id, h) case id: h(networkEvent); break;
 
@@ -638,16 +640,16 @@ void MainWindow::AddWindowTab(ITabWindow* pWindow)
 	_TRACE("MainWindow(0x%08X)::AddWindowTab(0x%08X)", this, pWindow);
 
 	m_TabStrip.AddTab(pWindow->GetTabTitle(), pWindow->GetTabWindow(), (LPARAM)pWindow);
-	m_vecChildren.Append(pWindow);
+	m_vecChildren.push_back(pWindow);
 
 	// Force resize to fit new window
 	ZeroMemory(&m_rcOldClient, sizeof(RECT));
 	this->OnSize(0, 0);
 }
 
-void MainWindow::SetWindowTabTitle(ITabWindow* pWindow, const String& sTitle)
+void MainWindow::SetWindowTabTitle(ITabWindow* pWindow, const tstring& sTitle)
 {
-	_TRACE("MainWindow(0x%08X)::SetWindowTabTitle(0x%08X, \"%s\")", this, pWindow, sTitle.Str());
+	_TRACE("MainWindow(0x%08X)::SetWindowTabTitle(0x%08X, \"%s\")", this, pWindow, sTitle.c_str());
 
 	UINT index;
 	if(m_TabStrip.FindTab((LPARAM)pWindow, &index))
@@ -684,14 +686,10 @@ void MainWindow::RemoveWindowTab(ITabWindow* pWindow)
 		m_TabStrip.RemoveTab(index);
 	}
 
-	index = m_vecChildren.Find(pWindow);
-	if(index != Vector<ITabWindow*>::NPOS)
-	{
-		m_vecChildren.Erase(index);
-	}
+	Erase(m_vecChildren, pWindow);
 }
 
-String MainWindow::GetInput()
+tstring MainWindow::GetInput()
 {
 	_TRACE("MainWindow(0x%08X)::GetInput()", this);
 
@@ -709,7 +707,7 @@ String MainWindow::GetInput()
 		}
 		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)buf);
 	}
-	return String(buf);
+	return tstring(buf);
 }
 
 void MainWindow::ClearInput()
@@ -722,15 +720,15 @@ void MainWindow::ClearInput()
 	SetWindowText(hCombo, _T(""));
 }
 
-void MainWindow::InsertInput(const String& str)
+void MainWindow::InsertInput(const tstring& str)
 {
-	_TRACE("MainWindow(0x%08X)::InsertInput(\"%s\")", this, str.Str());
-	SendMessage(::GetWindow(m_InputBar.GetWindow(), GW_CHILD), EM_REPLACESEL, 0, (LPARAM)str.Str());
+	_TRACE("MainWindow(0x%08X)::InsertInput(\"%s\")", this, str.c_str());
+	SendMessage(::GetWindow(m_InputBar.GetWindow(), GW_CHILD), EM_REPLACESEL, 0, (LPARAM)str.c_str());
 }
 
-void MainWindow::OpenQuery(const String& sUser)
+void MainWindow::OpenQuery(const tstring& sUser)
 {
-	_TRACE("MainWindow(0x%08X)::OpenQuery(\"%s\")", this, sUser.Str());
+	_TRACE("MainWindow(0x%08X)::OpenQuery(\"%s\")", this, sUser.c_str());
 
 	if(!IsChannel(sUser))
 	{
@@ -742,9 +740,9 @@ void MainWindow::OpenQuery(const String& sUser)
 	}
 }
 
-void MainWindow::CloseQuery(const String& sUser)
+void MainWindow::CloseQuery(const tstring& sUser)
 {
-	_TRACE("MainWindow(0x%08X)::CloseQuery(\"%s\")", this, sUser.Str());
+	_TRACE("MainWindow(0x%08X)::CloseQuery(\"%s\")", this, sUser.c_str());
 
 	IDisplayWindow* pQuery = GetDisplayWindow(sUser);
 	if(pQuery)
@@ -753,9 +751,9 @@ void MainWindow::CloseQuery(const String& sUser)
 	}
 }
 
-IDisplayWindow* MainWindow::CreateChannelWindow(const String& sChannel)
+IDisplayWindow* MainWindow::CreateChannelWindow(const tstring& sChannel)
 {
-	_TRACE("MainWindow(0x%08X)::CreateChannelWindow(\"%s\")", this, sChannel.Str());
+	_TRACE("MainWindow(0x%08X)::CreateChannelWindow(\"%s\")", this, sChannel.c_str());
 
 	Channel* pChannel = m_pSession->GetChannel(sChannel);
 	_ASSERTE(pChannel);
@@ -772,9 +770,9 @@ IDisplayWindow* MainWindow::CreateChannelWindow(const String& sChannel)
 	return NULL;
 }
 
-IDisplayWindow* MainWindow::CreateQueryWindow(const String& sUser)
+IDisplayWindow* MainWindow::CreateQueryWindow(const tstring& sUser)
 {
-	_TRACE("MainWindow(0x%08X)::CreateQueryWindow(\"%s\")", this, sUser.Str());
+	_TRACE("MainWindow(0x%08X)::CreateQueryWindow(\"%s\")", this, sUser.c_str());
 
 	QueryWindow* pWindow = new QueryWindow;
 	pWindow->SetMainWindow(this);
@@ -785,9 +783,9 @@ IDisplayWindow* MainWindow::CreateQueryWindow(const String& sUser)
 	return pWindow;
 }
 
-IDisplayWindow* MainWindow::GetDisplayWindow(const String& sKey)
+IDisplayWindow* MainWindow::GetDisplayWindow(const tstring& sKey)
 {
-	for(UINT i = 0; i < m_vecChildren.Size(); ++i)
+	for(UINT i = 0; i < m_vecChildren.size(); ++i)
 	{
 		ITabWindow* pWindow = m_vecChildren[i];
 		_ASSERTE(pWindow != NULL);
@@ -796,7 +794,7 @@ IDisplayWindow* MainWindow::GetDisplayWindow(const String& sKey)
 		{
 			DisplayWindow* pDisplay = static_cast<DisplayWindow*>(pWindow);
 			_ASSERTE(pDisplay);
-			if(sKey.Compare(pDisplay->GetKey(), false))
+			if(Compare(sKey, pDisplay->GetKey(), false))
 			{
 				return pDisplay;
 			}
@@ -814,9 +812,9 @@ void MainWindow::SetDefaultWindow(IDisplayWindow* pWindow)
 
 void MainWindow::DispatchEvent(const NetworkEvent& networkEvent)
 {
-	//_TRACE("MainWindow(0x%08X)::DispatchEvent(\"%s\")", this, networkEvent.GetEvent().Str());
+	//_TRACE("MainWindow(0x%08X)::DispatchEvent(\"%s\")", this, networkEvent.GetEvent().c_str());
 
-	String sKey = GetEventKey(networkEvent);
+	tstring sKey = GetEventKey(networkEvent);
 	IDisplayWindow* pWindow = GetDisplayWindow(sKey);
 	if(pWindow == NULL)
 	{
@@ -832,9 +830,9 @@ void MainWindow::DispatchEvent(const NetworkEvent& networkEvent)
 
 void MainWindow::DispatchToChannels(const NetworkEvent& event)
 {
-	_TRACE("MainWindow(0x%08X)::DispatchToChannels(\"%s\")", this, event.GetEvent().Str());
+	_TRACE("MainWindow(0x%08X)::DispatchToChannels(\"%s\")", this, event.GetEvent().c_str());
 
-	for(UINT i = 0; i < m_vecChildren.Size(); ++i)
+	for(UINT i = 0; i < m_vecChildren.size(); ++i)
 	{
 		ITabWindow* pWindow = m_vecChildren[i];
 		_ASSERTE(pWindow != NULL);
@@ -849,12 +847,12 @@ void MainWindow::DispatchToChannels(const NetworkEvent& event)
 	}
 }
 
-void MainWindow::DispatchToChannelsWithUser(const NetworkEvent& event, const String& sUser)
+void MainWindow::DispatchToChannelsWithUser(const NetworkEvent& event, const tstring& sUser)
 {
-	_TRACE("MainWindow(0x%08X)::DispatchToChannelsWithUser(\"%s\", \"%s\")", this, event.GetEvent().Str(), sUser.Str());
+	_TRACE("MainWindow(0x%08X)::DispatchToChannelsWithUser(\"%s\", \"%s\")", this, event.GetEvent().c_str(), sUser.c_str());
 
 
-	for(UINT i = 0; i < m_vecChildren.Size(); ++i)
+	for(UINT i = 0; i < m_vecChildren.size(); ++i)
 	{
 		ITabWindow* pWindow = m_vecChildren[i];
 		_ASSERTE(pWindow != NULL);
@@ -1175,7 +1173,7 @@ void MainWindow::OnSize(WPARAM wParam, LPARAM lParam)
 
 			MoveWindow(m_TabStrip.GetWindow(), 0, rcClient.bottom - tabHeight, rcClient.right, tabHeight, TRUE);
 
-			for(UINT i = 0; i < m_vecChildren.Size(); ++i)
+			for(UINT i = 0; i < m_vecChildren.size(); ++i)
 			{
 				MoveWindow(m_vecChildren[i]->GetTabWindow(), 0, 0, rcClient.right, rcClient.bottom - tabHeight, TRUE);
 			}

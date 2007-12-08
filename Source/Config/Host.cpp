@@ -22,7 +22,7 @@ Host::Host(Host& hostCopyFrom)
 	*this = hostCopyFrom;
 }
 
-Host::Host(const String& sAddress, USHORT usPort)
+Host::Host(const tstring& sAddress, USHORT usPort)
 {
 	//_TRACE("Host(0x%08X)::Host(0x%08X, %u)", this, pszAddress, usPort);
 
@@ -57,14 +57,14 @@ const Host& Host::operator=(Host& hostCopyFrom)
 //	Accessor Methods
 /////////////////////////////////////////////////////////////////////////////
 
-void Host::SetAddress(const String& sAddress)
+void Host::SetAddress(const tstring& sAddress)
 {
 	//_TRACE("Host(0x%08X)::SetAddress(0x%08X)", this, pszAddress);
 	
 	m_sAddress = sAddress;
 }
 
-const String& Host::GetAddress()
+const tstring& Host::GetAddress()
 {
 	//_TRACE("Host(0x%08X)::GetAddress()", this);
 	return m_sAddress;
@@ -83,14 +83,14 @@ USHORT Host::GetPort()
 	return m_usPort;
 }
 
-void Host::SetPass(const String& sPass)
+void Host::SetPass(const tstring& sPass)
 {
 	//_TRACE("Host(0x%08X)::SetPass(0x%08X)", this, pszPass);
 	
 	m_sPass = sPass;
 }
 
-const String& Host::GetPass()
+const tstring& Host::GetPass()
 {
 	//_TRACE("Host(0x%08X)::GetPass()", this);
 	return m_sPass;

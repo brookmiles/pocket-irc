@@ -59,7 +59,7 @@ private:
 	void ActivateTab(bool bActivate);
 	void FitChildToTab(HWND hChild);
 	void UpdateSize();
-	void AddChannelListEntry(String& sChannel, String& sUsers, String& sTopic);
+	void AddChannelListEntry(tstring& sChannel, tstring& sUsers, tstring& sTopic);
 
 	static void UpdateListSize(HWND hDlg, UINT listId);
 };

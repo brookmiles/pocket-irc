@@ -44,9 +44,9 @@ UINT Formatter::GetLineHeight(HDC hdc)
 //   Draw segment using current formatting
 // End while
 
-void Formatter::FormatOut(HDC hdc, const String& str, RECT& rc, DWORD dwFlags)
+void Formatter::FormatOut(HDC hdc, const tstring& str, RECT& rc, DWORD dwFlags)
 {
-	UINT nLen = str.Size();
+	UINT nLen = str.size();
 	UINT cyUsed = 0;
 	UINT cxUsed = 0;
 
@@ -154,13 +154,13 @@ void Formatter::FormatOut(HDC hdc, const String& str, RECT& rc, DWORD dwFlags)
 	}
 }
 
-UINT Formatter::HitTest(HDC hdc, const String& strFmt, RECT& rc, DWORD dwFlags, POINT pt)
+UINT Formatter::HitTest(HDC hdc, const tstring& strFmt, RECT& rc, DWORD dwFlags, POINT pt)
 {
 	UINT cyUsed = 0;
 	UINT cxUsed = 0;
 
-	String str = StringFormat::StripFormatting(strFmt);
-	UINT nLen = str.Size();
+	tstring str = StringFormat::StripFormatting(strFmt);
+	UINT nLen = str.size();
 
 	UINT iChar = 0;
 	while(iChar < nLen)
@@ -223,13 +223,13 @@ UINT Formatter::HitTest(HDC hdc, const String& strFmt, RECT& rc, DWORD dwFlags, 
 	return iChar;
 }
 
-void Formatter::DrawSelection(HDC hdc, const String& strFmt, RECT& rc, DWORD dwFlags, UINT iSelStart, UINT iSelEnd)
+void Formatter::DrawSelection(HDC hdc, const tstring& strFmt, RECT& rc, DWORD dwFlags, UINT iSelStart, UINT iSelEnd)
 {
 	UINT cyUsed = 0;
 	UINT cxUsed = 0;
 
-	String str = StringFormat::StripFormatting(strFmt);
-	UINT nLen = str.Size();
+	tstring str = StringFormat::StripFormatting(strFmt);
+	UINT nLen = str.size();
 
 	UINT iChar = 0;
 	while(iChar < nLen && iChar < iSelEnd)

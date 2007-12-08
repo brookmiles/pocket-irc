@@ -9,6 +9,7 @@
 #include "ChooseColor.h"
 #include "Common\WindowString.h"
 #include "Common\TabCtrlUtil.h"
+#include "StringUtil.h"
 
 #include "resource.h"
 
@@ -169,7 +170,7 @@ int OptionDlg::EnumFontFamProc(ENUMLOGFONT FAR *lpelf, TEXTMETRIC FAR *lpntm, in
 	_ASSERTE(index != CB_ERR);
 	if(index != CB_ERR)
 	{
-		if(m_pOptions->GetFontName().Compare(lpelf->elfLogFont.lfFaceName, false))
+		if(Compare(m_pOptions->GetFontName(), lpelf->elfLogFont.lfFaceName, false))
 		{
 			SendMessage(hList, CB_SETCURSEL, index, 0);
 		}
@@ -260,12 +261,12 @@ void OptionDlg::OnInitDialog(WPARAM wParam, LPARAM lParam)
 	}
 
 	SendDlgItemMessage(hDlgServer, IDC_OPTIONS_NICKNAME, EM_LIMITTEXT, POCKETIRC_MAX_NICK_LEN, 0);
-	SetDlgItemText(hDlgServer, IDC_OPTIONS_NICKNAME, m_pOptions->GetNick().Str());
+	SetDlgItemText(hDlgServer, IDC_OPTIONS_NICKNAME, m_pOptions->GetNick().c_str());
 
 	SetEditMenuSubclass(GetDlgItem(hDlgServer, IDC_OPTIONS_NICKNAME), false);
 
 	SendDlgItemMessage(hDlgServer, IDC_OPTIONS_REALNAME, EM_LIMITTEXT, POCKETIRC_MAX_REALNAME_LEN, 0);
-	SetDlgItemText(hDlgServer, IDC_OPTIONS_REALNAME, m_pOptions->GetRealName().Str());
+	SetDlgItemText(hDlgServer, IDC_OPTIONS_REALNAME, m_pOptions->GetRealName().c_str());
 
 	SetEditMenuSubclass(GetDlgItem(hDlgServer, IDC_OPTIONS_REALNAME), true);
 
@@ -278,7 +279,7 @@ void OptionDlg::OnInitDialog(WPARAM wParam, LPARAM lParam)
 	SetEditMenuSubclass(GetDlgItem(hDlgServer, IDC_OPTIONS_SERVERPORT), false);
 
 	SendDlgItemMessage(hDlgServer, IDC_OPTIONS_QUITMSG, EM_LIMITTEXT, POCKETIRC_MAX_IRC_LINE_LEN, 0);
-	SetDlgItemText(hDlgServer, IDC_OPTIONS_QUITMSG, m_pOptions->GetQuitMsg().Str());
+	SetDlgItemText(hDlgServer, IDC_OPTIONS_QUITMSG, m_pOptions->GetQuitMsg().c_str());
 
 	SetEditMenuSubclass(GetDlgItem(hDlgServer, IDC_OPTIONS_QUITMSG), true);
 
@@ -292,7 +293,7 @@ void OptionDlg::OnInitDialog(WPARAM wParam, LPARAM lParam)
 		_ASSERTE(SUCCEEDED(hr));
 		_ASSERTE(pHost != NULL);
 
-		int index = SendDlgItemMessage(hDlgServer, IDC_OPTIONS_SERVERNAME, CB_ADDSTRING, 0, (LPARAM)pHost->GetAddress().Str());
+		int index = SendDlgItemMessage(hDlgServer, IDC_OPTIONS_SERVERNAME, CB_ADDSTRING, 0, (LPARAM)pHost->GetAddress().c_str());
 		_ASSERTE(index != CB_ERR);
 		if(index != CB_ERR)
 		{
@@ -302,7 +303,7 @@ void OptionDlg::OnInitDialog(WPARAM wParam, LPARAM lParam)
 			{
 				SendDlgItemMessage(hDlgServer, IDC_OPTIONS_SERVERNAME, CB_SETCURSEL, index, 0);
 				SetDlgItemInt(hDlgServer, IDC_OPTIONS_SERVERPORT, pHost->GetPort(), FALSE);
-				SetDlgItemText(hDlgServer, IDC_OPTIONS_SERVERPASS, pHost->GetPass().Str());
+				SetDlgItemText(hDlgServer, IDC_OPTIONS_SERVERPASS, pHost->GetPass().c_str());
 			}
 		}
 	}
@@ -310,7 +311,7 @@ void OptionDlg::OnInitDialog(WPARAM wParam, LPARAM lParam)
 
 	// Init Display Dialog
 	SendDlgItemMessage(hDlgDisplay, IDC_DISPLAY_BACKGROUND, EM_LIMITTEXT, MAX_PATH, 0);
-	SetDlgItemText(hDlgDisplay, IDC_DISPLAY_BACKGROUND, m_pOptions->GetBackImage().Str());
+	SetDlgItemText(hDlgDisplay, IDC_DISPLAY_BACKGROUND, m_pOptions->GetBackImage().c_str());
 
 	SetEditMenuSubclass(GetDlgItem(hDlgDisplay, IDC_DISPLAY_BACKGROUND), false);
 
@@ -324,7 +325,7 @@ void OptionDlg::OnInitDialog(WPARAM wParam, LPARAM lParam)
 
 	// Init Ident Dialog
 	SendDlgItemMessage(hDlgIdent, IDC_IDENT_USERNAME, EM_LIMITTEXT, 10, 0);
-	SetDlgItemText(hDlgIdent, IDC_IDENT_USERNAME, m_pOptions->GetIdentUser().Str());
+	SetDlgItemText(hDlgIdent, IDC_IDENT_USERNAME, m_pOptions->GetIdentUser().c_str());
 
 	SetEditMenuSubclass(GetDlgItem(hDlgIdent, IDC_IDENT_USERNAME), false);
 
@@ -345,7 +346,7 @@ void OptionDlg::OnInitDialog(WPARAM wParam, LPARAM lParam)
 		_ASSERTE(pFormat != NULL);
 
 		int index = SendDlgItemMessage(hDlgFormat, IDC_FORMAT_EVENT, CB_ADDSTRING, 0, 
-			(LPARAM)pFormat->GetEventName().Str());
+			(LPARAM)pFormat->GetEventName().c_str());
 		_ASSERTE(index != CB_ERR);
 		if(index != CB_ERR)
 		{
@@ -380,11 +381,11 @@ void OptionDlg::OnInitDialog(WPARAM wParam, LPARAM lParam)
 	SendDlgItemMessage(hDlgDCC, IDC_DCC_IGNORECHAT, BM_SETCHECK, m_pOptions->GetIgnoreChat() ? BST_CHECKED : BST_UNCHECKED, 0);
 	SendDlgItemMessage(hDlgDCC, IDC_DCC_IGNORESEND, BM_SETCHECK, m_pOptions->GetIgnoreSend() ? BST_CHECKED : BST_UNCHECKED, 0);
 
-	if(m_pOptions->GetLocalAddress().Size())
-		SetDlgItemText(hDlgDCC, IDC_DCC_LOCALIP, m_pOptions->GetLocalAddress().Str());
-	if(m_pOptions->GetDetectedAddress().Size())
-		SetDlgItemText(hDlgDCC, IDC_DCC_REMOTEIP, m_pOptions->GetDetectedAddress().Str());
-	SetDlgItemText(hDlgDCC, IDC_DCC_CUSTOMIP, m_pOptions->GetCustomAddress().Str());
+	if(m_pOptions->GetLocalAddress().size())
+		SetDlgItemText(hDlgDCC, IDC_DCC_LOCALIP, m_pOptions->GetLocalAddress().c_str());
+	if(m_pOptions->GetDetectedAddress().size())
+		SetDlgItemText(hDlgDCC, IDC_DCC_REMOTEIP, m_pOptions->GetDetectedAddress().c_str());
+	SetDlgItemText(hDlgDCC, IDC_DCC_CUSTOMIP, m_pOptions->GetCustomAddress().c_str());
 
 	SetDlgItemInt(hDlgDCC, IDC_DCC_FIRSTPORT, m_pOptions->GetDCCStartPort(), FALSE);
 	SetDlgItemInt(hDlgDCC, IDC_DCC_LASTPORT, m_pOptions->GetDCCEndPort(), FALSE);
@@ -392,7 +393,7 @@ void OptionDlg::OnInitDialog(WPARAM wParam, LPARAM lParam)
 	// Init Aboot Box
 	SetDlgItemText(hDlgAbout, IDC_ABOOT_VERSION, APP_VERSION_STRING);
 
-	SetDlgItemText(hDlgAbout, IDC_ABOOT_REGCODE, m_pOptions->GetRegCode().Str());
+	SetDlgItemText(hDlgAbout, IDC_ABOOT_REGCODE, m_pOptions->GetRegCode().c_str());
 	SetEditMenuSubclass(GetDlgItem(hDlgAbout, IDC_ABOOT_REGCODE), false);
 
 	// Gogogo!
@@ -494,7 +495,7 @@ void OptionDlg::OnOk()
 			uPort = POCKETIRC_DEFAULT_PORT;
 		}
 
-		String sPass;
+		tstring sPass;
 		GetDlgItemString(hDlgServer, IDC_OPTIONS_SERVERPASS, sPass);
 
 		m_pOptions->SetDefaultHost(szServerBuf, uPort, sPass);
@@ -623,7 +624,7 @@ void OptionDlg::OnServerNameSelEndOk()
 		if(pHost != NULL)
 		{
 			SetDlgItemInt(hDlgServer, IDC_OPTIONS_SERVERPORT, pHost->GetPort(), FALSE);
-			SetDlgItemText(hDlgServer, IDC_OPTIONS_SERVERPASS, pHost->GetPass().Str());
+			SetDlgItemText(hDlgServer, IDC_OPTIONS_SERVERPASS, pHost->GetPass().c_str());
 		}
 	}
 }
@@ -637,7 +638,7 @@ void OptionDlg::OnFormatSelEndOk()
 	if(pFormat != NULL)
 	{
 		SendDlgItemMessage(hDlgFormat, IDC_FORMAT_ENABLE, BM_SETCHECK, pFormat->IsEnabled() ? BST_CHECKED : BST_UNCHECKED, 0);
-		SetDlgItemText(hDlgFormat, IDC_FORMAT_STRING, pFormat->GetFormat().Str());
+		SetDlgItemText(hDlgFormat, IDC_FORMAT_STRING, pFormat->GetFormat().c_str());
 	}
 
 	InvalidateRect(GetDlgItem(hDlgFormat, IDC_FORMAT_EXAMPLE), NULL, FALSE);
@@ -825,12 +826,12 @@ void OptionDlg::OnDrawItem(WPARAM wParam, LPARAM lParam)
 
 			if(pFormat != NULL)
 			{
-				String sFmt = pFormat->GetFormat();
+				tstring sFmt = pFormat->GetFormat();
 
-				NetworkEvent event(IRC_CMD_UNKNOWN, 10, &String(_T("ZERO")), &String(_T("ONE")), &String(_T("TWO")), &String(_T("THREE")), &String(_T("FOUR")), &String(_T("FIVE")), &String(_T("SIX")), &String(_T("SEVEN")), &String(_T("EIGHT")), &String(_T("NINE")));
+				NetworkEvent event(IRC_CMD_UNKNOWN, 10, &tstring(_T("ZERO")), &tstring(_T("ONE")), &tstring(_T("TWO")), &tstring(_T("THREE")), &tstring(_T("FOUR")), &tstring(_T("FIVE")), &tstring(_T("SIX")), &tstring(_T("SEVEN")), &tstring(_T("EIGHT")), &tstring(_T("NINE")));
 				event.SetPrefix(_T("NICK!~IDENT@HOST"));
 
-				String sMsg = EventFormat(event, _T("YOU"), sFmt);
+				tstring sMsg = EventFormat(event, _T("YOU"), sFmt);
 
 				formatter.FormatOut(pdi->hDC, sMsg, pdi->rcItem, Formatter::FMT_WRAP);
 			}

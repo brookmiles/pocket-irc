@@ -60,9 +60,9 @@ static int GetStringID(LPCTSTR* ppszList, LPCTSTR psz, int iLast)
 // Static Utilities
 /////////////////////////////////////////////////////////////////////////////
 
-String NetworkEvent::EventIDToString(int idEvent)
+tstring NetworkEvent::EventIDToString(int idEvent)
 {
-	String sCmd;
+	tstring sCmd;
 
 	if(idEvent >= EVENT_OFFSET_COMMAND && idEvent <= IRC_CMD_UNKNOWN)
 	{
@@ -86,19 +86,19 @@ String NetworkEvent::EventIDToString(int idEvent)
 	return sCmd;
 }
 
-int NetworkEvent::EventStringToID(const String& sEvent)
+int NetworkEvent::EventStringToID(const tstring& sEvent)
 {
-	_ASSERTE(sEvent.Str() != NULL);
+	_ASSERTE(sEvent.c_str() != NULL);
 
 	int idEvent = IRC_CMD_INVALID;
-	if(sEvent.Size())
+	if(sEvent.size())
 	{
 		const int idUnknown = sizeof(COMMAND_EVENT_STRINGS)/sizeof(COMMAND_EVENT_STRINGS[0]) - 1;
-		int idString = GetStringID(COMMAND_EVENT_STRINGS, sEvent.Str(), idUnknown);
+		int idString = GetStringID(COMMAND_EVENT_STRINGS, sEvent.c_str(), idUnknown);
 
 		if(idString == idUnknown)
 		{
-			int idParsed = _ttoi(sEvent.Str());
+			int idParsed = _ttoi(sEvent.c_str());
 			if(idParsed > 0)
 			{
 				idEvent = idParsed;
@@ -116,15 +116,15 @@ int NetworkEvent::EventStringToID(const String& sEvent)
 	return idEvent;
 }
 
-int NetworkEvent::CTCPEventStringToID(const String& sEvent, bool bReply)
+int NetworkEvent::CTCPEventStringToID(const tstring& sEvent, bool bReply)
 {
-	_ASSERTE(sEvent.Str() != NULL);
+	_ASSERTE(sEvent.c_str() != NULL);
 
 	int idEvent = IRC_CTCP_UNKNOWN;
-	if(sEvent.Size())
+	if(sEvent.size())
 	{
 		const int idUnknown = sizeof(CTCP_EVENT_STRINGS)/sizeof(CTCP_EVENT_STRINGS[0]) - 1;
-		int idString = GetStringID(CTCP_EVENT_STRINGS, sEvent.Str(), idUnknown);
+		int idString = GetStringID(CTCP_EVENT_STRINGS, sEvent.c_str(), idUnknown);
 
 		if(bReply)
 		{
@@ -186,7 +186,7 @@ NetworkEvent::NetworkEvent(int idEvent, int nParams, ...)
 
 	for(int i = 0; i < nParams; ++i)
 	{
-		String* psParam = va_arg(va, String*);
+		tstring* psParam = va_arg(va, tstring*);
 		_ASSERTE(psParam != NULL);
 
 		AddParam(*psParam);
@@ -204,12 +204,12 @@ NetworkEvent::~NetworkEvent()
 // Interface
 /////////////////////////////////////////////////////////////////////////////
 
-void NetworkEvent::SetEvent(const String& sEvent)
+void NetworkEvent::SetEvent(const tstring& sEvent)
 {
 	m_sEvent = sEvent;
 }
 
-const String& NetworkEvent::GetEvent() const
+const tstring& NetworkEvent::GetEvent() const
 {
 	return m_sEvent;
 }
@@ -226,14 +226,13 @@ int NetworkEvent::GetEventID() const
 }
 
 
-UINT NetworkEvent::AddParam(const String& sParam)
+UINT NetworkEvent::AddParam(const tstring& sParam)
 {
-	UINT index = m_vecParams.Size();
-	m_vecParams[index] = sParam;
-	return index;
+	m_vecParams.push_back(sParam);
+	return GetParamCount();
 }
 
-const String& NetworkEvent::GetParam(UINT iParam) const
+const tstring& NetworkEvent::GetParam(UINT iParam) const
 {
 	_ASSERTE(iParam < GetParamCount());
 	return m_vecParams[iParam];
@@ -241,15 +240,15 @@ const String& NetworkEvent::GetParam(UINT iParam) const
 
 UINT NetworkEvent::GetParamCount() const
 {
-	return m_vecParams.Size();
+	return m_vecParams.size();
 }
 
-void NetworkEvent::SetPrefix(const String& sPrefix)
+void NetworkEvent::SetPrefix(const tstring& sPrefix)
 {
 	m_sPrefix = sPrefix;
 }
 
-const String& NetworkEvent::GetPrefix() const
+const tstring& NetworkEvent::GetPrefix() const
 {
 	return m_sPrefix;
 }

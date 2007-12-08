@@ -36,7 +36,7 @@ HRESULT DisplayWindow::Create()
 	
 	_ASSERTE(m_pMainWindow != NULL);
 
-	HRESULT hr = Window::Create(m_pMainWindow->GetWindow(), m_sTitle.Str(), WS_CHILD | WS_CLIPSIBLINGS, 0, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT);
+	HRESULT hr = Window::Create(m_pMainWindow->GetWindow(), m_sTitle.c_str(), WS_CHILD | WS_CLIPSIBLINGS, 0, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT);
 	_ASSERTE(SUCCEEDED(hr));
 
 	m_pMainWindow->AddWindowTab(this);
@@ -55,22 +55,22 @@ void DisplayWindow::SetMainWindow(MainWindow* pMainWindow)
 //	IDisplayWindow
 /////////////////////////////////////////////////////////////////////////////
 
-const String& DisplayWindow::GetKey()
+const tstring& DisplayWindow::GetKey()
 {
 	return m_sKey;
 }
 
-void DisplayWindow::SetKey(const String& sKey)
+void DisplayWindow::SetKey(const tstring& sKey)
 {
 	m_sKey = sKey;
 }
 
-const String& DisplayWindow::GetTitle()
+const tstring& DisplayWindow::GetTitle()
 {
 	return m_sTitle;
 }
 
-void DisplayWindow::SetTitle(const String& sTitle)
+void DisplayWindow::SetTitle(const tstring& sTitle)
 {
 	m_sTitle = sTitle;
 
@@ -99,7 +99,7 @@ void DisplayWindow::SetHighlight(int iHighlight)
 	}
 }
 
-void DisplayWindow::Print(const String& sText)
+void DisplayWindow::Print(const tstring& sText)
 {
 	m_View.AddLine(sText);
 }
@@ -251,10 +251,10 @@ LRESULT DisplayWindow::OnNotify(WPARAM wParam, LPARAM lParam)
 				{
 					_TRACE("...IDC_VIEW");
 
-					String str = m_View.GetSelectedWord();
-					if(str.Size())
+					tstring str = m_View.GetSelectedWord();
+					if(str.size())
 					{
-						str.Append(' ');
+						str.push_back(' ');
 						m_pMainWindow->InsertInput(str);
 					}
 				}
@@ -280,8 +280,8 @@ LRESULT DisplayWindow::OnNotify(WPARAM wParam, LPARAM lParam)
 					UINT iChar;
 					if(m_View.HitTestMsg((WORD)pt.x, (WORD)pt.y, &iMsg, &iChar))
 					{
-						String str = m_View.GetWordAtChar(iMsg, iChar);
-						_TRACE("...Word selected: \"%s\"", str.Str());
+						tstring str = m_View.GetWordAtChar(iMsg, iChar);
+						_TRACE("...Word selected: \"%s\"", str.c_str());
 
 						// Modify pt in place, map to screen coords
 						MapWindowPoints(m_hwnd, NULL, &pt, 1);
@@ -315,7 +315,7 @@ LRESULT DisplayWindow::OnNotify(WPARAM wParam, LPARAM lParam)
 //	Utilities
 /////////////////////////////////////////////////////////////////////////////
 
-void DisplayWindow::DoOffChannelMenu(WORD x, WORD y, const String& sChannel)
+void DisplayWindow::DoOffChannelMenu(WORD x, WORD y, const tstring& sChannel)
 {
 	HMENU hMenu = LoadMenu(GetModuleHandle(NULL), MAKEINTRESOURCE(IDR_OFFCHANNELMENU));
 	_ASSERTE(hMenu != NULL);
@@ -323,13 +323,13 @@ void DisplayWindow::DoOffChannelMenu(WORD x, WORD y, const String& sChannel)
 	UINT iCmd = TrackPopupMenuEx(GetSubMenu(hMenu, 0), TPM_BOTTOMALIGN | TPM_LEFTALIGN | TPM_RETURNCMD, 
 		x, y, m_hwnd, NULL);
 
-	String sInput = m_pMainWindow->GetInput();
+	tstring sInput = m_pMainWindow->GetInput();
 
 	switch(iCmd)
 	{
 		case ID_CHANNEL_JOIN:
 		{
-			if(sInput.Size() == 0)
+			if(sInput.size() == 0)
 			{
 				FavouriteChannel* pFavChan = g_Options.GetFavouriteChannelList().FindChannel(sChannel);
 				if(pFavChan)
@@ -346,7 +346,7 @@ void DisplayWindow::DoOffChannelMenu(WORD x, WORD y, const String& sChannel)
 	DestroyMenu(hMenu);
 }
 
-void DisplayWindow::DoUrlMenu(WORD x, WORD y, const String& sUrl)
+void DisplayWindow::DoUrlMenu(WORD x, WORD y, const tstring& sUrl)
 {
 	HMENU hMenu = LoadMenu(GetModuleHandle(NULL), MAKEINTRESOURCE(IDR_URLMENU));
 	_ASSERTE(hMenu != NULL);
@@ -358,7 +358,7 @@ void DisplayWindow::DoUrlMenu(WORD x, WORD y, const String& sUrl)
 	{
 		case ID_URL_BROWSE:
 		{
-			CreateProcess(_T("iexplore.exe"), sUrl.Str(), NULL, NULL, FALSE, 0, NULL, NULL, NULL, NULL);
+			CreateProcess(_T("iexplore.exe"), sUrl.c_str(), NULL, NULL, FALSE, 0, NULL, NULL, NULL, NULL);
 		}
 		break;
 	}

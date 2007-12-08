@@ -1,7 +1,6 @@
 #include "PocketIRC.h"
 #include "EditMenu.h"
 
-#include "StringT.h"
 #include "IrcStringFormat.h"
 
 #include "ChooseColor.h"
@@ -192,10 +191,10 @@ void TrackPopupEditMenu(HWND hEdit, int xPos, int yPos, bool bColors)
 					TCHAR* buf = new TCHAR[len + 1];
 					GetWindowText(hEdit, buf, len + 1);
 
-					String str = StringFormat::StripFormatting(buf);
+					tstring str = StringFormat::StripFormatting(buf);
 					delete buf;
 
-					SetWindowText(hEdit, str.Str());
+					SetWindowText(hEdit, str.c_str());
 				}
 			}
 			break;

@@ -1,8 +1,6 @@
 #ifndef _DISPLAYWINDOW_H_INCLUDED_
 #define _DISPLAYWINDOW_H_INCLUDED_
 
-#include "StringT.h"
-
 #include "Window.h"
 #include "View.h"
 
@@ -25,16 +23,16 @@ public:
 	virtual void SetMainWindow(MainWindow* pMainWindow);
 
 // IDisplayWindow
-	virtual const String& GetKey();
-	virtual void SetKey(const String& sTitle);
+	virtual const tstring& GetKey();
+	virtual void SetKey(const tstring& sTitle);
 
-	virtual const String& GetTitle();
-	virtual void SetTitle(const String& sTitle);
+	virtual const tstring& GetTitle();
+	virtual void SetTitle(const tstring& sTitle);
 
 	virtual int GetHighlight();
 	virtual void SetHighlight(int iHighlight);
 
-	virtual void Print(const String& sText);
+	virtual void Print(const tstring& sText);
 	virtual void PrintEvent(const DisplayEvent& displayEvent);
 
 	virtual void OnEvent(const NetworkEvent& networkEvent);
@@ -43,7 +41,7 @@ public:
 
 // ITabWindow
 	virtual HWND GetTabWindow(){ return GetWindow(); }
-	virtual const String GetTabTitle(){ return GetText(); }
+	virtual const tstring GetTabTitle(){ return GetText(); }
 	virtual void OnOptionsChanged(){ m_View.Update(true); }
 	virtual void DoDefaultAction();
 	virtual void DoMenu(POINT pt);
@@ -58,13 +56,13 @@ protected:
 
 	virtual bool OnTabMenuCommand(UINT idCmd) { return false; }
 
-	void DoOffChannelMenu(WORD x, WORD y, const String& sChannel);
-	void DoUrlMenu(WORD x, WORD y, const String& sUrl);
+	void DoOffChannelMenu(WORD x, WORD y, const tstring& sChannel);
+	void DoUrlMenu(WORD x, WORD y, const tstring& sUrl);
 
 	MainWindow* m_pMainWindow;
 
-	String m_sKey;
-	String m_sTitle;
+	tstring m_sKey;
+	tstring m_sTitle;
 	int m_iHighlight;
 	bool m_bActive;
 

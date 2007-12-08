@@ -94,14 +94,14 @@ static HFONT g_hfControl = NULL;
 static HBITMAP g_hbmBack = NULL;
 static HBRUSH g_hbrBack = NULL;
 
-static String g_sLocalAddress;
-static String g_sDetectedAddress;
+static tstring g_sLocalAddress;
+static tstring g_sDetectedAddress;
 
 
 /////////////////////////////////////////////////////////////////////////////
 //	Static Utility Methods
 /////////////////////////////////////////////////////////////////////////////
-const String& Options::GetEventFormat(int idEvent, bool bIncoming)
+const tstring& Options::GetEventFormat(int idEvent, bool bIncoming)
 {
 	Format* pFormat = g_Options.GetFormatList().GetFormat(idEvent, bIncoming);
 	_ASSERTE(pFormat != NULL);
@@ -109,7 +109,7 @@ const String& Options::GetEventFormat(int idEvent, bool bIncoming)
 	return pFormat->GetFormat();
 }
 
-const String Options::GetDefaultFormat(int idEvent, bool bIncoming)
+const tstring Options::GetDefaultFormat(int idEvent, bool bIncoming)
 {
 	for(int i = 0; i < sizeof(POCKETIRC_FORMAT)/sizeof(POCKETIRC_FORMAT[0]); ++i)
 	{
@@ -118,7 +118,7 @@ const String Options::GetDefaultFormat(int idEvent, bool bIncoming)
 			return POCKETIRC_FORMAT[i].def;
 		}
 	}
-	return String();
+	return tstring();
 }
 
 bool Options::GetDefaultEnable(int idEvent, bool bIncoming)
@@ -162,9 +162,9 @@ void Options::UpdateResourceCache()
 		g_hbmBack = NULL;
 	}
 
-	if(g_Options.GetBackImage().Size() > 0)
+	if(g_Options.GetBackImage().size() > 0)
 	{
-		g_hbmBack = ImageFileLoad(g_Options.GetBackImage().Str());
+		g_hbmBack = ImageFileLoad(g_Options.GetBackImage().c_str());
 	}
 
 	if(g_hbrBack)
@@ -184,7 +184,7 @@ void Options::UpdateResourceCache()
 	ZeroMemory(&lf, sizeof(lf));
 	lf.lfQuality = DEFAULT_QUALITY;
 
-	_tcsncpy(lf.lfFaceName, g_Options.GetFontName().Str(), sizeof(lf.lfFaceName)/sizeof(TCHAR));
+	_tcsncpy(lf.lfFaceName, g_Options.GetFontName().c_str(), sizeof(lf.lfFaceName)/sizeof(TCHAR));
 	lf.lfFaceName[sizeof(lf.lfFaceName)/sizeof(TCHAR) - 1] = '\0';
 
 	int logpix = GetDeviceCaps(GetDC(NULL), LOGPIXELSY);
@@ -211,7 +211,7 @@ bool Options::IsRegistered()
 #ifndef DEBUG
 	DWORD dwCode = 0x0BADBABE;
 	DWORD dwReg = 0;
-	dwReg = _tcstoul(g_Options.GetRegCode().Str(), NULL, 16);
+	dwReg = _tcstoul(g_Options.GetRegCode().c_str(), NULL, 16);
 
 	return (~dwReg == dwCode) || PresButan();
 #else
@@ -221,30 +221,30 @@ bool Options::IsRegistered()
 
 bool Options::PresButan()
 {
-	return (_tcscmp(g_Options.GetRegCode().Str(), _T("pres butan")) == 0);
+	return (_tcscmp(g_Options.GetRegCode().c_str(), _T("pres butan")) == 0);
 }
 
-void Options::SetLocalAddress(const String& sAddr)
+void Options::SetLocalAddress(const tstring& sAddr)
 {
 	g_sLocalAddress = sAddr;
 }
 
-void Options::SetDetectedAddress(const String& sAddr)
+void Options::SetDetectedAddress(const tstring& sAddr)
 {
 	g_sDetectedAddress = sAddr;
 }
 
-String Options::GetLocalAddress()
+tstring Options::GetLocalAddress()
 {
 	return g_sLocalAddress;
 }
 
-String Options::GetDetectedAddress()
+tstring Options::GetDetectedAddress()
 {
 	return g_sDetectedAddress;
 }
 
-String Options::GetAddress()
+tstring Options::GetAddress()
 {
 	if(g_Options.GetLocalAddressMethod() == 0)
 	{
@@ -262,7 +262,7 @@ String Options::GetAddress()
 	return 0;
 }
 
-void Options::SetDefaultHost(const String& sHost, USHORT uPort, const String& sPass)
+void Options::SetDefaultHost(const tstring& sHost, USHORT uPort, const tstring& sPass)
 {
 	// Add to server list
 	HostList& lstHosts = GetHostList();
@@ -380,7 +380,7 @@ const Options& Options::operator=(Options& from)
 /////////////////////////////////////////////////////////////////////////////
 //	Interface
 /////////////////////////////////////////////////////////////////////////////
-void Options::SetRealName(const String& sRealName) 
+void Options::SetRealName(const tstring& sRealName) 
 {
 	if(IsRegistered())
 	{
@@ -388,7 +388,7 @@ void Options::SetRealName(const String& sRealName)
 	}
 }
 
-void Options::SetQuitMsg(const String& sQuitMsg) 
+void Options::SetQuitMsg(const tstring& sQuitMsg) 
 {
 	if(IsRegistered())
 	{
@@ -396,7 +396,7 @@ void Options::SetQuitMsg(const String& sQuitMsg)
 	}
 }
 
-const String Options::GetRealName() 
+const tstring Options::GetRealName() 
 {
 	if(IsRegistered())
 	{
@@ -408,7 +408,7 @@ const String Options::GetRealName()
 	}
 }
 
-const String Options::GetQuitMsg() 
+const tstring Options::GetQuitMsg() 
 {
 	if(IsRegistered())
 	{
@@ -420,9 +420,9 @@ const String Options::GetQuitMsg()
 	}
 }
 
-HRESULT Options::Save(HKEY hkRoot, const String& sKeyName)
+HRESULT Options::Save(HKEY hkRoot, const tstring& sKeyName)
 {
-	_TRACE("Options(0x%08X)::Save(0x%08X, \"%s\")", this, hkRoot, sKeyName.Str());
+	_TRACE("Options(0x%08X)::Save(0x%08X, \"%s\")", this, hkRoot, sKeyName.c_str());
 	_ASSERTE(hkRoot != NULL);
 
 	RegKey key(hkRoot, sKeyName);
@@ -521,9 +521,9 @@ HRESULT Options::Save(HKEY hkRoot, const String& sKeyName)
 	return S_OK;
 }
 
-HRESULT Options::Load(HKEY hkRoot, const String& sKeyName)
+HRESULT Options::Load(HKEY hkRoot, const tstring& sKeyName)
 {
-	_TRACE("Options(0x%08X)::Load(0x%08X, \"%s\")", this, hkRoot, sKeyName.Str());
+	_TRACE("Options(0x%08X)::Load(0x%08X, \"%s\")", this, hkRoot, sKeyName.c_str());
 	_ASSERTE(hkRoot != NULL);
 
 	RegKey key(hkRoot, sKeyName);
@@ -534,16 +534,16 @@ HRESULT Options::Load(HKEY hkRoot, const String& sKeyName)
 
 	// Host List
 	RegKey keyHosts(key, _T("Host"));
-	String sDefHost = keyHosts.GetString(_T(""), _T(""));
+	tstring sDefHost = keyHosts.GetString(_T(""), _T(""));
 	
 	m_lstHosts.Clear();
 	DWORD dwIndex = 0;
-	String sHost;
+	tstring sHost;
 	while(keyHosts.EnumKey(dwIndex++, sHost))
 	{
 		RegKey keyHost(keyHosts, sHost);
 		USHORT uPort = (USHORT)keyHost.GetDWORD(_T("Port"), 6667);
-		String sPass = keyHost.GetString(_T("Pass"), _T(""));
+		tstring sPass = keyHost.GetString(_T("Pass"), _T(""));
 
 		Host* pHost = NULL;
 		m_lstHosts.AddHost(sHost, uPort, &pHost);
@@ -551,7 +551,7 @@ HRESULT Options::Load(HKEY hkRoot, const String& sKeyName)
 
 		pHost->SetPass(sPass);
 
-		if(sDefHost.Compare(sHost, false))
+		if(_tcsicmp(sDefHost.c_str(), sHost.c_str()) == 0)
 		{
 			m_lstHosts.SetDefault(pHost);
 		}
@@ -575,17 +575,17 @@ HRESULT Options::Load(HKEY hkRoot, const String& sKeyName)
 	m_favChannels.Clear();
 
 	RegKey keyChannels(key, _T("Channels"));
-	String sChannel;
+	tstring sChannel;
 	DWORD dwChan = 0;
 	while(keyChannels.EnumKey(dwChan++, sChannel))
 	{
 		RegKey keyChan(keyChannels, sChannel);
 
-		String sName = keyChan.GetString(_T("Name"), _T(""));
-		String sKey = keyChan.GetString(_T("Key"), _T(""));
+		tstring sName = keyChan.GetString(_T("Name"), _T(""));
+		tstring sKey = keyChan.GetString(_T("Key"), _T(""));
 		bool autoJoin = keyChan.GetBool(_T("AutoJoinOnConnect"), false);
 
-		if(sName != String(_T("")))
+		if(sName != tstring(_T("")))
 			m_favChannels.AddChannel(sName, sKey, autoJoin);
 	}
 

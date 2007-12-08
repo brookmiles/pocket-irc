@@ -1,8 +1,6 @@
 #ifndef _STATUSWINDOW_H_INCLUDED_
 #define _STATUSWINDOW_H_INCLUDED_
 
-#include "StringT.h"
-
 #include "Core\Session.h"
 
 #include "DisplayWindow.h"

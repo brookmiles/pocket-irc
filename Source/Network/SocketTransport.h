@@ -32,10 +32,10 @@ public:
 	HRESULT Write(BYTE *pData, UINT nSize);
 
 // ITransport
-	HRESULT Connect(const String& sHostName, USHORT uPort);
+	HRESULT Connect(const tstring& sHostName, USHORT uPort);
 	HRESULT Close();
 	bool IsOpen();
-	String GetLocalAddress();
+	tstring GetLocalAddress();
 
 private:
 	static DWORD CALLBACK ThreadProc(LPVOID lpv);
@@ -52,7 +52,7 @@ private:
 	ISocketNotify* m_pNotify;
 	SOCKET m_socket;
 
-	String m_sHostName;
+	tstring m_sHostName;
 	USHORT m_uPort;
 };
 

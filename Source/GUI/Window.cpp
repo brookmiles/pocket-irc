@@ -1,6 +1,7 @@
 #include "PocketIRC.h"
 #include "Window.h"
 
+#include "WindowString.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // Static Initialisation and Cleanup
@@ -97,15 +98,15 @@ Window::~Window()
 //	Window Creation
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT Window::Create(HWND hParent, const String& sTitle, DWORD dwStyles, UINT uID, int x, int y, int w, int h)
+HRESULT Window::Create(HWND hParent, const tstring& sTitle, DWORD dwStyles, UINT uID, int x, int y, int w, int h)
 {
-	_TRACE("Window(0x%08X)::Create(0x%08X, \"%s\", 0x%08X, %u) \"%s\"", this, hParent, sTitle.Str(), dwStyles, uID, GetClassName());
+	_TRACE("Window(0x%08X)::Create(0x%08X, \"%s\", 0x%08X, %u) \"%s\"", this, hParent, sTitle.c_str(), dwStyles, uID, GetClassName());
 
 	_ASSERTE(IsWindow(hParent) || hParent == NULL);
 
 	HRESULT hr = E_UNEXPECTED;
 
-	HWND hwnd = CreateWindow(GetClassName(), sTitle.Str(), dwStyles, 
+	HWND hwnd = CreateWindow(GetClassName(), sTitle.c_str(), dwStyles, 
 		x, y, w, h, hParent, (HMENU)uID, GetModuleHandle(NULL), (void*)this);
 
 	_ASSERTE(IsWindow(hwnd));
@@ -123,16 +124,15 @@ HRESULT Window::Create(HWND hParent, const String& sTitle, DWORD dwStyles, UINT 
 	return hr;
 }
 
-String Window::GetText()
+tstring Window::GetText()
 {
 	int len = GetWindowTextLength(m_hwnd);
 
 	if(len > 0)
 	{
-		String sTitle;
-		sTitle.Reserve(len + 1);
+		tstring sTitle;
 
-		GetWindowText(m_hwnd, sTitle.Str(), len + 1);
+		GetWindowString(m_hwnd, sTitle);
 		return sTitle;
 	}
 	

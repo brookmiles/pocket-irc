@@ -47,7 +47,7 @@ DCCChat::~DCCChat()
 //	Interface
 /////////////////////////////////////////////////////////////////////////////
 
-void DCCChat::IncomingRequest(const String& sRemoteUser, ULONG ulRemoteAddress, USHORT ulRemotePort)
+void DCCChat::IncomingRequest(const tstring& sRemoteUser, ULONG ulRemoteAddress, USHORT ulRemotePort)
 {
 	USES_CONVERSION;
 
@@ -63,7 +63,7 @@ void DCCChat::IncomingRequest(const String& sRemoteUser, ULONG ulRemoteAddress, 
 	m_uRemotePort = ulRemotePort;
 }
 
-bool DCCChat::OutgoingRequest(const String& sRemoteUser)
+bool DCCChat::OutgoingRequest(const tstring& sRemoteUser)
 {
 	USES_CONVERSION;
 
@@ -162,15 +162,15 @@ void DCCChat::Close()
 	m_pDCCHandler->RemoveSession(this);
 }
 
-String DCCChat::GetDescription()
+tstring DCCChat::GetDescription()
 {
-	String str = m_bIncoming ? _T("CHAT From ") : _T("CHAT To ");
+	tstring str = m_bIncoming ? _T("CHAT From ") : _T("CHAT To ");
 	str += GetPrefixNick(m_sRemoteUser);
 
 	return str;
 }
 
-String DCCChat::GetRemoteUser()
+tstring DCCChat::GetRemoteUser()
 {
 	return GetPrefixNick(m_sRemoteUser);
 }
@@ -241,8 +241,8 @@ void DCCChat::OnLineRead(LPCTSTR pszLine)
 {
 	_TRACE("DCCChat(0x%08X)::OnLineRead(\"%s\")", this, pszLine);
 
-	String sFakeLine;
-	sFakeLine.Reserve(POCKETIRC_MAX_IRC_LINE_LEN);
+	tstring sFakeLine;
+	sFakeLine.reserve(POCKETIRC_MAX_IRC_LINE_LEN);
 
 	sFakeLine += _T(":");
 	sFakeLine += m_sRemoteUser;
@@ -252,7 +252,7 @@ void DCCChat::OnLineRead(LPCTSTR pszLine)
 	sFakeLine += pszLine;
 
 	NetworkEvent event;
-	Reader::ParseEvent(event, sFakeLine.Str());
+	Reader::ParseEvent(event, sFakeLine.c_str());
 	event.SetIncoming(true);
 
 	m_pChatWindow->OnEvent(event);
@@ -309,14 +309,14 @@ bool DCCChat::OnAccept(HRESULT hr, SocketTransport* pTransport, LPCTSTR psz)
 // IDCCChat
 /////////////////////////////////////////////////////////////////////////////
 
-void DCCChat::Say(const String& str)
+void DCCChat::Say(const tstring& str)
 {
-	_TRACE("DCCChat(0x%08X)::Say(\"%s\")", this, str.Str());
+	_TRACE("DCCChat(0x%08X)::Say(\"%s\")", this, str.c_str());
 
 	if(m_pTransport && m_pTransport->IsOpen())
 	{
 		USES_CONVERSION;
-		const char* msg = T2CA(str.Str());
+		const char* msg = T2CA(str.c_str());
 		m_pTransport->Write((BYTE*)msg, strlen(msg));
 		m_pTransport->Write((BYTE*)"\r\n", 2);
 
@@ -329,14 +329,14 @@ void DCCChat::Say(const String& str)
 	}
 }
 
-void DCCChat::Act(const String& str)
+void DCCChat::Act(const tstring& str)
 {
-	_TRACE("DCCChat(0x%08X)::Act(\"%s\")", this, str.Str());
+	_TRACE("DCCChat(0x%08X)::Act(\"%s\")", this, str.c_str());
 
 	if(m_pTransport && m_pTransport->IsOpen())
 	{
 		USES_CONVERSION;
-		const char* msg = T2CA(str.Str());
+		const char* msg = T2CA(str.c_str());
 		m_pTransport->Write((BYTE*)"\x01" "ACTION ", 8);
 		m_pTransport->Write((BYTE*)msg, strlen(msg));
 		m_pTransport->Write((BYTE*)"\x01\r\n", 3);

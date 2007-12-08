@@ -1,8 +1,9 @@
 #include "PocketIRC.h"
 #include "IrcString.h"
 
-static const TCHAR validchars[] = _T("abcdefghijklmnopqsrtuvwxyzABCDEFGHIJKLMNOPQSRTUVWXYZ1234567890^[]{}\\|`_-@.");
-static const TCHAR validfirst[] = _T("abcdefghijklmnopqsrtuvwxyzABCDEFGHIJKLMNOPQSRTUVWXYZ^[]{}\\|`_");
+// These are pretty useless, "standard" my ass
+//static const TCHAR validchars[] = _T("abcdefghijklmnopqsrtuvwxyzABCDEFGHIJKLMNOPQSRTUVWXYZ1234567890^[]{}\\|`_-@.");
+//static const TCHAR validfirst[] = _T("abcdefghijklmnopqsrtuvwxyzABCDEFGHIJKLMNOPQSRTUVWXYZ^[]{}\\|`_");
 
 int IrcStringGetWord(LPTSTR dst, LPCTSTR src, int iMaxLen, LPCTSTR* ppEnd)
 {
@@ -23,13 +24,6 @@ int IrcStringGetWord(LPTSTR dst, LPCTSTR src, int iMaxLen, LPCTSTR* ppEnd)
 	return i;
 }
 
-//LPCTSTR StringSkipWhite(LPCTSTR psz)
-//{
-//	LPCTSTR seek = psz;
-//	while(*seek != '\0' && _istspace(*seek))
-//		++seek;
-//	return seek;
-//}
 
 // I have seen non-breaking spaces used in EFNet channels, so we can't arbitrarily skip whitespace.  
 // IRC protocol specifies a single spaces as a parameter seperator
@@ -41,113 +35,110 @@ LPCTSTR IrcStringSkipSpaces(LPCTSTR psz)
 	return seek;
 }
 
-bool IsNick(const String& sNick)
+bool IsNick(const tstring& sNick)
 {
-	return sNick[0] != '\0' && _tcschr(validfirst, sNick[0]) != NULL && 
-		_tcsspn(sNick.Str(), validchars) == sNick.Size();
+	return !IsChannel(sNick);
 }
 
-bool IsChannel(const String& sChannel)
-{
-	return (sChannel[0] == '#' || sChannel[0] == '&' || sChannel[0] == '+' || 
-		sChannel[0] == '!') && (_tcschr(sChannel.Str(), ' ') == NULL);
-}
 
-bool IsUserString(const String& sUser)
+bool IsChannel(const tstring& sChannel)
 {
-	TCHAR* pc;
-	return ((pc = _tcschr(sUser.Str(), '!')) != NULL) && 
-		(_tcschr(pc + 1, '@') != NULL);
-}
-
-String GetPrefixNick(const String& sPrefix)
-{
-	if(sPrefix.Str())
+	switch(sChannel[0])
 	{
-		TCHAR* pNickEnd = _tcschr(sPrefix.Str(), '!');
-		if(pNickEnd)
+	case '#':
+	case '&':
+	case '+':
+	case '!':
+		return true;
+	default:
+		return false;
+	}
+}
+
+bool IsUserString(const tstring& sUser)
+{
+	tstring::size_type c;
+	return ((c = sUser.find_first_of('!')) != tstring::npos) && 
+		((c = sUser.find_first_of('@', ++c)) != tstring::npos);
+}
+
+tstring GetPrefixNick(const tstring& sPrefix)
+{
+	if(sPrefix.size())
+	{
+		tstring::size_type c = sPrefix.find_first_of('!');
+		if(c != tstring::npos)
 		{
-			return String(sPrefix, pNickEnd - sPrefix.Str());
+			return sPrefix.substr(0, c);
 		}
 		else
 		{
 			return sPrefix;
 		}
 	}
-	return String(_T(""));
+	return _T("");
 }
 
-String GetPrefixIdent(const String& sPrefix)
+tstring GetPrefixIdent(const tstring& sPrefix)
 {
-	if(sPrefix.Str())
+	if(sPrefix.size())
 	{
-		TCHAR* pIdentStart = _tcschr(sPrefix.Str(), '!');
-		if(pIdentStart)
+		tstring::size_type start = sPrefix.find_first_of('!');
+		if(start != tstring::npos)
 		{
-			++pIdentStart;
+			++start;
 
-			TCHAR* pIdentEnd = _tcschr(pIdentStart, '@');
-			if(pIdentEnd)
+			tstring::size_type end = sPrefix.find_first_of('@', start);
+			if(end != tstring::npos)
 			{
-				return String(pIdentStart, pIdentEnd - pIdentStart);
+				return sPrefix.substr(start, end - start);
 			}
-		}
-	}
-	return String(_T(""));
-}
-
-String GetPrefixHost(const String& sPrefix)
-{
-	if(sPrefix.Str())
-	{
-		TCHAR* pIdentStart = _tcschr(sPrefix.Str(), '!');
-		if(pIdentStart)
-		{
-			++pIdentStart;
-			TCHAR* pIdentEnd = _tcschr(pIdentStart, '@');
-			if(pIdentEnd)
-			{
-				++pIdentEnd;
-				return String(pIdentEnd);
-			}
-		}
-	}
-	return String(_T(""));
-}
-
-String StripNick(const String& sNick)
-{
-	UINT nCharStart = (UINT)_tcscspn(sNick.Str(), validfirst);
-
-	if(nCharStart < sNick.Size())
-	{
-		UINT nChars = (UINT)_tcsspn(sNick.Str() + nCharStart, validchars);
-		if(nChars > 0)
-		{
-			return sNick.SubStr(nCharStart, nChars);
 		}
 	}
 	return _T("");
 }
 
-bool IsUrl(const String& sUrl)
+tstring GetPrefixHost(const tstring& sPrefix)
 {
-	if(_tcsnicmp(_T("http://"), sUrl.Str(), 7) == 0)
-		return true;
-	else if(_tcsnicmp(_T("www."), sUrl.Str(), 4) == 0)
-		return true;
-	else
-		return false;
+	if(sPrefix.size())
+	{
+		tstring::size_type start = sPrefix.find_first_of('!');
+		if(start != tstring::npos)
+		{
+			start = sPrefix.find_first_of('@', ++start);
+			if(start != tstring::npos)
+			{
+				return sPrefix.substr(++start);
+			}
+		}
+	}
+	return _T("");
 }
 
-bool NickHasMode(const String& sNick, TCHAR mode)
+tstring StripNick(const tstring& sNick, const tstring& sModeChars)
 {
-	UINT nCharStart = (UINT)_tcscspn(sNick.Str(), validfirst);
-	if(nCharStart < sNick.Size())
+	tstring::size_type start = sNick.find_first_not_of(sModeChars);
+	if(start != tstring::npos)
 	{
-		String sModes = sNick.SubStr(0, nCharStart);
-		TCHAR* chr = _tcschr(sModes.Str(), mode);
-		return chr != NULL;
+		return sNick.substr(start);
 	}
+	return _T("");
+}
+
+bool IsUrl(const tstring& sUrl)
+{
+	tstring url = _T("http://");
+	if(sUrl.compare(0, url.size(), url))
+		return true;
+
+	url = _T("www.");
+	if(sUrl.compare(0, url.size(), url))
+		return true;
+	
 	return false;
+}
+
+bool NickHasMode(const tstring& sNick, TCHAR mode)
+{
+	return (sNick.find_first_of(mode) != tstring::npos);
 }

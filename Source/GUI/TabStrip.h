@@ -2,8 +2,6 @@
 #define _TABSTRIP_H_INCLUDED_
 
 #include "Window.h"
-#include "Vector.h"
-#include "StringT.h"
 
 //#define TABSTRIP_DEF_HEIGHT	22
 #define TABSTRIP_MAX_TEXT_LEN 32
@@ -16,7 +14,7 @@ class TabStrip : public Window
 	class TabStripItem
 	{
 	public:
-		String sText;
+		tstring sText;
 		HWND hActivate;
 		LPARAM lParam;
 		int iWidth;
@@ -32,13 +30,13 @@ public:
 	void Update();
 	bool UpdateSelection();
 
-	UINT AddTab(const String& sTitle, HWND hActivate, LPARAM lParam);
+	UINT AddTab(const tstring& sTitle, HWND hActivate, LPARAM lParam);
 	bool RemoveTab(UINT uIndex);
 	bool FindTab(LPARAM lParam, UINT* pResult);
 
 	bool GetTabParam(UINT uIndex, LPARAM* pParam);
 	bool SetTabColor(UINT uIndex, COLORREF color, bool bRedraw);
-	bool SetTabText(UINT uIndex, const String& sText, bool bRedraw);
+	bool SetTabText(UINT uIndex, const tstring& sText, bool bRedraw);
 
 	bool GetCurSel(UINT* pResult);
 	void SetCurSel(UINT uIndex);
@@ -62,7 +60,7 @@ private:
 	void OnLButtonUp(WPARAM wParam, LPARAM lParam);
 	void OnCaptureChanged(WPARAM wParam, LPARAM lParam);
 
-	Vector<TabStripItem*> m_vecItems;
+	std::vector<TabStripItem*> m_vecItems;
 
 	UINT m_uSelected;
 	UINT m_uStart;

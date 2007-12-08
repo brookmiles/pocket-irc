@@ -1,13 +1,10 @@
 #ifndef _NICKLIST_H_INCLUDED_
 #define _NICKLIST_H_INCLUDED_
 
-#include "StringT.h"
-#include "Vector.h"
-
 class NickListEntry
 {
 public:
-	String nick;
+	tstring nick;
 	bool op;
 	bool voice;
 };
@@ -18,17 +15,17 @@ public:
 	NickList();
 	~NickList();
 
-	void AddNick(const String& sNick, bool bOp, bool bVoice);
-	void RemoveNick(const String& sNick);
+	void AddNick(const tstring& sNick, bool bOp, bool bVoice);
+	void RemoveNick(const tstring& sNick);
 	void Clear();
 
 	UINT Count();
-	UINT Find(const String& sNick);
+	UINT Find(const tstring& sNick);
 	NickListEntry* GetEntry(UINT i);
-	NickListEntry* GetEntry(const String& sNick);
+	NickListEntry* GetEntry(const tstring& sNick);
 
 private:
-	Vector<NickListEntry*> m_vecNicks;
+	std::vector<NickListEntry*> m_vecNicks;
 };
 
 #endif//_NICKLIST_H_INCLUDED_

@@ -1,6 +1,8 @@
 #include "PocketIRC.h"
 #include "SocketNotifyWindow.h"
 
+#include "VectorUtil.h"
+
 ISocketNotify* ISocketNotify::Instance = NULL;
 
 typedef struct _RECVNOTIFYINFO {
@@ -51,7 +53,7 @@ HRESULT SocketNotifyWindow::Create()
 
 bool SocketNotifyWindow::IsValidSink(LPARAM lParam)
 {
-	return m_vecValidSinks.Find(lParam) != Vector<LPARAM>::NPOS;
+	return std::find(m_vecValidSinks.begin(), m_vecValidSinks.end(), lParam) != m_vecValidSinks.end();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -60,16 +62,12 @@ bool SocketNotifyWindow::IsValidSink(LPARAM lParam)
 
 void SocketNotifyWindow::AddSink(LPARAM lParam)
 {
-	m_vecValidSinks.Append(lParam);
+	m_vecValidSinks.push_back(lParam);
 }
 
 void SocketNotifyWindow::RemoveSink(LPARAM lParam)
 {
-	UINT index = m_vecValidSinks.Find(lParam);
-	if(index != Vector<LPARAM>::NPOS)
-	{
-		m_vecValidSinks.Erase(index);
-	}
+	Erase(m_vecValidSinks, lParam);
 }
 
 bool SocketNotifyWindow::RecvNotify(IRecvNotifySink *pSink, int iRecv, LPARAM lParam)

@@ -54,9 +54,9 @@ DWORD CALLBACK SocketAccepter::AcceptThreadProc(LPVOID lpv)
 		if(accepted != INVALID_SOCKET)
 		{
 			USES_CONVERSION;
-			String sAddr = A2CT(inet_ntoa(sa.sin_addr));
+			tstring sAddr = A2CT(inet_ntoa(sa.sin_addr));
 
-			bDone = pNotify->AcceptNotify(pAccepter, accepted, (LPARAM)sAddr.Str());
+			bDone = pNotify->AcceptNotify(pAccepter, accepted, (LPARAM)sAddr.c_str());
 		}
 		else
 		{

@@ -11,8 +11,6 @@
 #include "IDCCChat.h"
 #include "DCCChatWindow.h"
 
-#include "Vector.h"
-
 class Session;
 
 class DCCHandler : 
@@ -41,27 +39,27 @@ public:
 	UINT GetSessionCount();
 	IDCCSession* GetSession(UINT i);
 
-	String GetNick() { return m_pSession->GetNick(); }
+	tstring GetNick() { return m_pSession->GetNick(); }
 
 	void RemoveSession(IDCCSession* pSession);
 	void AddSession(IDCCSession* pSession);
 
-	void Chat(const String& sUser);
-	void Send(const String& sUser);
+	void Chat(const tstring& sUser);
+	void Send(const tstring& sUser);
 
 private:
 	DCCListWindow* GetDCCListWindow(bool bEnsureCreated = false);
-	bool OnSend(const String& sPrefix, const String& sFileName, ULONG ulAddr, USHORT usPort, ULONG ulSize);
-	bool OnChat(const String& sPrefix, const String& sType, ULONG ulAddr, USHORT usPort);
-	bool OnResume(const String& sPrefix, const String& sFileName, USHORT usPort, ULONG ulSize);
-	bool OnAccept(const String& sPrefix, const String& sFileName, USHORT usPort, ULONG ulSize);
+	bool OnSend(const tstring& sPrefix, const tstring& sFileName, ULONG ulAddr, USHORT usPort, ULONG ulSize);
+	bool OnChat(const tstring& sPrefix, const tstring& sType, ULONG ulAddr, USHORT usPort);
+	bool OnResume(const tstring& sPrefix, const tstring& sFileName, USHORT usPort, ULONG ulSize);
+	bool OnAccept(const tstring& sPrefix, const tstring& sFileName, USHORT usPort, ULONG ulSize);
 
 	MainWindow* m_pMainWindow;
 	Session* m_pSession;
 	ISocketNotify* m_pSockNotify;
 
 	DCCListWindow* m_pDCCListWindow;
-	Vector<IDCCSession*> m_Sessions;
+	std::vector<IDCCSession*> m_Sessions;
 };
 
 #endif//_DCCHANDLER_H_INCLUDED_

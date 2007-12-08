@@ -1,8 +1,6 @@
 #ifndef _DCCLISTWINDOW_H_INCLUDED_
 #define _DCCLISTWINDOW_H_INCLUDED_
 
-#include "StringT.h"
-
 #include "GUI\Window.h"
 #include "GUI\MainWindow.h"
 
@@ -35,7 +33,7 @@ public:
 
 // ITabWindow
 	HWND GetTabWindow(){ return GetWindow(); }
-	const String GetTabTitle(){ return GetText(); }
+	const tstring GetTabTitle(){ return GetText(); }
 	void OnOptionsChanged() {}
 	void DoMenu(POINT pt);
 	void DoDefaultAction() {}

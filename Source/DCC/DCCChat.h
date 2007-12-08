@@ -1,7 +1,6 @@
 #ifndef _DCCCHAT_H_INCLUDED_
 #define _DCCCHAT_H_INCLUDED_
 
-#include "StringT.h"
 #include "IDCCSession.h"
 
 #include "Network\SocketTransport.h"
@@ -26,12 +25,12 @@ public:
 
 	void SetDCCHandler(DCCHandler* pDCCHandler) { m_pDCCHandler = pDCCHandler; }
 
-	void IncomingRequest(const String& sRemoteUser, ULONG ulRemoteAddress, USHORT ulRemotePort);
-	bool OutgoingRequest(const String& sRemoteUser);
+	void IncomingRequest(const tstring& sRemoteUser, ULONG ulRemoteAddress, USHORT ulRemotePort);
+	bool OutgoingRequest(const tstring& sRemoteUser);
 
 // IDCCChat
-	void Say(const String& str);
-	void Act(const String& str);
+	void Say(const tstring& str);
+	void Act(const tstring& str);
 	void CloseChat();
 
 // IDCCSession
@@ -42,12 +41,12 @@ public:
 	void Accept();
 	void Close();
 
-	String GetRemoteUser();
-	String GetRemoteHost() { return m_sRemoteHost; }
+	tstring GetRemoteUser();
+	tstring GetRemoteHost() { return m_sRemoteHost; }
 	USHORT GetRemotePort() { return m_uRemotePort; }
 	USHORT GetLocalPort() { return m_uLocalPort; }
 
-	String GetDescription();
+	tstring GetDescription();
 
 // ITransportReader
 	void OnConnect(HRESULT hr, LPCTSTR pszError);
@@ -66,8 +65,8 @@ private:
 	DCC_STATE m_state;
 	bool m_bIncoming;
 
-	String m_sRemoteUser;
-	String m_sRemoteHost;
+	tstring m_sRemoteUser;
+	tstring m_sRemoteHost;
 	ULONG m_ulRemoteAddress;
 	USHORT m_uRemotePort;
 	USHORT m_uLocalPort;

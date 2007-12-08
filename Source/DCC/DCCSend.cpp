@@ -6,11 +6,11 @@
 
 static const TCHAR validchars[] = _T("abcdefghijklmnopqsrtuvwxyzABCDEFGHIJKLMNOPQSRTUVWXYZ1234567890_-.");
 
-static String SafeDCCFileName(const String& sFileName)
+static tstring SafeDCCFileName(const tstring& sFileName)
 {
-	String sNewName;
+	tstring sNewName;
 
-	TCHAR* pszLastSlash = _tcsrchr(sFileName.Str(), '\\');
+	TCHAR* pszLastSlash = _tcsrchr(sFileName.c_str(), '\\');
 	if(pszLastSlash)
 	{
 		sNewName = pszLastSlash + 1;
@@ -20,13 +20,12 @@ static String SafeDCCFileName(const String& sFileName)
 		sNewName = sFileName;
 	}
 
-	TCHAR* pszFile = sNewName.Str();
-	UINT nSize = sNewName.Size();
+	UINT nSize = sNewName.size();
 	for(UINT i = 0; i < nSize; ++i)
 	{
-		if(!_tcschr(validchars, pszFile[i]))
+		if(!_tcschr(validchars, sNewName[i]))
 		{
-			pszFile[i] = '_';
+			sNewName[i] = '_';
 		}
 	}
 
@@ -73,8 +72,8 @@ DCCSend::~DCCSend()
 //	Interface
 /////////////////////////////////////////////////////////////////////////////
 
-void DCCSend::IncomingRequest(const String& sRemoteUser, ULONG ulRemoteAddress, USHORT ulRemotePort, 
-	const String& sFileName, ULONG ulFileSize)
+void DCCSend::IncomingRequest(const tstring& sRemoteUser, ULONG ulRemoteAddress, USHORT ulRemotePort, 
+	const tstring& sFileName, ULONG ulFileSize)
 {
 	USES_CONVERSION;
 
@@ -94,7 +93,7 @@ void DCCSend::IncomingRequest(const String& sRemoteUser, ULONG ulRemoteAddress, 
 
 }
 
-bool DCCSend::OutgoingRequest(const String& sRemoteUser)
+bool DCCSend::OutgoingRequest(const tstring& sRemoteUser)
 {
 	if(DoSendFileName())
 	{
@@ -150,7 +149,7 @@ void DCCSend::Accept()
 	{
 		if(DoAcceptFileName())
 		{
-			m_hFile = CreateFile(m_sFileName.Str(), GENERIC_WRITE, FILE_SHARE_READ, 
+			m_hFile = CreateFile(m_sFileName.c_str(), GENERIC_WRITE, FILE_SHARE_READ, 
 				NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
 			if(m_hFile != INVALID_HANDLE_VALUE)
@@ -240,14 +239,14 @@ void DCCSend::Close()
 	m_pDCCHandler->RemoveSession(this);
 }
 
-String DCCSend::GetRemoteUser()
+tstring DCCSend::GetRemoteUser()
 {
 	return GetPrefixNick(m_sRemoteUser);
 }
 
-String DCCSend::GetDescription()
+tstring DCCSend::GetDescription()
 {
-	String str = m_bIncoming ? _T("RECV ") : _T("SEND ");
+	tstring str = m_bIncoming ? _T("RECV ") : _T("SEND ");
 	str += m_sFileName;
 	str += m_bIncoming ? _T(" From ") : _T(" To ");
 	str += GetPrefixNick(m_sRemoteUser);
@@ -467,17 +466,17 @@ bool DCCSend::DoAcceptFileName()
 {
 	TCHAR szFileName[MAX_PATH];
 	int nBuf = sizeof(szFileName)/sizeof(TCHAR);
-	_tcsncpy(szFileName, m_sFileName.Str(), nBuf);
+	_tcsncpy(szFileName, m_sFileName.c_str(), nBuf);
 
 	TCHAR szFilter[MAX_PATH] = _T("All Files (*.*)\0*.*\0");
 
-	String sExt;
-	TCHAR* pszExt = _tcsrchr(m_sFileName.Str(), '.');
+	tstring sExt;
+	TCHAR* pszExt = _tcsrchr(m_sFileName.c_str(), '.');
 	if(pszExt != NULL && pszExt[0] != NULL)
 	{
 		sExt = pszExt + 1;
 
-		wsprintf(szFilter, _T("%s Files (*.%s)|*.%s|All Files (*.*)|*.*|"), sExt.Str(), sExt.Str(), sExt.Str());
+		wsprintf(szFilter, _T("%s Files (*.%s)|*.%s|All Files (*.*)|*.*|"), sExt.c_str(), sExt.c_str(), sExt.c_str());
 
 		TCHAR* psz = szFilter;
 		while(psz[0] != NULL)
@@ -551,7 +550,7 @@ void DCCSend::CloseFile(bool bDelete)
 
 		if(bDelete)
 		{
-			DeleteFile(m_sFileName.Str());
+			DeleteFile(m_sFileName.c_str());
 		}
 	}
 }

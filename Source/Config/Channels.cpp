@@ -48,14 +48,14 @@ FavouriteChannel* FavouriteChannelList::GetChannel(UINT i)
 	return NULL;
 }
 
-FavouriteChannel* FavouriteChannelList::AddChannel(const String& name, const String& key, bool autoJoin)
+FavouriteChannel* FavouriteChannelList::AddChannel(const tstring& name, const tstring& key, bool autoJoin)
 {
 	FavouriteChannel* chan = new FavouriteChannel(name, key, autoJoin);
 	m_listChannels.push_back(chan);
 	return chan;
 }
 
-FavouriteChannel* FavouriteChannelList::FindChannel(const String& name)
+FavouriteChannel* FavouriteChannelList::FindChannel(const tstring& name)
 {
 	for(chanlist_t::iterator it = m_listChannels.begin(); it != m_listChannels.end(); ++it)
 	{
@@ -65,7 +65,7 @@ FavouriteChannel* FavouriteChannelList::FindChannel(const String& name)
 	return NULL;
 }
 
-bool FavouriteChannelList::RemoveChannel(const String& name)
+bool FavouriteChannelList::RemoveChannel(const tstring& name)
 {
 	FavouriteChannel* chan = FindChannel(name);
 	if(chan)
