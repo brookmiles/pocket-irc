@@ -1,19 +1,16 @@
 #ifndef _WINDOW_H_INCLUDED_
 #define _WINDOW_H_INCLUDED_
 
-#include "StringT.h"
-
-
 class Window
 {
 public:
 	Window();
 	virtual ~Window();
 
-	virtual HRESULT Create(HWND hParent, const String& sTitle, DWORD dwStyles, UINT uID, int x, int y, int w, int h);
+	virtual HRESULT Create(HWND hParent, const tstring& sTitle, DWORD dwStyles, UINT uID, int x, int y, int w, int h);
 	virtual HWND GetWindow() { return m_hwnd; }
 
-	virtual String GetText();
+	virtual tstring GetText();
 
 protected:
 	virtual LPCTSTR GetClassName() = 0;

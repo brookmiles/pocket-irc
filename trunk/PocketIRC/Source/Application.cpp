@@ -7,11 +7,6 @@
 
 #include "DCC\DCCListWindow.h"
 
-#if DEBUG && DEBUG_STRING_ALLOCS
-int String::allocs[1000] = {0};
-int String::greater = 0;
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 //	Constructor and Destructor
 /////////////////////////////////////////////////////////////////////////////
@@ -30,16 +25,7 @@ Application::~Application()
 
 	if(m_bInitOk)
 	{
-#if DEBUG && DEBUG_STRING_ALLOCS
-		for(int i = 0; i < 1000; ++i)
-		{
-			if(String::allocs[i] > 0)
-			{
-				_TRACE("String(%u) %u", i, String::allocs[i]);
-			}
-		}
-		_TRACE("String(*) %u", String::greater);
-#endif
+		// o helo
 	}
 }
 

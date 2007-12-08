@@ -1,8 +1,6 @@
 #ifndef _DISPLAYEVENT_H_INCLUDED_
 #define _DISPLAYEVENT_H_INCLUDED_
 
-#include "StringT.h"
-
 class DisplayEvent
 {
 public:
@@ -18,17 +16,17 @@ public:
 	int GetHighlight() const { return m_iHighlight; }
 	void SetHighlight(int iHighlight) { m_iHighlight = iHighlight; }
 
-	void SetText(const String& sText) { m_sText = sText; }
-	const String& GetText() const { return m_sText; }
+	void SetText(const tstring& sText) { m_sText = sText; }
+	const tstring& GetText() const { return m_sText; }
 
-	void SetKey(const String& sKey) { m_sKey = sKey; }
-	const String& GetKey() const { return m_sKey; }
+	void SetKey(const tstring& sKey) { m_sKey = sKey; }
+	const tstring& GetKey() const { return m_sKey; }
 
 protected:
 
 	int m_iHighlight;
-	String m_sKey;
-	String m_sText;
+	tstring m_sKey;
+	tstring m_sText;
 };
 
 #endif//_DISPLAYEVENT_H_INCLUDED_

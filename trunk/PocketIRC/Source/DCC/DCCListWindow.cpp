@@ -132,20 +132,20 @@ void DCCListWindow::AddSession(IDCCSession* pSession)
 
 	HWND hList = GetDlgItem(m_hDlg, IDC_DCCLIST_LIST);
 
-	String sDesc = pSession->GetDescription();
-	String sState = GetDCCStateString(pSession->GetState());
+	tstring sDesc = pSession->GetDescription();
+	tstring sState = GetDCCStateString(pSession->GetState());
 
 	LVITEM lvi = {LVIF_PARAM | LVIF_TEXT};
 
 	lvi.iItem = ListView_GetItemCount(hList);
 	lvi.iSubItem = 0;
 	lvi.lParam = (LPARAM)pSession;
-	lvi.pszText = sDesc.Str();
+	lvi.pszText = const_cast<LPTSTR>(sDesc.c_str());
 
 	int index = ListView_InsertItem(hList, &lvi);
 	_ASSERTE(index != -1);
 
-	ListView_SetItemText(hList, index, 1, sState.Str());
+	ListView_SetItemText(hList, index, 1, const_cast<LPTSTR>(sState.c_str()));
 
 	SetHighlight(2);
 }
@@ -156,13 +156,13 @@ void DCCListWindow::UpdateSession(IDCCSession* pSession)
 
 	HWND hList = GetDlgItem(m_hDlg, IDC_DCCLIST_LIST);
 
-	String sDesc = pSession->GetDescription();
-	String sState = GetDCCStateString(pSession->GetState());
+	tstring sDesc = pSession->GetDescription();
+	tstring sState = GetDCCStateString(pSession->GetState());
 
 	int index = ListView_FindItemByParam(hList, (LPARAM)pSession);
 	if(index >= 0)
 	{
-		ListView_SetItemText(hList, index, 1, sState.Str());
+		ListView_SetItemText(hList, index, 1, const_cast<LPTSTR>(sState.c_str()));
 		SetHighlight(1);
 	}
 }
@@ -173,8 +173,8 @@ void DCCListWindow::RemoveSession(IDCCSession* pSession)
 
 	HWND hList = GetDlgItem(m_hDlg, IDC_DCCLIST_LIST);
 
-	String sDesc = pSession->GetDescription();
-	String sState = GetDCCStateString(pSession->GetState());
+	tstring sDesc = pSession->GetDescription();
+	tstring sState = GetDCCStateString(pSession->GetState());
 
 	int index = ListView_FindItemByParam(hList, (LPARAM)pSession);
 	if(index >= 0)
@@ -453,7 +453,7 @@ void DCCListWindow::OnClear()
 
 void DCCListWindow::OnChat()
 {
-	String sUser;
+	tstring sUser;
 
 	if(GetDlgItemString(m_hDlg, IDC_DCCLIST_USER, sUser) && IsNick(sUser))
 	{
@@ -463,7 +463,7 @@ void DCCListWindow::OnChat()
 
 void DCCListWindow::OnSend()
 {
-	String sUser;
+	tstring sUser;
 
 	if(GetDlgItemString(m_hDlg, IDC_DCCLIST_USER, sUser) && IsNick(sUser))
 	{

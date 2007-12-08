@@ -5,14 +5,12 @@
 #include "FormatList.h"
 #include "Channels.h"
 
-#include "StringT.h"
-
 class Options
 {
 public:
 // Utility Accessor Methods
-	static const String& GetEventFormat(int idEvent, bool bIncoming);
-	static const String GetDefaultFormat(int idEvent, bool bIncoming);
+	static const tstring& GetEventFormat(int idEvent, bool bIncoming);
+	static const tstring GetDefaultFormat(int idEvent, bool bIncoming);
 	static bool GetDefaultEnable(int idEvent, bool bIncoming);
 	static HBITMAP GetDisplayBackground();
 	static HFONT GetDisplayFont();
@@ -22,11 +20,11 @@ public:
 	static bool IsRegistered();
 	static bool PresButan();
 
-	static void SetLocalAddress(const String& sAddr);
-	static void SetDetectedAddress(const String& sAddr);
-	static String GetLocalAddress();
-	static String GetDetectedAddress();
-	static String GetAddress();
+	static void SetLocalAddress(const tstring& sAddr);
+	static void SetDetectedAddress(const tstring& sAddr);
+	static tstring GetLocalAddress();
+	static tstring GetDetectedAddress();
+	static tstring GetAddress();
 
 	Options();
 	Options(Options& from);
@@ -34,21 +32,21 @@ public:
 
 	const Options& operator=(Options& from);
 
-	HRESULT Save(HKEY hkRoot, const String& sKeyName);
-	HRESULT Load(HKEY hkRoot, const String& sKeyName);
+	HRESULT Save(HKEY hkRoot, const tstring& sKeyName);
+	HRESULT Load(HKEY hkRoot, const tstring& sKeyName);
 
 // Server
-	void SetNick(const String& sNick) { m_sNick = sNick; }
-	const String& GetNick() { return m_sNick; }
+	void SetNick(const tstring& sNick) { m_sNick = sNick; }
+	const tstring& GetNick() { return m_sNick; }
 
-	void SetRealName(const String& sRealName);
-	const String GetRealName();
+	void SetRealName(const tstring& sRealName);
+	const tstring GetRealName();
 
-	void SetQuitMsg(const String& sQuitMsg);
-	const String GetQuitMsg();
+	void SetQuitMsg(const tstring& sQuitMsg);
+	const tstring GetQuitMsg();
 
 	HostList& GetHostList() { return m_lstHosts; }
-	void SetDefaultHost(const String& sHost, USHORT uPort, const String& sPass);
+	void SetDefaultHost(const tstring& sHost, USHORT uPort, const tstring& sPass);
 
 // Channel Favourites
 
@@ -66,8 +64,8 @@ public:
 	void SetHighlight(UINT iHighlight, COLORREF cr) { m_crHighlight[iHighlight] = cr; }
 	COLORREF GetHighlight(UINT iHighlight) { return m_crHighlight[iHighlight]; }
 
-	void SetBackImage(const String& sBackImage) { m_sBackImage = sBackImage; }
-	const String& GetBackImage() { return m_sBackImage; }
+	void SetBackImage(const tstring& sBackImage) { m_sBackImage = sBackImage; }
+	const tstring& GetBackImage() { return m_sBackImage; }
 
 	void SetBackAlignTop(bool bBackAlignTop) { m_bBackAlignTop = bBackAlignTop; }
 	bool GetBackAlignTop() { return m_bBackAlignTop; }
@@ -85,8 +83,8 @@ public:
 	void SetIdentEnable(bool bIdentEnable) { m_bIdentEnable = bIdentEnable; }
 	bool GetIdentEnable() { return m_bIdentEnable; }
 
-	void SetIdentUser(const String& sIdentUser) { m_sIdentUser = sIdentUser; }
-	const String& GetIdentUser() { return m_sIdentUser; }
+	void SetIdentUser(const tstring& sIdentUser) { m_sIdentUser = sIdentUser; }
+	const tstring& GetIdentUser() { return m_sIdentUser; }
 
 	void SetIdentPort(USHORT uIdentPort) { m_uIdentPort = uIdentPort; }
 	USHORT GetIdentPort() { return m_uIdentPort; }
@@ -98,8 +96,8 @@ public:
 	void SetTextColor(COLORREF cr) { m_crTextColor = cr; }
 	COLORREF GetTextColor() { return m_crTextColor; }
 
-	void SetFontName(const String& sFontName) { m_sFontName = sFontName; }
-	const String& GetFontName() { return m_sFontName; }
+	void SetFontName(const tstring& sFontName) { m_sFontName = sFontName; }
+	const tstring& GetFontName() { return m_sFontName; }
 
 	void SetFontSize(DWORD dw) { m_dwFontSize = dw; }
 	DWORD GetFontSize() { return m_dwFontSize; }
@@ -108,8 +106,8 @@ public:
 	void SetLocalAddressMethod(DWORD dw) { m_dwLocalAddressMethod = dw; }
 	DWORD GetLocalAddressMethod() { return m_dwLocalAddressMethod; }
 
-	void SetCustomAddress(const String& sCustomAddress) { m_sCustomAddress = sCustomAddress; }
-	const String& GetCustomAddress() { return m_sCustomAddress; }
+	void SetCustomAddress(const tstring& sCustomAddress) { m_sCustomAddress = sCustomAddress; }
+	const tstring& GetCustomAddress() { return m_sCustomAddress; }
 
 	void SetDCCStartPort(USHORT uDCCStartPort) { m_uDCCStartPort = uDCCStartPort; }
 	USHORT GetDCCStartPort() { return m_uDCCStartPort; }
@@ -125,14 +123,14 @@ public:
 
 // Aboot
 
-	void SetRegCode(const String& sRegCode) { m_sRegCode = sRegCode; }
-	const String& GetRegCode() { return m_sRegCode; }
+	void SetRegCode(const tstring& sRegCode) { m_sRegCode = sRegCode; }
+	const tstring& GetRegCode() { return m_sRegCode; }
 
 protected:
-	String	m_sNick;
-	String	m_sRealName;
+	tstring	m_sNick;
+	tstring	m_sRealName;
 	HostList m_lstHosts;
-	String	m_sQuitMsg;
+	tstring	m_sQuitMsg;
 
 	FavouriteChannelList m_favChannels;
 	UINT m_nChanListMinUsers;
@@ -141,28 +139,28 @@ protected:
 	bool		m_bBackAlignTop;
 	COLORREF	m_crHighlight[4];
 	FormatList	m_lstFormats;
-	String		m_sBackImage;
+	tstring		m_sBackImage;
 	bool		m_bStripAll;
 	bool		m_bStripIncoming;
 	bool		m_bShowTimestamp;
 
 	bool	m_bIdentEnable;
-	String	m_sIdentUser;
+	tstring	m_sIdentUser;
 	USHORT	m_uIdentPort;
 
 	COLORREF m_crBackColor;
 	COLORREF m_crTextColor;
-	String	m_sFontName;
+	tstring	m_sFontName;
 	DWORD	m_dwFontSize;
 
 	DWORD m_dwLocalAddressMethod;
-	String m_sCustomAddress;
+	tstring m_sCustomAddress;
 	USHORT m_uDCCStartPort;
 	USHORT m_uDCCEndPort;
 	bool m_bIgnoreChat;
 	bool m_bIgnoreSend;
 
-	String m_sRegCode;
+	tstring m_sRegCode;
 };
 
 extern Options g_Options;

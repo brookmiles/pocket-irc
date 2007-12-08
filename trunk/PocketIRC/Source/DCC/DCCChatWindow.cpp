@@ -81,14 +81,14 @@ bool DCCChatWindow::OnTabMenuCommand(UINT idCmd)
 		case ID_SAY:
 		case ID_DCCCHAT_SAY:
 		{
-			String str = m_pMainWindow->GetInput();
+			tstring str = m_pMainWindow->GetInput();
 			m_pChat->Say(str);
 			m_pMainWindow->ClearInput();
 		}
 		break;
 		case ID_DCCCHAT_ACT:
 		{
-			String str = m_pMainWindow->GetInput();
+			tstring str = m_pMainWindow->GetInput();
 			m_pChat->Act(str);
 			m_pMainWindow->ClearInput();
 		}

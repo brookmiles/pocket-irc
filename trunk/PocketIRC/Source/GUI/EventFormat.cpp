@@ -9,14 +9,14 @@
 // File private utilities
 /////////////////////////////////////////////////////////////////////////////
 
-static int GetEventHighlight(const NetworkEvent& network, const String& sMe)
+static int GetEventHighlight(const NetworkEvent& network, const tstring& sMe)
 {
 	switch(network.GetEventID())
 	{
 		case IRC_CMD_PRIVMSG:
 		case IRC_CMD_NOTICE:
 		case IRC_CTCP_ACTION:
-			if(_tcsstr(network.GetParam(1).Str(), sMe.Str()))
+			if(_tcsstr(network.GetParam(1).c_str(), sMe.c_str()))
 				return DisplayEvent::HL_NOTIFY;
 			else
 				return DisplayEvent::HL_MESSAGE;
@@ -26,36 +26,35 @@ static int GetEventHighlight(const NetworkEvent& network, const String& sMe)
 	}
 }
 
-static String GetTimestamp()
+static tstring GetTimestamp()
 {
-	String str;
-	str.Reserve(10);
+	TCHAR buf[10];
 
 	SYSTEMTIME st;
 	GetLocalTime(&st);
 
-	wsprintf(str.Str(), _T("[%02u:%02u] "), st.wHour, st.wMinute);
+	wsprintf(buf, _T("[%02u:%02u] "), st.wHour, st.wMinute);
 
-	return str;
+	return buf;
 }
 
-static void GetEventFormat(const NetworkEvent& network, const String& sMe, 
-	const String& sFmt, String& sText, int* piHighlight)
+static void GetEventFormat(const NetworkEvent& network, const tstring& sMe, 
+	const tstring& sFmt, tstring& sText, int* piHighlight)
 {
-	sText.Reserve(POCKETIRC_MAX_IRC_DISPLAY_LEN + 1);
+	sText.reserve(POCKETIRC_MAX_IRC_DISPLAY_LEN + 1);
 
 	*piHighlight = GetEventHighlight(network, sMe);
 
-	unsigned nFmtLen = sFmt.Size();
+	unsigned nFmtLen = sFmt.size();
 	UINT nUsed = 0;
 
-	String str;
-	str.Reserve(POCKETIRC_MAX_IRC_DISPLAY_LEN + 1);
+	tstring str;
+	str.reserve(POCKETIRC_MAX_IRC_DISPLAY_LEN + 1);
 
 	if(g_Options.GetShowTimestamp())
 	{
 		sText += GetTimestamp();
-		nUsed = sText.Size();
+		nUsed = sText.size();
 	}
 
 	UINT i = 0;
@@ -88,7 +87,7 @@ static void GetEventFormat(const NetworkEvent& network, const String& sMe,
 					str = GetEventKey(network);
 				break;
 				case 'c':
-					if(network.GetEvent().Size() > 0)
+					if(network.GetEvent().size() > 0)
 					{
 						str = network.GetEvent();
 					}
@@ -111,8 +110,8 @@ static void GetEventFormat(const NetworkEvent& network, const String& sMe,
 						UINT nStrUsed = 0;
 						for(UINT j = nParam; (j < network.GetParamCount()) && (nStrUsed < POCKETIRC_MAX_IRC_DISPLAY_LEN); ++j)
 						{
-							const String& sParam = network.GetParam(j);
-							unsigned nParamLen = sParam.Size();
+							const tstring& sParam = network.GetParam(j);
+							unsigned nParamLen = sParam.size();
 
 							if(j > nParam) nParamLen++;
 							if(nStrUsed + nParamLen < POCKETIRC_MAX_IRC_DISPLAY_LEN)
@@ -142,7 +141,7 @@ static void GetEventFormat(const NetworkEvent& network, const String& sMe,
 				break;
 			}
 
-			unsigned nStrLen = str.Size();
+			unsigned nStrLen = str.size();
 			if(nStrLen)
 			{
 				if(nUsed + nStrLen <= POCKETIRC_MAX_IRC_DISPLAY_LEN)
@@ -163,13 +162,13 @@ static void GetEventFormat(const NetworkEvent& network, const String& sMe,
 		}
 	}
 
-	if(_tcsstr(sText.Str(), sMe.Str()))
+	if(_tcsstr(sText.c_str(), sMe.c_str()))
 	{
 		*piHighlight = DisplayEvent::HL_NOTIFY;
 	}
 }
 
-String GetEventKey(const NetworkEvent& network)
+tstring GetEventKey(const NetworkEvent& network)
 {
 	int idEvent = network.GetEventID();
 	switch(idEvent)
@@ -225,24 +224,24 @@ String GetEventKey(const NetworkEvent& network)
 // Internal Methods
 /////////////////////////////////////////////////////////////////////////////
 
-String EventFormat(const NetworkEvent& network, const String& sMe, const String& sFmt)
+tstring EventFormat(const NetworkEvent& network, const tstring& sMe, const tstring& sFmt)
 {
 	int iHighlight;
-	String sText;
+	tstring sText;
 
 	GetEventFormat(network, sMe, sFmt, sText, &iHighlight);
 
 	return sText;
 }
 
-void DisplayEventFormat(DisplayEvent& display, const NetworkEvent& network, const String& sMe)
+void DisplayEventFormat(DisplayEvent& display, const NetworkEvent& network, const tstring& sMe)
 {
 	display.SetKey(GetEventKey(network));
 
 	int iHighlight;
-	String sText;
+	tstring sText;
 
-	String sFmt = g_Options.GetEventFormat(network.GetEventID(), network.IsIncoming());
+	tstring sFmt = g_Options.GetEventFormat(network.GetEventID(), network.IsIncoming());
 	GetEventFormat(network, sMe, sFmt, sText, &iHighlight);
 
 	display.SetText(sText);

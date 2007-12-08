@@ -46,7 +46,7 @@ HRESULT View::Create(HWND hParent, UINT iID, int x, int y, int w, int h)
 //	Interface
 /////////////////////////////////////////////////////////////////////////////
 
-void View::AddLine(const String& sText)
+void View::AddLine(const tstring& sText)
 {
 	ViewMsg* pMsg = new ViewMsg;
 	_ASSERTE(pMsg != NULL);
@@ -54,7 +54,8 @@ void View::AddLine(const String& sText)
 	pMsg->msg = sText;
 	pMsg->cy = 0;
 
-	UINT nMsgs = m_vecMsgs.Append(pMsg);
+	m_vecMsgs.push_back(pMsg);
+	UINT nMsgs = m_vecMsgs.size();
 	
 	if(nMsgs > POCKETIRC_BACKBUFFER_SIZE)
 	{
@@ -64,7 +65,7 @@ void View::AddLine(const String& sText)
 			m_vecMsgs[i] = NULL;
 		}
 
-		m_vecMsgs.Erase(0, 10);
+		m_vecMsgs.erase(m_vecMsgs.begin(), m_vecMsgs.begin() + 10);
 	}
 
 	if(m_iStart)
@@ -72,9 +73,9 @@ void View::AddLine(const String& sText)
 		m_iStart++;
 	}
 
-	if(m_iStart >= m_vecMsgs.Size())
+	if(m_iStart >= m_vecMsgs.size())
 	{
-		m_iStart = m_vecMsgs.Size() - 1;
+		m_iStart = m_vecMsgs.size() - 1;
 	}
 
 	UpdateScrollBar();
@@ -100,12 +101,12 @@ void View::Update(bool bUpdateBounds)
 
 void View::ScrollIndex(UINT iScroll)
 {
-	if(iScroll < m_vecMsgs.Size())
+	if(iScroll < m_vecMsgs.size())
 	{
 		m_iStart = iScroll;
 
 		SCROLLINFO si = {sizeof(si), SIF_POS};
-		si.nPos = m_vecMsgs.Size() - 1 - m_iStart;
+		si.nPos = m_vecMsgs.size() - 1 - m_iStart;
 
 		SetScrollInfo(m_hwnd, SB_VERT, &si, TRUE);
 		
@@ -115,14 +116,14 @@ void View::ScrollIndex(UINT iScroll)
 
 void View::Clear()
 {
-	for(UINT i = 0; i < m_vecMsgs.Size(); ++i)
+	for(UINT i = 0; i < m_vecMsgs.size(); ++i)
 	{
 		delete m_vecMsgs[i];
 	}
-	m_vecMsgs.Clear();
+	m_vecMsgs.clear();
 }
 
-String View::GetWordAtPoint(POINT pt)
+tstring View::GetWordAtPoint(POINT pt)
 {
 	UINT iMsg;
 	UINT iChar;
@@ -147,8 +148,8 @@ void View::UpdateScrollBar()
 	si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
 	si.nPage = 10;
 	si.nMin = 0;
-	si.nMax = m_vecMsgs.Size() - 2 + si.nPage;
-	si.nPos = m_vecMsgs.Size() - 1 - m_iStart;
+	si.nMax = m_vecMsgs.size() - 2 + si.nPage;
+	si.nPos = m_vecMsgs.size() - 1 - m_iStart;
 	SetScrollInfo(m_hwnd, SB_VERT, &si, TRUE);
 }
 
@@ -218,9 +219,9 @@ UINT View::Draw(HDC hdc, const RECT& rect)
 
 	m_Formatter.SetDefaultFmt(fmt);
 
-	if(m_vecMsgs.Size() > 0)
+	if(m_vecMsgs.size() > 0)
 	{
-		for(UINT i = m_vecMsgs.Size() - m_iStart; i > 0; --i)
+		for(UINT i = m_vecMsgs.size() - m_iStart; i > 0; --i)
 		{
 			ViewMsg *msg = m_vecMsgs[i - 1];
 			_ASSERTC(msg != NULL);
@@ -309,7 +310,7 @@ void View::UpdateMsgBounds(ViewMsg& msg, HDC hdc, UINT cx)
 
 void View::ClearBounds()
 {
-	for(UINT i = 0; i < m_vecMsgs.Size(); ++i)
+	for(UINT i = 0; i < m_vecMsgs.size(); ++i)
 	{
 		m_vecMsgs[i]->cy = 0;
 	}
@@ -394,7 +395,7 @@ bool View::HitTestMsg(WORD x, WORD y, UINT* piMsgStart, UINT* piCharStart)
 
 	bool bSuccess = false;
 	long cyUsed = 0;
-	for(UINT i = m_vecMsgs.Size() - m_iStart; i > 0; --i)
+	for(UINT i = m_vecMsgs.size() - m_iStart; i > 0; --i)
 	{
 		ViewMsg *msg = m_vecMsgs[i - 1];
 		_ASSERTC(msg != NULL);
@@ -444,8 +445,8 @@ void View::CopySelection()
 		iSelEnd = m_sel.iCharStart;
 	}
 
-	String str;
-	str.Reserve(1024*8);
+	tstring str;
+	str.reserve(1024*8);
 
 	for(UINT i = iMsgStart; i <= iMsgEnd; ++i)
 	{
@@ -455,7 +456,7 @@ void View::CopySelection()
 		UINT iMsgCharStart = (i > iMsgStart) ? 0 : iSelStart;
 		UINT nMsgCharMax = (i < iMsgEnd) ? -1 : iSelEnd - iMsgCharStart;
 
-		str += StringFormat::StripFormatting(msg->msg).SubStr(iMsgCharStart, nMsgCharMax);
+		str += StringFormat::StripFormatting(msg->msg).substr(iMsgCharStart, nMsgCharMax);
 		if(i < iMsgEnd)
 		{
 			str += _T("\r\n");
@@ -466,8 +467,8 @@ void View::CopySelection()
 	{
 		if(EmptyClipboard())
 		{
-			LPTSTR hMem = (LPTSTR)GlobalAlloc(LPTR, (str.Size() + 1) * sizeof(TCHAR));
-			_tcscpy(hMem, str.Str());
+			LPTSTR hMem = (LPTSTR)GlobalAlloc(LPTR, (str.size() + 1) * sizeof(TCHAR));
+			_tcscpy(hMem, str.c_str());
 
 			HANDLE hSetOk = SetClipboardData(CF_UNICODETEXT, (HANDLE)hMem);
 			_ASSERTC(hSetOk != NULL);
@@ -476,31 +477,31 @@ void View::CopySelection()
 	}
 }
 
-String View::GetWordAtChar(UINT iMsg, UINT iChar)
+tstring View::GetWordAtChar(UINT iMsg, UINT iChar)
 {
-	if(iMsg < m_vecMsgs.Size())
+	if(iMsg < m_vecMsgs.size())
 	{
 		ViewMsg* pMsg = m_vecMsgs[iMsg];
 		_ASSERTE(pMsg != NULL);
 
-		String sMsg = StringFormat::StripFormatting(pMsg->msg);
-		if(iChar < sMsg.Size())
+		tstring sMsg = StringFormat::StripFormatting(pMsg->msg);
+		if(iChar < sMsg.size())
 		{
 			UINT iWordStart = iChar;
 			while(iWordStart > 0 && !_istspace(sMsg[iWordStart - 1]))
 				iWordStart--;
 
 			UINT iWordEnd = iChar;
-			while(iWordEnd < sMsg.Size() && !_istspace(sMsg[iWordEnd]))
+			while(iWordEnd < sMsg.size() && !_istspace(sMsg[iWordEnd]))
 				iWordEnd++;
 
-			return sMsg.SubStr(iWordStart, iWordEnd - iWordStart);
+			return sMsg.substr(iWordStart, iWordEnd - iWordStart);
 		}
 	}
 	return _T("");
 }
 
-String View::GetSelectedWord()
+tstring View::GetSelectedWord()
 {
 	return GetWordAtChar(m_sel.iMsgStart, m_sel.iCharStart);
 }
@@ -619,8 +620,8 @@ void View::OnVScroll(WPARAM wParam, LPARAM lParam)
 	SetScrollInfo(m_hwnd, SB_VERT, &si, TRUE);
 	GetScrollInfo(m_hwnd, SB_VERT, &si);
 
-	UINT iNewStart = m_vecMsgs.Size() - 1 - si.nPos;
-	_ASSERTC(iNewStart < m_vecMsgs.Size());
+	UINT iNewStart = m_vecMsgs.size() - 1 - si.nPos;
+	_ASSERTC(iNewStart < m_vecMsgs.size());
 
 	if(iNewStart != m_iStart)
 	{

@@ -311,15 +311,15 @@ DWORD SocketTransport::ConnectThreadProc()
 		_TRACE("SocketTransport(0x%08X)::Connect() Created socket(0x%08X)", this, m_socket);
 		USES_CONVERSION;
 
-		m_pNotify->ConnectNotify(this, S_FALSE, (LPARAM)m_sHostName.Str());
+		m_pNotify->ConnectNotify(this, S_FALSE, (LPARAM)m_sHostName.c_str());
 
 		hr = AutoConnect();
 		_TRACE("...AutoConnect() returned 0x%08X", hr);
 
-		ULONG addr = inet_addr(T2CA(m_sHostName.Str()));
+		ULONG addr = inet_addr(T2CA(m_sHostName.c_str()));
 		if(addr == INADDR_NONE)
 		{
-			HOSTENT* pHostEnt = gethostbyname(T2CA(m_sHostName.Str()));
+			HOSTENT* pHostEnt = gethostbyname(T2CA(m_sHostName.c_str()));
 			if(pHostEnt != NULL)
 			{
 				int i = 0;
@@ -365,7 +365,7 @@ DWORD SocketTransport::ConnectThreadProc()
 		}
 	}
 
-	m_pNotify->ConnectNotify(this, hr, (LPARAM)m_sHostName.Str());
+	m_pNotify->ConnectNotify(this, hr, (LPARAM)m_sHostName.c_str());
 	return hr;	
 
 }
@@ -411,9 +411,9 @@ HRESULT SocketTransport::ConnectTryAddr(ULONG ulAddr, USHORT usPort)
 //	Interface
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT SocketTransport::Connect(const String& sHostName, USHORT uPort)
+HRESULT SocketTransport::Connect(const tstring& sHostName, USHORT uPort)
 {
-	_TRACE("SocketTransport(0x%08X)::Connect(\"%s\", %u)", this, sHostName.Str(), uPort);
+	_TRACE("SocketTransport(0x%08X)::Connect(\"%s\", %u)", this, sHostName.c_str(), uPort);
 
 	HRESULT hr = E_UNEXPECTED;
 
@@ -607,10 +607,9 @@ bool SocketTransport::IsOpen()
 	return (m_socket != INVALID_SOCKET);
 }
 
-String SocketTransport::GetLocalAddress()
+tstring SocketTransport::GetLocalAddress()
 {
 	_TRACE("SocketTransport(0x%08X)::GetLocalAddress()", this);
-	String sAddr;
 
 	if(IsOpen())
 	{
@@ -619,15 +618,16 @@ String SocketTransport::GetLocalAddress()
 
 		if(getsockname(m_socket, (SOCKADDR*)&sa, &size) == 0)
 		{
-			sAddr.Reserve(50);
-			wsprintf(sAddr.Str(), _T("%d.%d.%d.%d"), 
+			TCHAR buf[50];
+			wsprintf(buf, _T("%d.%d.%d.%d"), 
 				sa.sin_addr.S_un.S_un_b.s_b1, 
 				sa.sin_addr.S_un.S_un_b.s_b2, 
 				sa.sin_addr.S_un.S_un_b.s_b3, 
 				sa.sin_addr.S_un.S_un_b.s_b4);
-			_TRACE("... %s", sAddr.Str());
+			_TRACE("... %s", buf);
+			return buf;
 		}
 	}
 
-	return sAddr;
+	return _T("");
 }

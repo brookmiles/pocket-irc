@@ -1,8 +1,6 @@
 #ifndef _QUERYWINDOW_H_INCLUDED_
 #define _QUERYWINDOW_H_INCLUDED_
 
-#include "StringT.h"
-
 #include "Core\Session.h"
 
 #include "DisplayWindow.h"
@@ -16,7 +14,7 @@ public:
 	QueryWindow();
 	~QueryWindow();
 
-	void SetUser(const String& user);
+	void SetUser(const tstring& user);
 
 // ITabWindow
 	TABWINDOWTYPE GetTabType() { return TABWINDOWTYPE_QUERY; };
@@ -27,7 +25,7 @@ private:
 
 	bool OnTabMenuCommand(UINT idCmd);
 	
-	String m_sUser;
+	tstring m_sUser;
 };
 
 #endif//_QUERYWINDOW_H_INCLUDED_

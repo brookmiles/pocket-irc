@@ -3,6 +3,8 @@
 
 #include "IrcString.h"
 #include "IrcStringFormat.h"
+#include "StringUtil.h"
+#include "VectorUtil.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // Constructors/Destructors
@@ -30,7 +32,7 @@ void Session::SetWriter(IWriteNetworkEvent* pWriter)
 	m_pWriter = pWriter;
 }
 
-void Session::SetNick(const String& sNick)
+void Session::SetNick(const tstring& sNick)
 {
 	m_sNick = sNick;
 }
@@ -39,10 +41,10 @@ void Session::AddEventHandler(INetworkEventNotify* pHandler)
 {
 	_ASSERTE(pHandler != NULL);
 
-	UINT index = m_vecEventHandlers.Find(pHandler);
-	if(index == -1)
+	std::vector<INetworkEventNotify*>::iterator i = std::find(m_vecEventHandlers.begin(), m_vecEventHandlers.end(), pHandler);
+	if(i == m_vecEventHandlers.end())
 	{
-		m_vecEventHandlers.Append(pHandler);
+		m_vecEventHandlers.push_back(pHandler);
 	}
 }
 
@@ -50,44 +52,40 @@ void Session::RemoveEventHandler(INetworkEventNotify* pHandler)
 {
 	_ASSERTE(pHandler != NULL);
 
-	UINT index = m_vecEventHandlers.Find(pHandler);
-	if(index != -1)
-	{
-		m_vecEventHandlers.Erase(index);
-	}
+	Erase(m_vecEventHandlers, pHandler);
 }
 
-const String& Session::GetNick() const
+const tstring& Session::GetNick() const
 {
 	return m_sNick;
 }
 
-void Session::Pass(const String& sPass)
+void Session::Pass(const tstring& sPass)
 {
 	NetworkEvent event(IRC_CMD_PASS, 1, &sPass);
 	event.SetAutoPrefix(false);
 	DoEvent(event);
 }
 
-void Session::User(const String& sNick, const String& sName)
+void Session::User(const tstring& sNick, const tstring& sName)
 {
 	SetNick(sNick);
-	NetworkEvent event(IRC_CMD_USER, 4, &sNick, &String(_T("\"pocketirc.com\"")), &String(_T("\"pocketirc.com\"")), &sName);
+	NetworkEvent event(IRC_CMD_USER, 4, &sNick, &tstring(_T("\"pocketirc.com\"")), &tstring(_T("\"pocketirc.com\"")), &sName);
 	DoEvent(event);
 }
 
-void Session::Nick(const String& sNick)
+void Session::Nick(const tstring& sNick)
 {
 	NetworkEvent event(IRC_CMD_NICK, 1, &sNick);
 	event.SetAutoPrefix(false);
 	DoEvent(event);
 }
 
-void Session::Join(const String& sChannel, const String& sKey)
+void Session::Join(const tstring& sChannel, const tstring& sKey)
 {
 	NetworkEvent event(IRC_CMD_JOIN, 1, &sChannel);
 
-	if(sKey.Size())
+	if(sKey.size())
 	{
 		event.AddParam(sKey);
 	}
@@ -95,21 +93,21 @@ void Session::Join(const String& sChannel, const String& sKey)
 	DoEvent(event);
 }
 
-void Session::Part(const String& sChannel, const String& sMsg)
+void Session::Part(const tstring& sChannel, const tstring& sMsg)
 {
 	NetworkEvent event(IRC_CMD_PART, 1, &sChannel);
-	if(sMsg.Size())
+	if(sMsg.size())
 	{
 		event.AddParam(sMsg);
 	}
 	DoEvent(event);
 }
 
-void Session::Kick(const String& sChannel, const String& sUser, const String& sReason)
+void Session::Kick(const tstring& sChannel, const tstring& sUser, const tstring& sReason)
 {
 	NetworkEvent event(IRC_CMD_KICK, 2, &sChannel, &sUser);
 
-	if(sReason.Size())
+	if(sReason.size())
 	{
 		event.AddParam(sReason);
 	}
@@ -117,17 +115,17 @@ void Session::Kick(const String& sChannel, const String& sUser, const String& sR
 	DoEvent(event);
 }
 
-void Session::Invite(const String& sUser, const String& sChannel)
+void Session::Invite(const tstring& sUser, const tstring& sChannel)
 {
 	NetworkEvent event(IRC_CMD_INVITE, 2, &sUser, &sChannel);
 	DoEvent(event);
 }
 
-void Session::Topic(const String& sChannel, const String& sTopic)
+void Session::Topic(const tstring& sChannel, const tstring& sTopic)
 {
 	NetworkEvent event(IRC_CMD_TOPIC, 1, &sChannel);
 
-	if(sTopic.Size())
+	if(sTopic.size())
 	{
 		event.AddParam(sTopic);
 	}
@@ -135,30 +133,30 @@ void Session::Topic(const String& sChannel, const String& sTopic)
 	DoEvent(event);
 }
 
-void Session::PrivMsg(const String& sTarget, const String& sMsg)
+void Session::PrivMsg(const tstring& sTarget, const tstring& sMsg)
 {
 	NetworkEvent event(IRC_CMD_PRIVMSG, 2, &sTarget, &sMsg);
 	DoEvent(event);
 }
 
-void Session::Action(const String& sTarget, const String& sMsg)
+void Session::Action(const tstring& sTarget, const tstring& sMsg)
 {
 	CTCP(sTarget, _T("ACTION"), sMsg);
 }
 
-void Session::Notice(const String& sTarget, const String& sMsg)
+void Session::Notice(const tstring& sTarget, const tstring& sMsg)
 {
 	NetworkEvent event(IRC_CMD_NOTICE, 2, &sTarget, &sMsg);
 	DoEvent(event);
 }
 
-void Session::CTCP(const String& sTarget, const String& sCmd, const String& sMsg)
+void Session::CTCP(const tstring& sTarget, const tstring& sCmd, const tstring& sMsg)
 {
 	int idEvent = NetworkEvent::CTCPEventStringToID(sCmd);
 	NetworkEvent event(idEvent, 1, &sTarget);
 	event.SetEvent(sCmd);
 
-	if(sMsg.Size())
+	if(sMsg.size())
 	{
 		event.AddParam(sMsg);
 	}
@@ -166,35 +164,34 @@ void Session::CTCP(const String& sTarget, const String& sCmd, const String& sMsg
 	DoEvent(event);
 }
 
-void Session::CTCPPing(const String& sTarget)
+void Session::CTCPPing(const tstring& sTarget)
 {
 	NetworkEvent event(IRC_CTCP_PING, 1, &sTarget);
 	event.SetEvent(NetworkEvent::EventIDToString(IRC_CTCP_PING));
 
 	const int MAGIC_NUMBER = 32;
-	String sTime;
-	sTime.Reserve(MAGIC_NUMBER);
+	TCHAR buf[MAGIC_NUMBER];
 	DWORD t = GetTickCount() / 1000;
-	_sntprintf(sTime.Str(), MAGIC_NUMBER, _T("%u"), t);
-	sTime.Str()[MAGIC_NUMBER - 1] = 0;
+	_sntprintf(buf, MAGIC_NUMBER, _T("%u"), t);
+	buf[MAGIC_NUMBER - 1] = 0;
 
-	event.AddParam(sTime);
+	event.AddParam(buf);
 
 	DoEvent(event);
 }
 
-void Session::CTCPReply(const String& sTarget, const String& sCmd, const String& sMsg)
+void Session::CTCPReply(const tstring& sTarget, const tstring& sCmd, const tstring& sMsg)
 {
 	int idEvent = NetworkEvent::CTCPEventStringToID(sCmd, true);
 	if(idEvent == IRC_CTCP_RPL_INVALID)
 	{
-		_TRACE("Session(0x%08X)::CTCPReply(\"%s\", \"%s\") INVALID COMMAND", this, sCmd.Str(), sMsg.Str());
+		_TRACE("Session(0x%08X)::CTCPReply(\"%s\", \"%s\") INVALID COMMAND", this, sCmd.c_str(), sMsg.c_str());
 	}
 	else
 	{
 		NetworkEvent event(idEvent, 1, &sTarget);
 
-		if(sMsg.Size())
+		if(sMsg.size())
 		{
 			event.AddParam(sMsg);
 		}
@@ -203,39 +200,40 @@ void Session::CTCPReply(const String& sTarget, const String& sCmd, const String&
 	}
 }
 
-void Session::Whois(const String& sTarget)
+void Session::Whois(const tstring& sTarget)
 {
 	NetworkEvent event(IRC_CMD_WHOIS, 1, &sTarget);
 	DoEvent(event);
 }
 
-void Session::Mode(const String& sTarget, const String& sModes)
+void Session::Mode(const tstring& sTarget, const tstring& sModes)
 {
 	NetworkEvent event(IRC_CMD_MODE, 1, &sTarget);
 	
-	String sModeParam;
-	UINT iWord = 0;
-	while((sModeParam = sModes.GetWord(iWord)).Size())
+	std::vector<tstring> modes;
+	Split(sModes, modes, _T(' '), false);
+
+	for(std::vector<tstring>::iterator i = modes.begin(); i != modes.end(); ++i)
 	{
-		event.AddParam(sModeParam);
-		iWord++;
+		event.AddParam(*i);
 	}
+
 	DoEvent(event);
 }
 
-void Session::UserHost(const String& sUser)
+void Session::UserHost(const tstring& sUser)
 {
 	NetworkEvent event(IRC_CMD_USERHOST, 1, &sUser);
 	DoEvent(event);
 }
 
-void Session::Quit(const String& sMsg)
+void Session::Quit(const tstring& sMsg)
 {
 	NetworkEvent event(IRC_CMD_QUIT, 1, &sMsg);
 	DoEvent(event);
 }
 
-void Session::Away(const String& sMsg)
+void Session::Away(const tstring& sMsg)
 {
 	NetworkEvent event(IRC_CMD_AWAY, 1, &sMsg);
 	DoEvent(event);
@@ -253,13 +251,12 @@ void Session::List()
 	DoEvent(event);
 }
 
-void Session::Raw(const String& sText)
+void Session::Raw(const tstring& sText)
 {
 	ResetIdleCounter();
 
-	String sLine = sText;
-	sLine.Append(_T("\r\n"));
-	m_pWriter->Raw(sLine);
+	tstring sLine = sText;
+	m_pWriter->Write(sLine);
 }
 
 
@@ -267,17 +264,17 @@ void Session::Raw(const String& sText)
 // Internal Methods
 /////////////////////////////////////////////////////////////////////////////
 
-bool Session::IsMe(const String& sNick)
+bool Session::IsMe(const tstring& sNick)
 {
-	return (m_sNick.Compare(sNick, false));
+	return (Compare(m_sNick, sNick, false));
 }
 
 // DispatchEvent - Send an event to the display handlers, or whatever.
 void Session::DispatchEvent(const NetworkEvent& networkEvent)
 {
-	//_TRACE("Session(0x%08X)::DispatchEvent(\"%s\")", this, networkEvent.GetEvent().Str());
+	//_TRACE("Session(0x%08X)::DispatchEvent(\"%s\")", this, networkEvent.GetEvent().c_str());
 
-	for(UINT i = 0; i < m_vecEventHandlers.Size(); ++i)
+	for(UINT i = 0; i < m_vecEventHandlers.size(); ++i)
 	{
 		INetworkEventNotify* pHandler = m_vecEventHandlers[i];
 		_ASSERTE(pHandler != NULL);
@@ -289,7 +286,7 @@ void Session::DispatchEvent(const NetworkEvent& networkEvent)
 // DoEvent - Send an outgoing event
 void Session::DoEvent(const NetworkEvent& networkEvent)
 {
-	_TRACE("Session(0x%08X)::DoEvent(\"%s\")", this, networkEvent.GetEvent().Str());
+	_TRACE("Session(0x%08X)::DoEvent(\"%s\")", this, networkEvent.GetEvent().c_str());
 
 	ResetIdleCounter();
 
@@ -301,36 +298,32 @@ void Session::DoEvent(const NetworkEvent& networkEvent)
 // Channel and Query Object Management
 /////////////////////////////////////////////////////////////////////////////
 
-Channel* Session::GetChannel(const String& sChannel) const
+Channel* Session::GetChannel(const tstring& sChannel) const
 {
-	for(UINT i = 0; i < m_vecChannels.Size(); ++i)
+	for(UINT i = 0; i < m_vecChannels.size(); ++i)
 	{
-		if(sChannel.Compare(m_vecChannels[i]->GetName(), false))
+		if(Compare(sChannel, m_vecChannels[i]->GetName(), false))
 			return m_vecChannels[i]; 
 	}
 	return NULL;
 }
 
-Channel* Session::CreateChannelObject(const String& sChannel)
+Channel* Session::CreateChannelObject(const tstring& sChannel)
 {
 	Channel* pChan = new Channel();
 
 	pChan->SetName(sChannel);
 
-	m_vecChannels.Append(pChan);
+	m_vecChannels.push_back(pChan);
 
 	return pChan;
 }
 
-void Session::DestroyChannelObject(const String& sChannel)
+void Session::DestroyChannelObject(const tstring& sChannel)
 {
 	Channel* pChannel = GetChannel(sChannel);
 
-	UINT index = m_vecChannels.Find(pChannel);
-	if(index != Vector<Channel*>::NPOS)
-	{
-		m_vecChannels.Erase(index);
-	}
+	Erase(m_vecChannels, pChannel);
 
 	delete pChannel;
 }
@@ -392,18 +385,18 @@ void Session::OnDisconnect(const NetworkEvent& event)
 {
 	m_bConnected = false;
 
-	for(UINT i = 0; i < m_vecChannels.Size(); ++i)
+	for(UINT i = 0; i < m_vecChannels.size(); ++i)
 	{
 		delete m_vecChannels[i];
 	}
 
-	m_vecChannels.Free();
+	m_vecChannels.clear();
 }
 
 void Session::OnJoin(const NetworkEvent& event)
 {
-	String sUser = GetPrefixNick(event.GetPrefix());
-	const String& sChannel = event.GetParam(0);
+	tstring sUser = GetPrefixNick(event.GetPrefix());
+	const tstring& sChannel = event.GetParam(0);
 
 	if(IsMe(sUser))
 	{
@@ -423,8 +416,8 @@ void Session::OnJoin(const NetworkEvent& event)
 
 void Session::OnPart(const NetworkEvent& event)
 {
-	String sUser = GetPrefixNick(event.GetPrefix());
-	const String& sChannel = event.GetParam(0);
+	tstring sUser = GetPrefixNick(event.GetPrefix());
+	const tstring& sChannel = event.GetParam(0);
 
 	if(IsMe(sUser))
 	{
@@ -444,8 +437,8 @@ void Session::OnPart(const NetworkEvent& event)
 
 void Session::OnKick(const NetworkEvent& event)
 {
-	const String& sChannel = event.GetParam(0);
-	const String& sUser = event.GetParam(1);
+	const tstring& sChannel = event.GetParam(0);
+	const tstring& sUser = event.GetParam(1);
 
 	if(IsMe(sUser))
 	{
@@ -465,8 +458,8 @@ void Session::OnKick(const NetworkEvent& event)
 
 void Session::OnNick(const NetworkEvent& event)
 {
-	String sUser = GetPrefixNick(event.GetPrefix());
-	const String& sNick = event.GetParam(0);
+	tstring sUser = GetPrefixNick(event.GetPrefix());
+	const tstring& sNick = event.GetParam(0);
 
 	if(IsMe(sUser))
 	{
@@ -474,10 +467,10 @@ void Session::OnNick(const NetworkEvent& event)
 	}
 
 	// Update channel nick lists
-	if(m_vecChannels.Size() > 0)
+	if(m_vecChannels.size() > 0)
 	{
 		//Change user's nick in channel nick lists
-		for(UINT iChan = 0; iChan < m_vecChannels.Size(); ++iChan)
+		for(UINT iChan = 0; iChan < m_vecChannels.size(); ++iChan)
 		{
 			Channel* pChan = m_vecChannels[iChan];
 			_ASSERTE(pChan != NULL);
@@ -495,7 +488,7 @@ void Session::OnNick(const NetworkEvent& event)
 
 void Session::OnQuit(const NetworkEvent& event)
 {
-	String sUser = GetPrefixNick(event.GetPrefix());
+	tstring sUser = GetPrefixNick(event.GetPrefix());
 
 	if(IsMe(sUser))
 	{
@@ -503,7 +496,7 @@ void Session::OnQuit(const NetworkEvent& event)
 	}
 	else
 	{
-		for(UINT iChan = 0; iChan < m_vecChannels.Size(); ++iChan)
+		for(UINT iChan = 0; iChan < m_vecChannels.size(); ++iChan)
 		{
 			Channel* pChan = m_vecChannels[iChan];
 			_ASSERTE(pChan != NULL);
@@ -528,20 +521,20 @@ void Session::OnPing(const NetworkEvent& event)
 
 void Session::OnCTCPPing(const NetworkEvent& event)
 {
-	String from = GetPrefixNick(event.GetPrefix());
+	tstring from = GetPrefixNick(event.GetPrefix());
 
 	CTCPReply(from, _T("PING"), event.GetParam(1));
 }
 
 void Session::OnCTCPRplPing(const NetworkEvent& event)
 {
-	String from = GetPrefixNick(event.GetPrefix());
-	String sTime = event.GetParam(1);
+	tstring from = GetPrefixNick(event.GetPrefix());
+	tstring sTime = event.GetParam(1);
 
-	if(sTime.Size())
+	if(sTime.size())
 	{
 		DWORD now = GetTickCount() / 1000;
-		DWORD then = _tcstoul(sTime.Str(), NULL, 10);
+		DWORD then = _tcstoul(sTime.c_str(), NULL, 10);
 		DWORD seconds = now - then;
 
 		TCHAR buf[30];
@@ -555,15 +548,15 @@ void Session::OnCTCPRplPing(const NetworkEvent& event)
 
 void Session::OnCTCPVersion(const NetworkEvent& event)
 {
-	String from = GetPrefixNick(event.GetPrefix());
+	tstring from = GetPrefixNick(event.GetPrefix());
 
 	CTCPReply(from, _T("VERSION"), POCKETIRC_VERSION_REPLY);
 }
 
 void Session::OnRplNamReply(const NetworkEvent& event)
 {
-	const String& sChannel = event.GetParam(2);
-	_ASSERTE(sChannel.Size());
+	const tstring& sChannel = event.GetParam(2);
+	_ASSERTE(sChannel.size());
 
 	Channel* pChannel = GetChannel(sChannel);
 
@@ -575,8 +568,8 @@ void Session::OnRplNamReply(const NetworkEvent& event)
 
 void Session::OnMode(const NetworkEvent& event)
 {
-	const String& sTarget = event.GetParam(0);
-	_ASSERTE(sTarget.Size());
+	const tstring& sTarget = event.GetParam(0);
+	_ASSERTE(sTarget.size());
 
 	if(IsChannel(sTarget))
 	{
@@ -591,8 +584,8 @@ void Session::OnMode(const NetworkEvent& event)
 
 void Session::OnRplWelcome(const NetworkEvent& event)
 {
-	const String& sMe = event.GetParam(0);
-	_ASSERTE(sMe.Size());
+	const tstring& sMe = event.GetParam(0);
+	_ASSERTE(sMe.size());
 
 	SetNick(sMe);
 }
@@ -605,11 +598,11 @@ void Session::OnRplListStart(const NetworkEvent& event)
 
 void Session::OnRplList(const NetworkEvent& event)
 {
-	String sChannel = event.GetParam(1);
-	String sUsers = event.GetParam(2);
-	String sTopic = event.GetParam(3);
+	tstring sChannel = event.GetParam(1);
+	tstring sUsers = event.GetParam(2);
+	tstring sTopic = event.GetParam(3);
 
-	if(sTopic[0] == '[' && sTopic[sTopic.Size() - 1] == ']')
+	if(sTopic[0] == '[' && sTopic[sTopic.size() - 1] == ']')
 		sTopic = _T("");
 	sTopic = StringFormat::StripFormatting(sTopic);
 
@@ -620,16 +613,16 @@ void Session::OnRplList(const NetworkEvent& event)
 		chan->users = sUsers;
 		chan->topic = sTopic;
 
-		m_vecChannelList.Append(chan);
+		m_vecChannelList.push_back(chan);
 	}
 }
 
 void Session::ClearChannelList()
 {
-	for(UINT i = 0; i < m_vecChannelList.Size(); ++i)
+	for(UINT i = 0; i < m_vecChannelList.size(); ++i)
 	{
 		delete m_vecChannelList[i];
 	}
-	m_vecChannelList.Clear();
+	m_vecChannelList.clear();
 }
 

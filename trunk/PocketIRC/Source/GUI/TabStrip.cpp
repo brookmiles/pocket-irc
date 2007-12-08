@@ -24,11 +24,11 @@ TabStrip::~TabStrip()
 {
 	_TRACE("TabStrip(0x%08X)::~TabStrip()", this);
 
-	for(UINT i = 0; i < m_vecItems.Size(); ++i)
+	for(UINT i = 0; i < m_vecItems.size(); ++i)
 	{
 		delete m_vecItems[i];
 	}
-	m_vecItems.Shrink(0);
+	m_vecItems.clear();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -108,7 +108,7 @@ void TabStrip::OnPaint(WPARAM wParam, LPARAM lParam)
 	}
 
 	
-	for(UINT i = 0; i < m_vecItems.Size(); ++i)
+	for(UINT i = 0; i < m_vecItems.size(); ++i)
 	{	
 		TabStripItem* pItem = m_vecItems[i];
 		_ASSERTE(pItem != NULL);
@@ -123,7 +123,7 @@ void TabStrip::OnPaint(WPARAM wParam, LPARAM lParam)
 			}
 
 			SetTextColor(hdc, pItem->crText);
-			DrawText(hdc, pItem->sText.Str(), -1, &rcText, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+			DrawText(hdc, pItem->sText.c_str(), -1, &rcText, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 
 			dx += pItem->iWidth;
 
@@ -202,7 +202,7 @@ void TabStrip::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 
 			m_bScrollRightDown = true;
 
-			if(m_uStart < m_vecItems.Size() - 1)
+			if(m_uStart < m_vecItems.size() - 1)
 			{
 				m_uStart++;
 			}
@@ -213,7 +213,7 @@ void TabStrip::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 		}
 	}
 
-	for(UINT i = 0; i < m_vecItems.Size(); ++i)
+	for(UINT i = 0; i < m_vecItems.size(); ++i)
 	{	
 		TabStripItem* pItem = m_vecItems[i];
 		_ASSERTE(pItem != NULL);
@@ -264,9 +264,9 @@ void TabStrip::OnEraseBkgnd(WPARAM wParam, LPARAM lParam)
 // Interface
 /////////////////////////////////////////////////////////////////////////////
 
-UINT TabStrip::AddTab(const String& sTitle, HWND hActivate, LPARAM lParam)
+UINT TabStrip::AddTab(const tstring& sTitle, HWND hActivate, LPARAM lParam)
 {
-	_ASSERTE(sTitle.Str() != NULL);
+	_ASSERTE(sTitle.c_str() != NULL);
 
 	if(hActivate)
 	{
@@ -283,21 +283,21 @@ UINT TabStrip::AddTab(const String& sTitle, HWND hActivate, LPARAM lParam)
 
 	pNewItem->iWidth = CalcItemWidth(pNewItem);
 
-	m_vecItems.Append(pNewItem);
+	m_vecItems.push_back(pNewItem);
 
 	UpdateScrollButtons();
 	UpdateSelection();
 	Update();
 
-	return (m_vecItems.Size() - 1);
+	return (m_vecItems.size() - 1);
 }
 
 bool TabStrip::RemoveTab(UINT uIndex)
 {
-	if(uIndex < m_vecItems.Size())
+	if(uIndex < m_vecItems.size())
 	{
 		delete m_vecItems[uIndex];
-		m_vecItems.Erase(uIndex);
+		m_vecItems.erase(m_vecItems.begin() + uIndex);
 
 		UpdateSelection();
 		UpdateScrollButtons();
@@ -310,7 +310,7 @@ bool TabStrip::RemoveTab(UINT uIndex)
 
 TabStrip::TabStripItem* TabStrip::GetTabItem(UINT uIndex)
 {
-	if(uIndex < m_vecItems.Size())
+	if(uIndex < m_vecItems.size())
 	{
 		return m_vecItems[uIndex];
 	}
@@ -332,7 +332,7 @@ bool TabStrip::SetTabColor(UINT uIndex, COLORREF color, bool bRedraw)
 	return false;
 }
 
-bool TabStrip::SetTabText(UINT uIndex, const String& sText, bool bRedraw)
+bool TabStrip::SetTabText(UINT uIndex, const tstring& sText, bool bRedraw)
 {
 	TabStripItem* pItem = GetTabItem(uIndex);
 	if(pItem)
@@ -353,7 +353,7 @@ bool TabStrip::FindTab(LPARAM lParam, UINT* pResult)
 {
 	_ASSERTE(pResult != NULL);
 
-	for(UINT i = 0; i < m_vecItems.Size(); ++i)
+	for(UINT i = 0; i < m_vecItems.size(); ++i)
 	{	
 		TabStripItem* pItem = m_vecItems[i];
 		_ASSERTE(pItem != NULL);
@@ -375,7 +375,7 @@ void TabStrip::Update()
 
 bool TabStrip::UpdateSelection()
 {
-	UINT nItems = m_vecItems.Size();
+	UINT nItems = m_vecItems.size();
 	if(nItems > 0)
 	{
 		if(m_uSelected >= nItems)
@@ -420,7 +420,7 @@ bool TabStrip::GetTabParam(UINT uIndex, LPARAM* pParam)
 bool TabStrip::GetCurSel(UINT* pResult)
 {
 	*pResult = m_uSelected;
-	return (m_vecItems.Size() > 0);
+	return (m_vecItems.size() > 0);
 }
 
 void TabStrip::SetCurSel(UINT uIndex)
@@ -459,7 +459,7 @@ void TabStrip::UpdateScrollButtons()
 		m_bScrollLeftVisible = false;
 	}
 
-	for(UINT i = 0; i < m_vecItems.Size(); ++i)
+	for(UINT i = 0; i < m_vecItems.size(); ++i)
 	{	
 		TabStripItem* pItem = m_vecItems[i];
 		_ASSERTE(pItem != NULL);
@@ -491,7 +491,7 @@ int TabStrip::CalcItemWidth(TabStripItem* pItem)
 	
 	RECT rcText = {0, 0, 0, 0};
 
-	DrawText(hdc, pItem->sText.Str(), -1, &rcText, DT_SINGLELINE | DT_CALCRECT);
+	DrawText(hdc, pItem->sText.c_str(), -1, &rcText, DT_SINGLELINE | DT_CALCRECT);
 
 	SelectObject(hdc, hfOld);
 	ReleaseDC(m_hwnd, hdc);	

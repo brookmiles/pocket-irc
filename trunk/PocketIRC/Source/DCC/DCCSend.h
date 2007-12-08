@@ -1,7 +1,6 @@
 #ifndef _DCCSEND_H_INCLUDED_
 #define _DCCSEND_H_INCLUDED_
 
-#include "StringT.h"
 #include "Network\SocketTransport.h"
 #include "Network\SocketAccepter.h"
 
@@ -19,10 +18,10 @@ public:
 
 	void SetDCCHandler(DCCHandler* pDCCHandler) { m_pDCCHandler = pDCCHandler; }
 
-	void IncomingRequest(const String& sRemoteUser, ULONG ulRemoteAddress, USHORT ulRemotePort, const String& sFileName, ULONG ulFileSize);
-	bool OutgoingRequest(const String& sRemoteUser);
+	void IncomingRequest(const tstring& sRemoteUser, ULONG ulRemoteAddress, USHORT ulRemotePort, const tstring& sFileName, ULONG ulFileSize);
+	bool OutgoingRequest(const tstring& sRemoteUser);
 
-	String GetFileName() { return m_sFileName; }
+	tstring GetFileName() { return m_sFileName; }
 	ULONG GetFileSize() { return m_ulFileSize; }
 
 	bool Resume(ULONG ulSize);
@@ -36,13 +35,13 @@ public:
 	void Accept();
 	void Close();
 
-	String GetRemoteUser();
-	String GetRemoteHost() { return m_sRemoteHost; }
+	tstring GetRemoteUser();
+	tstring GetRemoteHost() { return m_sRemoteHost; }
 	USHORT GetRemotePort() { return m_uRemotePort; }
 	USHORT GetLocalPort() { return m_uLocalPort; }
 
-	String GetStateString();
-	String GetDescription();
+	tstring GetStateString();
+	tstring GetDescription();
 
 // ITransportReader
 	void OnConnect(HRESULT hr, LPCTSTR pszError);
@@ -68,13 +67,13 @@ private:
 	DCC_STATE m_state;
 	bool m_bIncoming;
 
-	String m_sRemoteUser;
-	String m_sRemoteHost;
+	tstring m_sRemoteUser;
+	tstring m_sRemoteHost;
 	ULONG m_ulRemoteAddress;
 	USHORT m_uRemotePort;
 	USHORT m_uLocalPort;
 
-	String m_sFileName;
+	tstring m_sFileName;
 	ULONG m_ulFileSize;
 
 	SocketAccepter m_sockAccepter;

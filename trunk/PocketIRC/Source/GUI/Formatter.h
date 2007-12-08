@@ -1,8 +1,6 @@
 #ifndef _FORMATTER_H_INCLUDED_
 #define _FORMATTER_H_INCLUDED_
 
-#include "StringT.h"
-#include "Vector.h"
 #include "IrcStringFormat.h"
 
 class Formatter
@@ -17,9 +15,9 @@ public:
 
 	// If FMT_WRAP, accept width in prc and return height in prc
 	// Otherwise return output width and height in prc
-	void FormatOut(HDC hdc, const String& str, RECT& rc, DWORD dwFlags);
-	UINT HitTest(HDC hdc, const String& str, RECT& rc, DWORD dwFlags, POINT pt);
-	void DrawSelection(HDC hdc, const String& strFmt, RECT& rc, DWORD dwFlags, UINT iSelStart, UINT iSelEnd);
+	void FormatOut(HDC hdc, const tstring& str, RECT& rc, DWORD dwFlags);
+	UINT HitTest(HDC hdc, const tstring& str, RECT& rc, DWORD dwFlags, POINT pt);
+	void DrawSelection(HDC hdc, const tstring& strFmt, RECT& rc, DWORD dwFlags, UINT iSelStart, UINT iSelEnd);
 	UINT GetLineHeight(HDC hdc);
 
 private:

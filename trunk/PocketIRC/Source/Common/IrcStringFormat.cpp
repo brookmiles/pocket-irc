@@ -26,18 +26,16 @@ COLORREF StringFormat::GetColorCode(UINT iColor)
 	return COLORS[iColor];
 }
 
-UINT StringFormat::ParseColorCode(LPCTSTR psz, StringFormat& fmt)
+UINT StringFormat::ParseColorCode(const tstring& str, StringFormat& fmt)
 {
-	_ASSERTE(psz != NULL);
-
 	UINT nUsed = 0;
 
-	if(_istdigit(psz[0]))
+	if(_istdigit(str[0]))
 	{
-		nUsed = ParseSingleColor(&psz[0], &fmt.fg);
-		if(nUsed && psz[nUsed] == ',' && _istdigit(psz[nUsed + 1]))
+		nUsed = ParseSingleColor(str, &fmt.fg);
+		if(nUsed < str.size() - 2 && str[nUsed] == ',' && _istdigit(str[nUsed + 1]))
 		{
-			UINT nUsedBack = ParseSingleColor(&psz[nUsed + 1], &fmt.bg);
+			UINT nUsedBack = ParseSingleColor(str.substr(nUsed + 1), &fmt.bg);
 			if(nUsedBack)
 				nUsed += nUsedBack + 1;
 		}
@@ -46,22 +44,20 @@ UINT StringFormat::ParseColorCode(LPCTSTR psz, StringFormat& fmt)
 	return nUsed;
 }
 
-UINT StringFormat::ParseSingleColor(LPCTSTR psz, COLORREF* pcr)
+UINT StringFormat::ParseSingleColor(const tstring& str, COLORREF* pcr)
 {
-	_ASSERTE(psz != NULL);
 	_ASSERTE(pcr != NULL);
-
-	_ASSERTE(_istdigit(psz[0]));
+	_ASSERTE(_istdigit(str[0]));
 
 	UINT nUsed = 0;
-	if(psz[0] == '0' || psz[0] == '1')
+	if(str[0] == '0' || str[0] == '1')
 	{
 		nUsed++;
-		if(_istdigit(psz[1]))
+		if(str.size() > 1 && _istdigit(str[1]))
 		{
 			nUsed++;
-			UINT iPartColor = (psz[0] - '0') * 10;
-			UINT iColor = (psz[1] - '0') + iPartColor;
+			UINT iPartColor = (str[0] - '0') * 10;
+			UINT iColor = (str[1] - '0') + iPartColor;
 			if(iColor >= 0 && iColor < 16)
 			{
 				*pcr = GetColorCode(iColor);
@@ -69,7 +65,7 @@ UINT StringFormat::ParseSingleColor(LPCTSTR psz, COLORREF* pcr)
 		}
 		else
 		{
-			UINT iColor = psz[0] - '0';
+			UINT iColor = str[0] - '0';
 			*pcr = GetColorCode(iColor);
 			nUsed = 1;
 		}
@@ -77,15 +73,15 @@ UINT StringFormat::ParseSingleColor(LPCTSTR psz, COLORREF* pcr)
 	else
 	{
 		nUsed++;
-		UINT iColor = psz[0] - '0';
+		UINT iColor = str[0] - '0';
 		*pcr = GetColorCode(iColor);
 	}
 	return nUsed;
 }
 
-UINT StringFormat::CollectFormats(const String& str, UINT iStart, const StringFormat& def, StringFormat& fmt)
+UINT StringFormat::CollectFormats(const tstring& str, UINT iStart, const StringFormat& def, StringFormat& fmt)
 {
-	UINT nLen = str.Size();
+	UINT nLen = str.size();
 
 	UINT iChar = iStart;
 	// Collect formatting
@@ -124,9 +120,9 @@ UINT StringFormat::CollectFormats(const String& str, UINT iStart, const StringFo
 	return iChar - iStart;
 }
 
-UINT StringFormat::FindSegmentLen(const String& str, UINT iStart)
+UINT StringFormat::FindSegmentLen(const tstring& str, UINT iStart)
 {
-	UINT nLen = str.Size();
+	UINT nLen = str.size();
 	UINT iSegEnd = iStart;
 	while(iSegEnd < nLen)
 	{
@@ -138,12 +134,11 @@ UINT StringFormat::FindSegmentLen(const String& str, UINT iStart)
 	return iSegEnd - iStart;
 }
 
-String StringFormat::StripFormatting(const String& str)
+tstring StringFormat::StripFormatting(const tstring& str)
 {
-	String out;
-	out.Reserve(str.Capacity());
+	tstring out;
 
-	UINT nLen = str.Size();
+	UINT nLen = str.size();
 	UINT iChar = 0;
 	while(iChar < nLen)
 	{
@@ -154,19 +149,19 @@ String StringFormat::StripFormatting(const String& str)
 		//   Find length of string segment
 		UINT iSegLen = FindSegmentLen(str, iChar);
 
-		out += str.SubStr(iChar, iSegLen);
+		out += str.substr(iChar, iSegLen);
 		iChar += iSegLen;
 	}
 
 	return out;
 }
 
-UINT StringFormat::FindWordBreak(LPCTSTR psz, UINT nFit)
+UINT StringFormat::FindWordBreak(const tstring& str, UINT nFit)
 {
 
 	for(UINT i = nFit; (i > 0) && (nFit - i < POCKETIRC_WORDWRAP_BIAS); --i)
 	{
-		if(psz[i - 1] == ' ')
+		if(str[i - 1] == ' ')
 		{
 			return i;
 		}

@@ -1,9 +1,6 @@
 #ifndef _NETWORKEVENT_H_INCLUDED_
 #define _NETWORKEVENT_H_INCLUDED_
 
-#include "Vector.h"
-#include "StringT.h"
-
 #define EVENT_OFFSET_COMMAND  1000
 #define EVENT_OFFSET_CTCP 2000
 #define EVENT_OFFSET_CTCP_REPLY 2500
@@ -12,9 +9,9 @@
 class NetworkEvent
 {
 public:
-	static String EventIDToString(int idEvent);
-	static int EventStringToID(const String& sEvent);
-	static int CTCPEventStringToID(const String& sEvent, bool bReply = false);
+	static tstring EventIDToString(int idEvent);
+	static int EventStringToID(const tstring& sEvent);
+	static int CTCPEventStringToID(const tstring& sEvent, bool bReply = false);
 
 	static bool IsReplyEvent(int idEvent);
 	static bool IsCommandEvent(int idEvent);
@@ -26,18 +23,18 @@ public:
 	NetworkEvent(int idEvent, int nParams, ...);
 	~NetworkEvent();
 
-	void SetEvent(const String& sEvent);
-	const String& GetEvent() const;
+	void SetEvent(const tstring& sEvent);
+	const tstring& GetEvent() const;
 
 	void SetEventID(int idEvent);
 	int GetEventID() const;
 
-	UINT AddParam(const String& sParam);
-	const String& GetParam(UINT iParam) const;
+	UINT AddParam(const tstring& sParam);
+	const tstring& GetParam(UINT iParam) const;
 	UINT GetParamCount() const;
 
-	void SetPrefix(const String& sPrefix);
-	const String& GetPrefix() const;
+	void SetPrefix(const tstring& sPrefix);
+	const tstring& GetPrefix() const;
 
 	bool IsIncoming() const;
 	void SetIncoming(bool bIncoming);
@@ -50,9 +47,9 @@ protected:
 
 	bool m_bIncoming;
 	UINT m_idEvent;
-	String m_sEvent;
-	String m_sPrefix;
-	Vector<String> m_vecParams;
+	tstring m_sEvent;
+	tstring m_sPrefix;
+	std::vector<tstring> m_vecParams;
 	bool m_bAutoPrefix;
 };
 

@@ -19,7 +19,7 @@ class ITabWindow
 {
 public:	
 	virtual HWND GetTabWindow() = 0;
-	virtual const String GetTabTitle() = 0;
+	virtual const tstring GetTabTitle() = 0;
 
 	virtual void DoMenu(POINT pt) = 0;
 	virtual void DoDefaultAction() = 0;
@@ -65,19 +65,19 @@ public:
 // MainWindow
 	void AddWindowTab(ITabWindow* pWindow);
 	void RemoveWindowTab(ITabWindow* pWindow);
-	void SetWindowTabTitle(ITabWindow* pWindow, const String& sTitle);
+	void SetWindowTabTitle(ITabWindow* pWindow, const tstring& sTitle);
 	void SetWindowTabHighlight(ITabWindow* pWindow, int iHighlight);
 	void SetWindowTabMenu(HMENU hMenu);
-	void SetCurrentTarget(const String& sTarget);
-	String GetCurrentTarget() { return m_sCurrentTarget; }
-	String GetInput();
+	void SetCurrentTarget(const tstring& sTarget);
+	tstring GetCurrentTarget() { return m_sCurrentTarget; }
+	tstring GetInput();
 	void ClearInput();
-	void InsertInput(const String& str);
+	void InsertInput(const tstring& str);
 
 	HWND GetWindow() { return Window::GetWindow(); }
 
-	void OpenQuery(const String& user);
-	void CloseQuery(const String& user);
+	void OpenQuery(const tstring& user);
+	void CloseQuery(const tstring& user);
 
 // IEventHandler
 	void OnEvent(const NetworkEvent &networkEvent);
@@ -103,25 +103,25 @@ private:
 	void Disconnect();
 
 	bool ProcessSlashCommand();
-	void SlashQuit(const String& s);
-	void SlashPart(const String& s);
-	void SlashMsg(const String& s);
-	void SlashQuery(const String& s);
-	void SlashClose(const String& s);
-	void SlashSay(const String& s);
-	void SlashMe(const String& s);
-	void SlashKick(const String& s);
-	void SlashInvite(const String& s);
-	void SlashNotice(const String& s);
-	void SlashTopic(const String& s);
-	void SlashRaw(const String& s);
-	void SlashExit(const String& s);
-	void SlashAway(const String& s);
-	void SlashPing(const String& s);
-	void SlashCTCP(const String& s);
-	void SlashConnect(const String& s);
-	void SlashDisconnect(const String& s);
-	void SlashServer(const String& s);
+	void SlashQuit(const tstring& s);
+	void SlashPart(const tstring& s);
+	void SlashMsg(const tstring& s);
+	void SlashQuery(const tstring& s);
+	void SlashClose(const tstring& s);
+	void SlashSay(const tstring& s);
+	void SlashMe(const tstring& s);
+	void SlashKick(const tstring& s);
+	void SlashInvite(const tstring& s);
+	void SlashNotice(const tstring& s);
+	void SlashTopic(const tstring& s);
+	void SlashRaw(const tstring& s);
+	void SlashExit(const tstring& s);
+	void SlashAway(const tstring& s);
+	void SlashPing(const tstring& s);
+	void SlashCTCP(const tstring& s);
+	void SlashConnect(const tstring& s);
+	void SlashDisconnect(const tstring& s);
+	void SlashServer(const tstring& s);
 
 	void OnConnectStateChange(const NetworkEvent &e);
 	void OnJoin(const NetworkEvent& event);
@@ -133,21 +133,21 @@ private:
 	void OnRplWelcome(const NetworkEvent& event);
 	void OnRplUserHost(const NetworkEvent& event);
 
-	IDisplayWindow* CreateQueryWindow(const String& sUser);
-	IDisplayWindow* CreateChannelWindow(const String& sChannel);
+	IDisplayWindow* CreateQueryWindow(const tstring& sUser);
+	IDisplayWindow* CreateChannelWindow(const tstring& sChannel);
 
-	IDisplayWindow* GetDisplayWindow(const String& sKey);
+	IDisplayWindow* GetDisplayWindow(const tstring& sKey);
 	void SetDefaultWindow(IDisplayWindow* pWindow);
 	void DispatchEvent(const NetworkEvent& event);
 	void DispatchToChannels(const NetworkEvent& event);
-	void DispatchToChannelsWithUser(const NetworkEvent& event, const String& sUser);
+	void DispatchToChannelsWithUser(const NetworkEvent& event, const tstring& sUser);
 
 	HWND m_hMenuBar;
 	InputBar m_InputBar;
 	TabStrip m_TabStrip;
 	bool m_bConnected;
 
-	Vector<ITabWindow*> m_vecChildren;
+	std::vector<ITabWindow*> m_vecChildren;
 	IDisplayWindow* m_pDefaultWindow;
 
 
@@ -160,7 +160,7 @@ private:
 	HMENU m_hServerMenu;
 
 	RECT m_rcOldClient;
-	String m_sCurrentTarget;
+	tstring m_sCurrentTarget;
 };
 
 #endif//_MAINWINDOW_H_INCLUDED_

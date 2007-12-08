@@ -1,8 +1,6 @@
 #ifndef _DCCCHATWINDOW_H_INCLUDED_
 #define _DCCCHATWINDOW_H_INCLUDED_
 
-#include "StringT.h"
-
 #include "GUI\Window.h"
 #include "GUI\MainWindow.h"
 #include "GUI\DisplayWindow.h"

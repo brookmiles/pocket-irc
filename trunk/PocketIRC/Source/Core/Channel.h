@@ -1,8 +1,6 @@
 #ifndef _CHANNEL_H_INCLUDED_
 #define _CHANNEL_H_INCLUDED_
 
-#include "StringT.h"
-
 #include "NetworkEvent.h"
 #include "NickList.h"
 
@@ -14,27 +12,27 @@ public:
 	Channel();
 	~Channel();
 
-	void SetName(const String& sChannel);
+	void SetName(const tstring& sChannel);
 	void SetSession(Session* pSession);
 
-	void ParseNameList(const String& sNameList);
-	void AddName(const String& sName, bool bOp, bool bVoice);
-	void RemoveName(const String& sName);
-	void ChangeName(const String& sOldName, const String& sNewName);
+	void ParseNameList(const tstring& sNameList);
+	void AddName(const tstring& sName, bool bOp, bool bVoice);
+	void RemoveName(const tstring& sName);
+	void ChangeName(const tstring& sOldName, const tstring& sNewName);
 
 	void OnMode(const NetworkEvent& event);
 
 //IChannel
-	const String& GetName() const;
-	bool IsOn(const String& sUser);
-	bool IsVoice(const String& sUser);
-	bool IsOp(const String& sUser);
+	const tstring& GetName() const;
+	bool IsOn(const tstring& sUser);
+	bool IsVoice(const tstring& sUser);
+	bool IsOp(const tstring& sUser);
 
 protected:
 
 private:
 	Session* m_pSession;
-	String m_sChannel;
+	tstring m_sChannel;
 
 	NickList m_nickList;
 	//IChannelUserNotify* m_pNotify;
@@ -45,9 +43,9 @@ struct ChannelMode
 {
 	bool add;
 	TCHAR mode;
-	String param;
+	tstring param;
 };
 
-void ParseChannelModes(const NetworkEvent& eventIn, Vector<ChannelMode>& listOut);
+void ParseChannelModes(const NetworkEvent& eventIn, std::vector<ChannelMode>& listOut);
 
 #endif//_CHANNEL_H_INCLUDED_

@@ -1,21 +1,24 @@
 #include "PocketIRC.h"
-#include "StringT.h"
 #include "WindowString.h"
 
-bool GetWindowString(HWND hwnd, String& str)
+bool GetWindowString(HWND hwnd, tstring& str)
 {
 	int len = GetWindowTextLength(hwnd);
 	if(len > 0)
 	{
-		str.Reserve(len + 1);
-		GetWindowText(hwnd, str.Str(), str.Capacity());
+		TCHAR* buf = new TCHAR[len + 1];
+
+		GetWindowText(hwnd, buf, len + 1);
+
+		str = buf;
+		delete[] buf;
 
 		return true;
 	}
 	return false;
 }
 
-bool GetDlgItemString(HWND hwnd, UINT id, String& str)
+bool GetDlgItemString(HWND hwnd, UINT id, tstring& str)
 {
 	return GetWindowString(GetDlgItem(hwnd, id), str);
 }

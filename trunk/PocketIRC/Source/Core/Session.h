@@ -1,8 +1,6 @@
 #ifndef _SESSION_H_INCLUDED_
 #define _SESSION_H_INCLUDED_
 
-#include "StringT.h"
-
 #include "NetworkEvent.h"
 #include "Channel.h"
 
@@ -14,9 +12,9 @@ class Session :
 public:
 	struct ChannelListEntry
 	{
-		String name;
-		String users;
-		String topic;
+		tstring name;
+		tstring users;
+		tstring topic;
 	};
 
 	Session();
@@ -27,35 +25,35 @@ public:
 	void AddEventHandler(INetworkEventNotify* pHandler);
 	void RemoveEventHandler(INetworkEventNotify* pHandler);
 
-	void Pass(const String& sPass);
-	void User(const String& sNick, const String& sName);
-	void Nick(const String& sNick);
-	void Join(const String& sChannel, const String& sKey = String(0));
-	void Part(const String& sChannel, const String& sMsg = String(0));
-	void Kick(const String& sChannel, const String& sUser, const String& sReason = String(0));
-	void Invite(const String& sUser, const String& sChannel);
-	void Topic(const String& sChannel, const String& sTopic = String(0));
-	void PrivMsg(const String& sTarget, const String& sMsg);
-	void Action(const String& sTarget, const String& sMsg);
-	void Notice(const String& sTarget, const String& sMsg);
-	void CTCP(const String& sTarget, const String& sCmd, const String& sMsg = String(0));
-	void CTCPReply(const String& sTarget, const String& sCmd, const String& sMsg = String(0));
-	void CTCPPing(const String& sTarget);
-	void Whois(const String& sTarget);
-	void Mode(const String& sTarget, const String& sModes);
-	void UserHost(const String& sUser);
-	void Quit(const String& sMsg);
-	void Away(const String& sMsg);
-	void Raw(const String& sText);
+	void Pass(const tstring& sPass);
+	void User(const tstring& sNick, const tstring& sName);
+	void Nick(const tstring& sNick);
+	void Join(const tstring& sChannel, const tstring& sKey = tstring(0));
+	void Part(const tstring& sChannel, const tstring& sMsg = tstring(0));
+	void Kick(const tstring& sChannel, const tstring& sUser, const tstring& sReason = tstring(0));
+	void Invite(const tstring& sUser, const tstring& sChannel);
+	void Topic(const tstring& sChannel, const tstring& sTopic = tstring(0));
+	void PrivMsg(const tstring& sTarget, const tstring& sMsg);
+	void Action(const tstring& sTarget, const tstring& sMsg);
+	void Notice(const tstring& sTarget, const tstring& sMsg);
+	void CTCP(const tstring& sTarget, const tstring& sCmd, const tstring& sMsg = tstring(0));
+	void CTCPReply(const tstring& sTarget, const tstring& sCmd, const tstring& sMsg = tstring(0));
+	void CTCPPing(const tstring& sTarget);
+	void Whois(const tstring& sTarget);
+	void Mode(const tstring& sTarget, const tstring& sModes);
+	void UserHost(const tstring& sUser);
+	void Quit(const tstring& sMsg);
+	void Away(const tstring& sMsg);
+	void Raw(const tstring& sText);
 	void Ping();
 	void List();
 
-	const String& GetNick() const;
-	void SetNick(const String& sNick);
-	bool IsMe(const String& sNick);
+	const tstring& GetNick() const;
+	void SetNick(const tstring& sNick);
+	bool IsMe(const tstring& sNick);
 	bool IsConnected() { return m_bConnected; }
-	Channel* GetChannel(const String& sChannel) const;
-	const Vector<ChannelListEntry*>& GetChannelList() { return m_vecChannelList; }
+	Channel* GetChannel(const tstring& sChannel) const;
+	const std::vector<ChannelListEntry*>& GetChannelList() { return m_vecChannelList; }
 	void ClearChannelList();
 
 	DWORD GetIdleTime() { return GetTickCount() - m_lastActivity; }
@@ -73,8 +71,8 @@ protected:
 	// DoEvent - Send an outgoing event
 	void DoEvent(const NetworkEvent& networkEvent);
 
-	Channel* CreateChannelObject(const String& sChannel);
-	void DestroyChannelObject(const String& sChannel);
+	Channel* CreateChannelObject(const tstring& sChannel);
+	void DestroyChannelObject(const tstring& sChannel);
 
 	void OnConnect(const NetworkEvent& event);
 	void OnDisconnect(const NetworkEvent& event);
@@ -97,11 +95,11 @@ protected:
 	void OnRplList(const NetworkEvent& event);
 
 private:
-	String m_sNick;
-	Vector<Channel*> m_vecChannels;
-	Vector<ChannelListEntry*> m_vecChannelList;
+	tstring m_sNick;
+	std::vector<Channel*> m_vecChannels;
+	std::vector<ChannelListEntry*> m_vecChannelList;
 
-	Vector<INetworkEventNotify*> m_vecEventHandlers;
+	std::vector<INetworkEventNotify*> m_vecEventHandlers;
 
 	IWriteNetworkEvent* m_pWriter;
 

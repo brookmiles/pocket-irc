@@ -1,17 +1,15 @@
 #ifndef _IRCSTRINGFORMAT_H_INCLUDED_
 #define _IRCSTRINGFORMAT_H_INCLUDED_
 
-#include "StringT.h"
-
 struct StringFormat
 {
-	static String StripFormatting(const String& str);
-	static UINT CollectFormats(const String& str, UINT iStart, const StringFormat& def, StringFormat& fmt);
-	static UINT FindSegmentLen(const String& str, UINT iStart);
-	static UINT ParseColorCode(LPCTSTR psz, StringFormat& fmt);
-	static UINT ParseSingleColor(LPCTSTR psz, COLORREF* pcr);
+	static tstring StripFormatting(const tstring& str);
+	static UINT CollectFormats(const tstring& str, UINT iStart, const StringFormat& def, StringFormat& fmt);
+	static UINT FindSegmentLen(const tstring& str, UINT iStart);
+	static UINT ParseColorCode(const tstring& str, StringFormat& fmt);
+	static UINT ParseSingleColor(const tstring& str, COLORREF* pcr);
 	static COLORREF GetColorCode(UINT iColor);
-	static UINT FindWordBreak(LPCTSTR psz, UINT nFit);
+	static UINT FindWordBreak(const tstring& str, UINT nFit);
 	COLORREF fg;
 	COLORREF bg;
 	bool bold;

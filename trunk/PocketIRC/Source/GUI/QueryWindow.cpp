@@ -2,6 +2,7 @@
 #include "QueryWindow.h"
 
 #include "IrcString.h"
+#include "StringUtil.h"
 
 #include "resource.h"
 
@@ -9,10 +10,10 @@
 //	IDisplayWindowFactory
 /////////////////////////////////////////////////////////////////////////////
 
-//IDisplayWindow* QueryWindowFactory::CreateDisplayWindow(const String& sKey, 
-//	const String& sTitle, LPARAM lParam)
+//IDisplayWindow* QueryWindowFactory::CreateDisplayWindow(const tstring& sKey, 
+//	const tstring& sTitle, LPARAM lParam)
 //{
-//	_TRACE("QueryWindowFactory(0x%08X)::CreateDisplayWindow(\"%s\", \"%s\", 0x%08X)", this, sKey.Str(), sTitle.Str(), lParam);
+//	_TRACE("QueryWindowFactory(0x%08X)::CreateDisplayWindow(\"%s\", \"%s\", 0x%08X)", this, sKey.c_str(), sTitle.c_str(), lParam);
 //
 //	if(IsNick(sKey))
 //	{
@@ -51,9 +52,9 @@ QueryWindow::~QueryWindow()
 //	Window Creation
 /////////////////////////////////////////////////////////////////////////////
 
-void QueryWindow::SetUser(const String& user)
+void QueryWindow::SetUser(const tstring& user)
 {
-	_TRACE("QueryWindow(0x%08X)::SetUser(\"%s\")", this, user.Str());
+	_TRACE("QueryWindow(0x%08X)::SetUser(\"%s\")", this, user.c_str());
 	m_sUser = user;
 
 	SetKey(m_sUser);
@@ -96,14 +97,14 @@ void QueryWindow::OnDestroy(WPARAM wParam, LPARAM lParam)
 
 bool QueryWindow::OnTabMenuCommand(UINT idCmd)
 {
-	String sInput = m_pMainWindow->GetInput();
+	tstring sInput = m_pMainWindow->GetInput();
 
 	switch(idCmd)
 	{
 		case ID_SAY:
 		case ID_QUERY_SAY:
 		{
-			if(sInput.Size())
+			if(sInput.size())
 			{
 				m_pMainWindow->GetSession()->PrivMsg(m_sUser, sInput);
 				m_pMainWindow->ClearInput();
@@ -112,7 +113,7 @@ bool QueryWindow::OnTabMenuCommand(UINT idCmd)
 		break;
 		case ID_QUERY_ACT:
 		{
-			if(sInput.Size())
+			if(sInput.size())
 			{
 				m_pMainWindow->GetSession()->Action(m_sUser, sInput);
 				m_pMainWindow->ClearInput();
@@ -121,7 +122,7 @@ bool QueryWindow::OnTabMenuCommand(UINT idCmd)
 		break;
 		case ID_QUERY_NOTICE:
 		{
-			if(sInput.Size())
+			if(sInput.size())
 			{
 				m_pMainWindow->GetSession()->Notice(m_sUser, sInput);
 				m_pMainWindow->ClearInput();
@@ -130,9 +131,9 @@ bool QueryWindow::OnTabMenuCommand(UINT idCmd)
 		break;
 		case ID_QUERY_CTCP:
 		{
-			if(sInput.Size())
+			if(sInput.size())
 			{
-				m_pMainWindow->GetSession()->CTCP(m_sUser, sInput.GetWord(0), sInput.GetWord(1, true));
+				m_pMainWindow->GetSession()->CTCP(m_sUser, GetWord(sInput, 0), GetWord(sInput, 1, true));
 				m_pMainWindow->ClearInput();
 			}
 		}

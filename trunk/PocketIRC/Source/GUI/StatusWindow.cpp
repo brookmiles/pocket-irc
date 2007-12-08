@@ -3,6 +3,7 @@
 
 #include "Config\Options.h"
 #include "IrcString.h"
+#include "StringUtil.h"
 
 #include "resource.h"
 
@@ -83,7 +84,7 @@ bool StatusWindow::OnTabMenuCommand(UINT idCmd)
 {
 	_TRACE("StatusWindow(0x%08X)::OnTabMenuCommand(%u)", this, idCmd);
 	
-	String sInput = m_pMainWindow->GetInput();
+	tstring sInput = m_pMainWindow->GetInput();
 
 	switch(idCmd)
 	{
@@ -91,12 +92,12 @@ bool StatusWindow::OnTabMenuCommand(UINT idCmd)
 		case ID_STATUS_JOIN:
 		case ID_STATUS_QUERY:
 		{
-			String sParam1 = sInput.GetWord(0);
-			if(sParam1.Size())
+			tstring sParam1 = GetWord(sInput, 0);
+			if(sParam1.size())
 			{
 				if(IsChannel(sParam1) && idCmd != ID_STATUS_QUERY)
 				{
-					String sParam2 = sInput.GetWord(1);
+					tstring sParam2 = GetWord(sInput, 1);
 
 					m_pMainWindow->GetSession()->Join(sParam1, sParam2);
 					m_pMainWindow->ClearInput();
@@ -111,7 +112,7 @@ bool StatusWindow::OnTabMenuCommand(UINT idCmd)
 		break;
 		case ID_STATUS_WHOIS:
 		{
-			String sParam1 = sInput.GetWord(0);
+			tstring sParam1 = GetWord(sInput, 0);
 			if(IsNick(sParam1))
 			{
 				m_pMainWindow->GetSession()->Whois(sParam1);
@@ -121,7 +122,7 @@ bool StatusWindow::OnTabMenuCommand(UINT idCmd)
 		break;
 		case ID_STATUS_NICK:
 		{
-			String sParam1 = sInput.GetWord(0);
+			tstring sParam1 = GetWord(sInput, 0);
 			if(IsNick(sParam1))
 			{
 				m_pMainWindow->GetSession()->Nick(sParam1);
@@ -137,7 +138,7 @@ bool StatusWindow::OnTabMenuCommand(UINT idCmd)
 		break;
 		case ID_STATUS_RAW:
 		{
-			if(sInput.Size())
+			if(sInput.size())
 			{
 				m_pMainWindow->GetSession()->Raw(sInput);
 				m_pMainWindow->ClearInput();
@@ -146,9 +147,9 @@ bool StatusWindow::OnTabMenuCommand(UINT idCmd)
 		break;
 		case ID_STATUS_NICKSERV:
 		{
-			if(sInput.Size())
+			if(sInput.size())
 			{
-				String sMsg = _T("NICKSERV ");
+				tstring sMsg = _T("NICKSERV ");
 				sMsg += sInput;
 				m_pMainWindow->GetSession()->Raw(sMsg);
 				m_pMainWindow->ClearInput();
@@ -157,7 +158,7 @@ bool StatusWindow::OnTabMenuCommand(UINT idCmd)
 		break;
 		case ID_STATUS_QUIT:
 		{
-			if(sInput.Size() && g_Options.IsRegistered())
+			if(sInput.size() && g_Options.IsRegistered())
 			{
 				m_pMainWindow->GetSession()->Quit(sInput);
 				m_pMainWindow->ClearInput();

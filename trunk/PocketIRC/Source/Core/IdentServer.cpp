@@ -39,9 +39,9 @@ void IdentServer::SetSocketNotify(ISocketNotify* pNotify)
 	m_sockAccepter.SetNotify(pNotify);
 }
 
-HRESULT IdentServer::Start(USHORT usPort, const String& sUserName)
+HRESULT IdentServer::Start(USHORT usPort, const tstring& sUserName)
 {
-	_TRACE("IdentServer(0x%08X)::Start(%u, \"%s\")", this, usPort, sUserName.Str());
+	_TRACE("IdentServer(0x%08X)::Start(%u, \"%s\")", this, usPort, sUserName.c_str());
 
 	HRESULT hr = E_UNEXPECTED;
 
@@ -69,7 +69,7 @@ void IdentServer::Stop()
 	_TRACE("IdentServer(0x%08X)::Stop()", this);
 
 	m_uPort = 0;
-	m_sUserName = 0;
+	m_sUserName.clear();
 
 	if(m_pTransport)
 	{
@@ -169,7 +169,7 @@ void IdentServer::OnLineRead(LPCTSTR pszLine)
 	_ASSERTE(m_pTransport != NULL);
 
 	TCHAR buf[100];
-	_sntprintf(buf, sizeof(buf)/sizeof(TCHAR), _T("%s : USERID : UNKNOWN : %s\r\n"), pszLine, m_sUserName.Str());
+	_sntprintf(buf, sizeof(buf)/sizeof(TCHAR), _T("%s : USERID : UNKNOWN : %s\r\n"), pszLine, m_sUserName.c_str());
 	buf[sizeof(buf)/sizeof(TCHAR) - 1] = '\0';
 
 	USES_CONVERSION;

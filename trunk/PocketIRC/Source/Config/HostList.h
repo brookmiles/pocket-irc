@@ -2,8 +2,6 @@
 #define _HOSTLIST_H_INCLUDED_
 
 #include "Host.h"
-#include "Vector.h"
-#include "StringT.h"
 
 class HostList
 {
@@ -14,8 +12,8 @@ public:
 
 	const HostList& operator=(HostList& from);
 
-	HRESULT FindHost(const String& sAddress, Host** ppNewHost);
-	HRESULT AddHost(const String& sAddress, USHORT usPort, Host** ppNewHost);
+	HRESULT FindHost(const tstring& sAddress, Host** ppNewHost);
+	HRESULT AddHost(const tstring& sAddress, USHORT usPort, Host** ppNewHost);
 	HRESULT AddHost(Host* pHost, Host** ppNewHost);
 	HRESULT RemoveHost(Host* pHost);
 	void Clear();
@@ -27,7 +25,8 @@ public:
 	HRESULT Item(UINT nIndex, Host** ppHost);
 
 private:
-	Vector<Host*> m_listHosts;
+	typedef std::vector<Host*> listtype_t;
+	listtype_t m_listHosts;
 	Host* m_pDefault;
 };
 

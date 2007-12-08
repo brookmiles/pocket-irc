@@ -2,7 +2,6 @@
 #define _FORMATLIST_H_INCLUDED_
 
 #include "Format.h"
-#include "Vector.h"
 
 class FormatList
 {
@@ -21,7 +20,7 @@ public:
 	void Clear();
 
 private:
-	Vector<Format*> m_vecFormats;
+	std::vector<Format*> m_vecFormats;
 };
 
 #endif//_FORMATLIST_H_INCLUDED_

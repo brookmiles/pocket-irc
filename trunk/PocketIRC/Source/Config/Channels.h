@@ -1,18 +1,15 @@
 #pragma once
 
-#include "Common\StringT.h"
-#include "Common\Vector.h"
-
 struct FavouriteChannel
 {
-	FavouriteChannel(const String& name, const String& key = _T(""), bool autoJoin = false)
+	FavouriteChannel(const tstring& name, const tstring& key = _T(""), bool autoJoin = false)
 	{
 		Name = name;
 		Key = key;
 		AutoJoin = autoJoin;
 	}
-	String Name;
-	String Key;
+	tstring Name;
+	tstring Key;
 	bool AutoJoin;
 };
 
@@ -26,9 +23,9 @@ public:
 	FavouriteChannelList& operator=(FavouriteChannelList& from);
 
 	FavouriteChannel* GetChannel(UINT i);
-	FavouriteChannel* AddChannel(const String& name, const String& key = _T(""), bool autoJoin = false);
-	FavouriteChannel* FindChannel(const String& name);
-	bool RemoveChannel(const String& name);
+	FavouriteChannel* AddChannel(const tstring& name, const tstring& key = _T(""), bool autoJoin = false);
+	FavouriteChannel* FindChannel(const tstring& name);
+	bool RemoveChannel(const tstring& name);
 	bool RemoveChannel(FavouriteChannel* chan);
 	UINT Count();
 	void Clear();

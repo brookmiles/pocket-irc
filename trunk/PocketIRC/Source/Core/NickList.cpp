@@ -19,7 +19,7 @@ NickList::~NickList()
 // Interface
 /////////////////////////////////////////////////////////////////////////////
 
-void NickList::AddNick(const String& sNick, bool bOp, bool bVoice)
+void NickList::AddNick(const tstring& sNick, bool bOp, bool bVoice)
 {
 	NickListEntry* pEntry = GetEntry(sNick);
 
@@ -28,7 +28,7 @@ void NickList::AddNick(const String& sNick, bool bOp, bool bVoice)
 		pEntry = new NickListEntry;
 		pEntry->nick = sNick;
 
-		m_vecNicks.Append(pEntry);
+		m_vecNicks.push_back(pEntry);
 	}
 
 	_ASSERTE(pEntry != NULL);
@@ -37,36 +37,36 @@ void NickList::AddNick(const String& sNick, bool bOp, bool bVoice)
 	pEntry->voice = bVoice;
 }
 
-void NickList::RemoveNick(const String& sNick)
+void NickList::RemoveNick(const tstring& sNick)
 {
 	UINT i = Find(sNick);
 	if(i != -1)
 	{
 		delete m_vecNicks[i];
-		m_vecNicks.Erase(i);
+		m_vecNicks.erase(m_vecNicks.begin() + i);
 	}
 }
 
 void NickList::Clear()
 {
-	for(UINT i = 0; i < m_vecNicks.Size(); ++i)
+	for(UINT i = 0; i < m_vecNicks.size(); ++i)
 	{
 		delete m_vecNicks[i];
 	}
-	m_vecNicks.Clear();
+	m_vecNicks.clear();
 }
 
 
 UINT NickList::Count()
 {
-	return m_vecNicks.Size();
+	return m_vecNicks.size();
 }
 
-UINT NickList::Find(const String& sNick)
+UINT NickList::Find(const tstring& sNick)
 {
-	for(UINT i = 0; i < m_vecNicks.Size(); ++i)
+	for(UINT i = 0; i < m_vecNicks.size(); ++i)
 	{
-		if(sNick.Compare(m_vecNicks[i]->nick, false))
+		if(_tcsicmp(sNick.c_str(), m_vecNicks[i]->nick.c_str()) == 0)
 		{
 			return i;
 		}
@@ -76,12 +76,12 @@ UINT NickList::Find(const String& sNick)
 
 NickListEntry* NickList::GetEntry(UINT i)
 {
-	_ASSERTE(i < m_vecNicks.Size());
+	_ASSERTE(i < m_vecNicks.size());
 
 	return m_vecNicks[i];
 }
 
-NickListEntry* NickList::GetEntry(const String& sNick)
+NickListEntry* NickList::GetEntry(const tstring& sNick)
 {
 	UINT i = Find(sNick);
 	if(i != -1)

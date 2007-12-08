@@ -76,7 +76,7 @@ void Reader::OnError(HRESULT hr)
 	TCHAR buf[200] = _T("");
 	_sntprintf(buf, sizeof(buf)/sizeof(buf[0]), _T("%s (0x%08X)"), SocketTransport::GetWSAErrorMessage(HRESULT_CODE(hr)), hr);
 
-	NetworkEvent event(SYS_EVENT_ERROR, 1, &String(buf));
+	NetworkEvent event(SYS_EVENT_ERROR, 1, &tstring(buf));
 	m_pNotify->OnEvent(event);
 }
 
@@ -95,11 +95,11 @@ void Reader::OnLineRead(LPCTSTR pszLine)
 	NetworkEvent event;
 	event.SetIncoming(true);
 
-	String sStripped;
+	tstring sStripped;
 	if(g_Options.GetStripIncoming())
 	{
 		sStripped = StringFormat::StripFormatting(pszLine);
-		pszLine = sStripped.Str();
+		pszLine = sStripped.c_str();
 	}
 
 	bool bParseOk = ParseEvent(event, pszLine);
@@ -252,8 +252,7 @@ bool Reader::ParseEvent(NetworkEvent& event, LPCTSTR pszInput)
 	}
 
 	// Special case, NOTICE AUTH at login.
-	if(idEvent == IRC_CMD_NOTICE && event.GetPrefix().Size() == 0 && 
-		event.GetParamCount() > 0)
+	if(idEvent == IRC_CMD_NOTICE && event.GetPrefix().size() == 0 && event.GetParamCount() > 0)
 	{
 		event.SetPrefix(event.GetParam(0));
 	}

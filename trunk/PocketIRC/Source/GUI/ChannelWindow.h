@@ -1,8 +1,6 @@
 #ifndef _CHANNELWINDOW_H_INCLUDED_
 #define _CHANNELWINDOW_H_INCLUDED_
 
-#include "StringT.h"
-
 #include "Core\Channel.h"
 
 #include "DisplayWindow.h"
@@ -20,8 +18,8 @@ public:
 	ChannelWindow();
 	~ChannelWindow();
 
-	void SetChannel(const String& sChannel);
-	bool HasUser(const String& sUser);
+	void SetChannel(const tstring& sChannel);
+	bool HasUser(const tstring& sUser);
 
 // IDisplayWindow
 	void OnEvent(const NetworkEvent& networkEvent);
@@ -50,16 +48,16 @@ private:
 	void OnRplEndOfNames(const NetworkEvent& event);
 	void OnConnectStateChange(const NetworkEvent &e);
 
-	int GetNickListIndex(const String& sUser);
-	String GetNickListEntry(int index);
-	void DoUserOnChannelMenu(WORD x, WORD y, const String& sUser);
+	int GetNickListIndex(const tstring& sUser);
+	tstring GetNickListEntry(int index);
+	void DoUserOnChannelMenu(WORD x, WORD y, const tstring& sUser);
 	bool OnTabMenuCommand(UINT idCmd);
 
-	void OnUserAdd(const String& sUser, bool bOp, bool bVoice);
-	void OnUserRemove(const String& sUser);
-	void OnUserUpdate(const String& sUser, const String& sNewNick = _T(""));
+	void OnUserAdd(const tstring& sUser, bool bOp, bool bVoice);
+	void OnUserRemove(const tstring& sUser);
+	void OnUserUpdate(const tstring& sUser, const tstring& sNewNick = _T(""));
 
-	String m_sChannel;
+	tstring m_sChannel;
 	HWND m_hNickList;
 	bool m_bShowNickList;
 	bool m_bHaveNickList;

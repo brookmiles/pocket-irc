@@ -7,7 +7,7 @@ class IWriteNetworkEvent
 {
 public:
 	virtual void WriteEvent(const NetworkEvent& event) = 0;
-	virtual void Raw(const String& sMsg) = 0;
+	virtual void Write(const tstring& sMsg) = 0;
 
 protected:
 	~IWriteNetworkEvent(){}

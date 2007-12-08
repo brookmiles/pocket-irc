@@ -25,7 +25,7 @@ public:
 	void SetEventNotify(INetworkEventNotify* pNotify);
 
 // IIdentServer
-	HRESULT Start(USHORT usPort, const String& sUserName);
+	HRESULT Start(USHORT usPort, const tstring& sUserName);
 	bool IsRunning();
 	void Stop();
 
@@ -41,7 +41,7 @@ public:
 	void OnLineRead(LPCTSTR pszLine);
 
 private:
-	String m_sUserName;
+	tstring m_sUserName;
 	USHORT m_uPort;
 	SocketAccepter m_sockAccepter;
 	SocketTransport* m_pTransport;

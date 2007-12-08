@@ -1,6 +1,7 @@
 #include "PocketIRC.h"
 
 #include "IrcString.h"
+#include "StringUtil.h"
 
 #include "Session.h"
 #include "Channel.h"
@@ -23,35 +24,33 @@ Channel::~Channel()
 // Interface
 /////////////////////////////////////////////////////////////////////////////
 
-void Channel::SetName(const String& sName)
+void Channel::SetName(const tstring& sName)
 {
 	m_sChannel = sName;
 }
 
-
-void Channel::ParseNameList(const String& stringIn)
+void Channel::ParseNameList(const tstring& stringIn)
 {
-	UINT iName = 0;
-	String sName;
+	std::vector<tstring> names;
+	Split(stringIn, names, _T(' '), false);
 
-	while((sName = stringIn.GetWord(iName)).Size() > 0)
+	for(std::vector<tstring>::iterator i = names.begin(); i != names.end(); ++i)
 	{
-		AddName(StripNick(sName), NickHasMode(sName, '@'), NickHasMode(sName, '+'));
-		iName++;
+		AddName(StripNick(*i, _T("@+")), NickHasMode(*i, '@'), NickHasMode(*i, '+'));
 	}
 }
 
-void Channel::AddName(const String& sName, bool bOp, bool bVoice)
+void Channel::AddName(const tstring& sName, bool bOp, bool bVoice)
 {
 	m_nickList.AddNick(sName, bOp, bVoice);
 }
 
-void Channel::RemoveName(const String& sName)
+void Channel::RemoveName(const tstring& sName)
 {
 	m_nickList.RemoveNick(sName);
 }
 
-void Channel::ChangeName(const String& sOldName, const String& sNewName)
+void Channel::ChangeName(const tstring& sOldName, const tstring& sNewName)
 {
 	NickListEntry* pEntry = m_nickList.GetEntry(sOldName);
 	_ASSERTE(pEntry != NULL);
@@ -64,12 +63,12 @@ void Channel::ChangeName(const String& sOldName, const String& sNewName)
 
 void Channel::OnMode(const NetworkEvent& event)
 {
-	_TRACE("Channel(0x%08X)::OnMode(%s)", this, event.GetParam(0).Str());
+	_TRACE("Channel(0x%08X)::OnMode(%s)", this, event.GetParam(0).c_str());
 
-	Vector<ChannelMode> modeList;
+	std::vector<ChannelMode> modeList;
 	ParseChannelModes(event, modeList);
 
-	for(UINT i = 0; i < modeList.Size(); ++i)
+	for(UINT i = 0; i < modeList.size(); ++i)
 	{
 		ChannelMode& mode = modeList[i];
 		switch(mode.mode)
@@ -77,10 +76,10 @@ void Channel::OnMode(const NetworkEvent& event)
 		case 'v':
 		case 'o':
 			{
-				String& sUser = mode.param;
-				_ASSERTE(sUser.Size());
+				tstring& sUser = mode.param;
+				_ASSERTE(sUser.size());
 
-				if(sUser.Size())
+				if(sUser.size())
 				{
 					NickListEntry* pEntry = m_nickList.GetEntry(sUser);
 					_ASSERTE(pEntry != NULL);
@@ -107,17 +106,17 @@ void Channel::OnMode(const NetworkEvent& event)
 // IChannel
 /////////////////////////////////////////////////////////////////////////////
 
-const String& Channel::GetName() const
+const tstring& Channel::GetName() const
 {
 	return m_sChannel;
 }
 
-bool Channel::IsOn(const String& sUser)
+bool Channel::IsOn(const tstring& sUser)
 {
 	return (m_nickList.Find(sUser) != -1);
 }
 
-bool Channel::IsVoice(const String& sUser)
+bool Channel::IsVoice(const tstring& sUser)
 {
 	NickListEntry *pEntry = m_nickList.GetEntry(sUser);
 	_ASSERTE(pEntry != NULL);
@@ -129,7 +128,7 @@ bool Channel::IsVoice(const String& sUser)
 	return false;
 }
 
-bool Channel::IsOp(const String& sUser)
+bool Channel::IsOp(const tstring& sUser)
 {
 	NickListEntry *pEntry = m_nickList.GetEntry(sUser);
 	_ASSERTE(pEntry != NULL);
@@ -145,7 +144,7 @@ bool Channel::IsOp(const String& sUser)
 // Utility
 /////////////////////////////////////////////////////////////////////////////
 
-void ParseChannelModes(const NetworkEvent& eventIn, Vector<ChannelMode>& listOut)
+void ParseChannelModes(const NetworkEvent& eventIn, std::vector<ChannelMode>& listOut)
 {
 	UINT iModeParam = 1;
 	UINT iParam = 1;
@@ -153,10 +152,10 @@ void ParseChannelModes(const NetworkEvent& eventIn, Vector<ChannelMode>& listOut
 
 	while(iModeParam < eventIn.GetParamCount())
 	{
-		const String& sModeBlock = eventIn.GetParam(iModeParam);
+		const tstring& sModeBlock = eventIn.GetParam(iModeParam);
 		_ASSERTE(sModeBlock[0] == '+' || sModeBlock[0] == '-');
 
-		UINT nModeBlockLen = sModeBlock.Size();
+		UINT nModeBlockLen = sModeBlock.size();
 		bool bAdding = true;
 
 		for(UINT i = 0; i < nModeBlockLen; ++i)
@@ -171,44 +170,44 @@ void ParseChannelModes(const NetworkEvent& eventIn, Vector<ChannelMode>& listOut
 				case 'v':
 				case 'o':
 				{
-					String sUser = eventIn.GetParam(iModeParam + iParam++);
-					_ASSERTC(sUser.Size());
+					tstring sUser = eventIn.GetParam(iModeParam + iParam++);
+					_ASSERTC(sUser.size());
 				
 					ChannelMode mode = {bAdding, cMode, sUser};
-					listOut.Append(mode);
+					listOut.push_back(mode);
 				}
 				break;
 				case 'a': case 'i': case 'm': case 'n': case 'q': 
 				case 'p': case 'r': case 's': case 't': 
 				{
 					ChannelMode mode = {bAdding, cMode};
-					listOut.Append(mode);
+					listOut.push_back(mode);
 				}
 				break;
 				case 'k': case 'l':
 				{
 					// Add takes a parameter, remove doesn't
 
-					String sParam;
+					tstring sParam;
 					if(bAdding)
 					{
 						sParam = eventIn.GetParam(iModeParam + iParam++);
-						_ASSERTC(sParam.Size());
+						_ASSERTC(sParam.size());
 					}
 
 					ChannelMode mode = {bAdding, cMode, sParam};
-					listOut.Append(mode);
+					listOut.push_back(mode);
 				}
 				break;
 				case 'b': case 'e': case 'I': case 'O':
 				{
 					// Adding and remove both take parameters
 
-					String sParam = eventIn.GetParam(iModeParam + iParam++);
-					_ASSERTC(sParam.Size());
+					tstring sParam = eventIn.GetParam(iModeParam + iParam++);
+					_ASSERTC(sParam.size());
 
 					ChannelMode mode = {bAdding, cMode, sParam};
-					listOut.Append(mode);
+					listOut.push_back(mode);
 				}
 				break;
 				default:

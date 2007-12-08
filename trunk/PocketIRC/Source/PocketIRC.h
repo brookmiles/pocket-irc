@@ -13,10 +13,16 @@
 #include <atlconv.h>
 
 #include <list>
+#include <string>
+#include <map>
+#include <vector>
+#include <algorithm>
 
 #include "DeviceResolutionAware.h"
 
 #include "Debug.h"
+
+typedef std::basic_string<TCHAR> tstring;
 
 // Toolbars send this on tap-and-hold
 #define TBN_CUSTHELP            (TBN_FIRST-9)
