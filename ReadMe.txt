@@ -5,6 +5,8 @@ o Doesn't properly parse user mode flags like % and &, general problem of any no
 o Can't Send/Receive files from storage card
 o DCC not recognised in some formats, notice type maybe?
 
+o I am a test
+
 TODO
 
 o Unlamify "Trying..." and other status messages
