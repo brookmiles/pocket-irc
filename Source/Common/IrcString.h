@@ -4,9 +4,7 @@
 int IrcStringGetWord(LPTSTR dst, LPCTSTR src, int iMaxLen, LPCTSTR* ppEnd);
 LPCTSTR IrcStringSkipSpaces(LPCTSTR psz);
 
-bool IsNick(const tstring& sNick);
-bool IsChannel(const tstring& sChannel);
-bool IsUserString(const tstring& sUser);
+bool IsChannelString(const tstring& sChannel);
 tstring GetPrefixNick(const tstring& sPrefix);
 tstring GetPrefixHost(const tstring& sPrefix);
 tstring GetPrefixIdent(const tstring& sPrefix);

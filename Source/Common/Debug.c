@@ -38,7 +38,7 @@ int _DebugReport(LPCSTR pszFile, int iLine, LPCSTR pszExpr, UINT gle, BOOL bCons
 	_snprintf(buf, DEBUG_REPORT_BUF_SIZE, "Assertion Failed! (0x%08X)", gle);
 	mbstowcs(wbufTitle, buf, DEBUG_REPORT_BUF_SIZE/2);
 
-	_snprintf(buf, DEBUG_REPORT_BUF_SIZE, "%s:%d\r\n%s\r\nContinue?", 
+	_snprintf(buf, DEBUG_REPORT_BUF_SIZE, "%s:%d\r\n%s", 
 		strrchr(pszFile, '\\') + 1, iLine, pszExpr);
 	mbstowcs(wbuf, buf, DEBUG_REPORT_BUF_SIZE);
 

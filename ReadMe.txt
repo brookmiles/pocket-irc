@@ -1,26 +1,28 @@
 
 BUGS
 
-o Doesn't properly parse user mode flags like % and &, general problem of any non-EFNet server flag compatibility
 o Can't Send/Receive files from storage card
 o DCC not recognised in some formats, notice type maybe?
+o Replace "[ ... ]" with "" in channel list
+o Unlamify "Trying..." and other status messages
 
 o Another test
 
 TODO
 
-o Unlamify "Trying..." and other status messages
+o Multiple codepage support
+o Logging
+
+o Per network/server? channel lists
+o Take channel list out of session object
 o Auto Reconnect on Disconnection
 o Secondary/generated nick
 
 o Resizeable user list
-o Unicode/multibyte support
-o Logging
 o Network server lists
-o Server capability parsing
 o DNS lookup on server provided host info
 o Make /list window headers sortable
-o Show user list by default
+o Show user list by default option
 o Hold to scroll right/left through tabs
 o Highlight tab arrow with highest notification colour
 
@@ -35,8 +37,7 @@ o Auto Rejoin on Kick
 o DCC Progress meter
 o Open/Run/Play files from DCC window
 
-o Simply socket sink to a single callback with messages
-
+? Simply socket sink to a single callback with messages
 ? Auto-connect on run
 ? Single thread socket handling
 ? DLL Plugins
@@ -49,6 +50,8 @@ o Simply socket sink to a single callback with messages
 ? General perform on connect script
 ? Per network join on connect and perform
 
+x Server capability parsing
+x Doesn't properly parse user mode flags like % and &, general problem of any non-EFNet server flag compatibility
 x Channel list breaks on non-breaking spaces in nicknames !#%#@  (irc.visp.ru, #sarovnet, "Dr Geegle")
 x User changes nick with query open can no longer talk to that user
 x Make DCC List window landscape/square friendly
@@ -60,7 +63,6 @@ x Enable green button at all times since you can always use it :/
 x /server and /connect behaviour when already connected
 x Channel List doesn't parse some channels correctly
 x Remember channel list (per session)
-x Replace "[ ... ]" with "" in channel list
 x Landscape friendly Options dlg
 x Landscape friendly Channels dlg
 x Add List tab to Channels window and ability to join by typing in a new one

@@ -455,7 +455,7 @@ void DCCListWindow::OnChat()
 {
 	tstring sUser;
 
-	if(GetDlgItemString(m_hDlg, IDC_DCCLIST_USER, sUser) && IsNick(sUser))
+	if(GetDlgItemString(m_hDlg, IDC_DCCLIST_USER, sUser))
 	{
 		m_pDCCHandler->Chat(sUser);
 	}
@@ -465,7 +465,7 @@ void DCCListWindow::OnSend()
 {
 	tstring sUser;
 
-	if(GetDlgItemString(m_hDlg, IDC_DCCLIST_USER, sUser) && IsNick(sUser))
+	if(GetDlgItemString(m_hDlg, IDC_DCCLIST_USER, sUser))
 	{
 		m_pDCCHandler->Send(sUser);
 	}

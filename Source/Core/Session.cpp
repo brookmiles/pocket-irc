@@ -16,6 +16,7 @@ Session::Session() :
 	m_bConnected(false)
 {
 	ResetIdleCounter();
+	InitDefaultServerCapabilities();
 }
 
 Session::~Session()
@@ -312,6 +313,7 @@ Channel* Session::CreateChannelObject(const tstring& sChannel)
 {
 	Channel* pChan = new Channel();
 
+	pChan->SetSession(this);
 	pChan->SetName(sChannel);
 
 	m_vecChannels.push_back(pChan);
@@ -326,6 +328,71 @@ void Session::DestroyChannelObject(const tstring& sChannel)
 	Erase(m_vecChannels, pChannel);
 
 	delete pChannel;
+}
+
+void Session::ClearChannelList()
+{
+	for(UINT i = 0; i < m_vecChannelList.size(); ++i)
+	{
+		delete m_vecChannelList[i];
+	}
+	m_vecChannelList.clear();
+}
+
+void Session::InitDefaultServerCapabilities()
+{
+	m_mapServerCaps.clear();
+
+	m_mapServerCaps[_T("CHANTYPES")] = _T("@&");
+	m_mapServerCaps[_T("PREFIX")] = _T("(ohv)@%+");
+}
+
+bool Session::HasServerCapability(const tstring& cap)
+{
+	return m_mapServerCaps.find(cap) != m_mapServerCaps.end();
+}
+
+tstring Session::GetServerCapability(const tstring& cap)
+{
+	if(HasServerCapability(cap))
+	{
+		return m_mapServerCaps[cap];
+	}
+	return _T("");
+}
+
+tstring Session::GetChannelTypes()
+{
+	tstring s = GetServerCapability(_T("CHANTYPES"));
+	_ASSERTE(s.size());
+	return s;
+}
+
+void Session::GetChannelUserModes(tstring* letters, tstring* symbols)
+{
+	tstring s = GetServerCapability(_T("PREFIX"));
+	_ASSERTE(s.size());
+
+	tstring::size_type start = s.find_first_of('(');
+	_ASSERTE(start != tstring::npos);
+	if(start != tstring::npos)
+	{
+		++start;
+
+		tstring::size_type end = s.find_first_of(')', start);
+		_ASSERTE(end != tstring::npos);
+		if(end != tstring::npos)
+		{
+			if(letters)
+			{
+				*letters = s.substr(start, end - start);
+			}
+			if(symbols)
+			{
+				*symbols = s.substr(end + 1, end - start);
+			}
+		}
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -349,6 +416,7 @@ void Session::OnEvent(const NetworkEvent& event)
 		HANDLE_IRC_EVENT(IRC_CMD_QUIT, OnQuit)
 
 		HANDLE_IRC_EVENT(IRC_RPL_WELCOME, OnRplWelcome)
+		HANDLE_IRC_EVENT(IRC_RPL_PROTOCTL, OnRplProtoCtl)
 		HANDLE_IRC_EVENT(IRC_RPL_NAMREPLY, OnRplNamReply)
 		HANDLE_IRC_EVENT(IRC_RPL_LISTSTART, OnRplListStart)
 		HANDLE_IRC_EVENT(IRC_RPL_LIST, OnRplList)
@@ -378,6 +446,7 @@ void Session::OnEvent(const NetworkEvent& event)
 
 void Session::OnConnect(const NetworkEvent& event)
 {
+	InitDefaultServerCapabilities();
 	m_bConnected = true;
 }
 
@@ -409,7 +478,7 @@ void Session::OnJoin(const NetworkEvent& event)
 
 		if(pChan != NULL)
 		{
-			pChan->AddName(sUser, false, false);
+			pChan->AddName(sUser);
 		}
 	}
 }
@@ -571,14 +640,10 @@ void Session::OnMode(const NetworkEvent& event)
 	const tstring& sTarget = event.GetParam(0);
 	_ASSERTE(sTarget.size());
 
-	if(IsChannel(sTarget))
+	Channel* pChannel = GetChannel(sTarget);
+	if(pChannel)
 	{
-		Channel* pChannel = GetChannel(sTarget);
-
-		if(pChannel)
-		{
-			pChannel->OnMode(event);
-		}
+		pChannel->OnMode(event);
 	}
 }
 
@@ -586,8 +651,37 @@ void Session::OnRplWelcome(const NetworkEvent& event)
 {
 	const tstring& sMe = event.GetParam(0);
 	_ASSERTE(sMe.size());
+	if(sMe.size())
+	{
+		SetNick(sMe);
+	}
+}
 
-	SetNick(sMe);
+void Session::OnRplProtoCtl(const NetworkEvent& event)
+{
+	for(unsigned int i = 1; i < event.GetParamCount() - 1; ++i)
+	{
+		const tstring& sParam = event.GetParam(i);
+
+		std::vector<tstring> var;
+		Split(sParam, var, _T('='), false);
+
+		_ASSERTE(var.size() > 0 && var.size() < 3);
+
+		if(var.size() > 0)
+		{
+			if(var.size() < 2)
+			{
+				m_mapServerCaps[var[0]] = _T("");
+				_TRACE("Server Capability: %s", var[0].c_str());
+			}
+			else
+			{
+				m_mapServerCaps[var[0]] = var[1];
+				_TRACE("Server Capability: %s: %s", var[0].c_str(), m_mapServerCaps[var[0]].c_str());
+			}
+		}
+	}
 }
 
 
@@ -603,7 +697,9 @@ void Session::OnRplList(const NetworkEvent& event)
 	tstring sTopic = event.GetParam(3);
 
 	if(sTopic[0] == '[' && sTopic[sTopic.size() - 1] == ']')
+	{
 		sTopic = _T("");
+	}
 	sTopic = StringFormat::StripFormatting(sTopic);
 
 	if(sChannel != _T("*"))
@@ -616,13 +712,3 @@ void Session::OnRplList(const NetworkEvent& event)
 		m_vecChannelList.push_back(chan);
 	}
 }
-
-void Session::ClearChannelList()
-{
-	for(UINT i = 0; i < m_vecChannelList.size(); ++i)
-	{
-		delete m_vecChannelList[i];
-	}
-	m_vecChannelList.clear();
-}
-

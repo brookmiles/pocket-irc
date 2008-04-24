@@ -730,7 +730,7 @@ void MainWindow::OpenQuery(const tstring& sUser)
 {
 	_TRACE("MainWindow(0x%08X)::OpenQuery(\"%s\")", this, sUser.c_str());
 
-	if(!IsChannel(sUser))
+	if(!IsChannelString(sUser))
 	{
 		IDisplayWindow* pQuery = GetDisplayWindow(sUser);
 		if(!pQuery)

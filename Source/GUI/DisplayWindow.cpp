@@ -286,7 +286,7 @@ LRESULT DisplayWindow::OnNotify(WPARAM wParam, LPARAM lParam)
 						// Modify pt in place, map to screen coords
 						MapWindowPoints(m_hwnd, NULL, &pt, 1);
 
-						if(IsChannel(str))
+						if(IsChannelString(str))
 						{
 							DoOffChannelMenu((WORD)pt.x, (WORD)pt.y, str);
 						}

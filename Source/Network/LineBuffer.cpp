@@ -24,7 +24,7 @@ void LineBuffer::OnRead(BYTE *pData, UINT nSize)
 		{
 			case '\0':
 				// wtf?
-				_ASSERTE(pData[i] != 0);
+				//_ASSERTE(pData[i] != 0);
 				OnError(E_UNEXPECTED);
 			break;
 			case '\r':

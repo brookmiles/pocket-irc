@@ -81,7 +81,7 @@ void ChannelWindow::OnJoin(const NetworkEvent& event)
 	}
 	else
 	{
-		OnUserAdd(sUser, false, false);
+		OnUserAdd(sUser);
 	}
 }
 
@@ -179,7 +179,7 @@ void ChannelWindow::OnRplNamReply(const NetworkEvent& event)
 
 		while((sName = GetWord(sNames, iName)).size() > 0)
 		{
-			OnUserAdd(StripNick(sName, _T("@+")), NickHasMode(sName, '@'), NickHasMode(sName, '+'));
+			OnUserAdd(sName);
 			iName++;
 		}
 	}
@@ -342,13 +342,13 @@ LRESULT ChannelWindow::OnNotify(WPARAM wParam, LPARAM lParam)
 						// Modify pt in place, map to screen coords
 						MapWindowPoints(m_hwnd, NULL, &pt, 1);
 
-						tstring sNick = StripNick(str, _T("@+"));
+						tstring sNick = StripNick(str, GetUserModes());
 						int index = GetNickListIndex(sNick);
 						if(index >= 0)
 						{
 							DoUserOnChannelMenu((WORD)pt.x, (WORD)pt.y, sNick);
 						}
-						else if(IsChannel(str))
+						else if(IsChannelString(str))
 						{
 							DoOffChannelMenu((WORD)pt.x, (WORD)pt.y, str);
 						}
@@ -395,34 +395,23 @@ LRESULT ChannelWindow::OnNotify(WPARAM wParam, LPARAM lParam)
 //	IChannelUINotify
 /////////////////////////////////////////////////////////////////////////////
 
-void ChannelWindow::OnUserAdd(const tstring& sUser, bool bOp, bool bVoice)
+void ChannelWindow::OnUserAdd(const tstring& sNewUser)
 {
-	_TRACE("ChannelWindow(0x%08X)::OnUserAdd(%s, %d, %d)", this, sUser.c_str(), bOp, bVoice);
+	_TRACE("ChannelWindow(0x%08X)::OnUserAdd(%s)", this, sNewUser.c_str());
+
+	tstring sUser = StripNick(sNewUser, GetUserModes());
 
 	if(m_pMainWindow->GetSession()->IsMe(sUser))
 	{
 		m_bOnChannel = true;
 	}
 
-	tstring sNewUser;
-
-	if(bOp)
-	{
-		sNewUser += _T("@");
-	}
-	else if(bVoice)
-	{
-		sNewUser += _T("+");
-	}
-
-	sNewUser += sUser;
-
 	int index = SendMessage(m_hNickList, LB_ADDSTRING, 0, (LPARAM)sNewUser.c_str());
 	_ASSERTE(index != LB_ERR);
-	if(index != LB_ERR)
-	{
-		SendMessage(m_hNickList, LB_SETITEMDATA, index, (LPARAM)((bOp || bVoice) ? 1 : 0));
-	}
+	//if(index != LB_ERR)
+	//{
+	//	SendMessage(m_hNickList, LB_SETITEMDATA, index, (LPARAM)((bOp || bVoice) ? 1 : 0));
+	//}
 }
 
 void ChannelWindow::OnUserRemove(const tstring& sUser)
@@ -445,9 +434,21 @@ void ChannelWindow::OnUserRemove(const tstring& sUser)
 	}
 }
 
+tstring ChannelWindow::PrependUserMode(const tstring& sUser)
+{
+	Channel* chan = m_pMainWindow->GetSession()->GetChannel(m_sChannel);
+	_ASSERTE(chan);
+	if(chan)
+	{
+		return chan->GetHighestUserMode(sUser) + sUser;
+	}
+
+	return sUser;
+}
+
 void ChannelWindow::OnUserUpdate(const tstring& sUser, const tstring& sNewNick)
 {
-	_TRACE("ChannelWindow(0x%08X)::OnUserUpdate(%s)", this, sUser.c_str());
+	_TRACE("ChannelWindow(0x%08X)::OnUserUpdate(%s, %s)", this, sUser.c_str(), sNewNick.c_str());
 
 	tstring sCurrentNick = sNewNick.size() > 0 ? sNewNick : sUser;
 
@@ -458,30 +459,14 @@ void ChannelWindow::OnUserUpdate(const tstring& sUser, const tstring& sNewNick)
 		SendMessage(m_hNickList, LB_DELETESTRING, index, 0);
 	}
 
-	tstring sDisplay;
-
-	Channel* chan = m_pMainWindow->GetSession()->GetChannel(m_sChannel);
-	_ASSERTE(chan);
-	if(chan)
-	{
-		if(chan->IsOp(sCurrentNick))
-		{
-			sDisplay += _T("@");
-		}
-		else if(chan->IsVoice(sCurrentNick))
-		{
-			sDisplay += _T("+");
-		}
-	}
-
-	sDisplay += sCurrentNick;
+	tstring sDisplay = PrependUserMode(sCurrentNick);
 
 	index = SendMessage(m_hNickList, LB_ADDSTRING, 0, (LPARAM)sDisplay.c_str());
 	_ASSERTE(index != LB_ERR);
-	if(index != LB_ERR)
-	{
-		SendMessage(m_hNickList, LB_SETITEMDATA, index, (LPARAM)((chan->IsOp(sCurrentNick) || chan->IsVoice(sCurrentNick)) ? 1 : 0));
-	}
+	//if(index != LB_ERR)
+	//{
+	//	SendMessage(m_hNickList, LB_SETITEMDATA, index, (LPARAM)((chan->IsOp(sCurrentNick) || chan->IsVoice(sCurrentNick)) ? 1 : 0));
+	//}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -532,11 +517,8 @@ bool ChannelWindow::OnTabMenuCommand(UINT idCmd)
 		break;
 		case ID_CHANNEL_INVITE:
 		{
-			if(IsNick(sInput))
-			{
-				m_pMainWindow->GetSession()->Invite(sInput, m_sChannel);
-				m_pMainWindow->ClearInput();
-			}
+			m_pMainWindow->GetSession()->Invite(sInput, m_sChannel);
+			m_pMainWindow->ClearInput();
 		}
 		break;
 		case ID_CHANNEL_MODE:	
@@ -619,6 +601,13 @@ void ChannelWindow::DoMenu(POINT pt)
 //	Utilities
 /////////////////////////////////////////////////////////////////////////////
 
+tstring ChannelWindow::GetUserModes()
+{
+	tstring symbols;
+	m_pMainWindow->GetSession()->GetChannelUserModes(NULL, &symbols);
+	return symbols;
+}
+
 bool ChannelWindow::HasUser(const tstring& sUser)
 {
 	int index = GetNickListIndex(sUser);
@@ -647,15 +636,7 @@ tstring ChannelWindow::GetNickListEntry(int index)
 	tstring sNick;
 	if(ListBoxGetString(m_hNickList, index, sNick))
 	{
-		long lUserData = SendMessage(m_hNickList, LB_GETITEMDATA, index, 0);
-		if(lUserData == 1)
-		{
-			return sNick.substr(1);
-		}
-		else
-		{
-			return sNick;
-		}
+		return StripNick(sNick, GetUserModes());
 	}
 	return NULL;
 }
@@ -671,8 +652,7 @@ int ChannelWindow::GetNickListIndex(const tstring& sUser)
 		tstring sNick;
 		if(ListBoxGetString(m_hNickList, i, sTest))
 		{
-			long lUserData = SendMessage(m_hNickList, LB_GETITEMDATA, i, 0);
-			if(Compare(sUser, sTest.c_str() + (lUserData == 1 ? 1 : 0), false))
+			if(Compare(sUser, StripNick(sTest, GetUserModes()), false))
 			{
 				return i;
 			}

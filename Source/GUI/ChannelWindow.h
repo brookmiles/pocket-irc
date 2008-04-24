@@ -48,12 +48,15 @@ private:
 	void OnRplEndOfNames(const NetworkEvent& event);
 	void OnConnectStateChange(const NetworkEvent &e);
 
+	tstring GetUserModes();
+	tstring PrependUserMode(const tstring& sUser);
+
 	int GetNickListIndex(const tstring& sUser);
 	tstring GetNickListEntry(int index);
 	void DoUserOnChannelMenu(WORD x, WORD y, const tstring& sUser);
 	bool OnTabMenuCommand(UINT idCmd);
 
-	void OnUserAdd(const tstring& sUser, bool bOp, bool bVoice);
+	void OnUserAdd(const tstring& sUserString);
 	void OnUserRemove(const tstring& sUser);
 	void OnUserUpdate(const tstring& sUser, const tstring& sNewNick = _T(""));
 

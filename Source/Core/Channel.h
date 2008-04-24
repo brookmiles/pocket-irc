@@ -13,10 +13,10 @@ public:
 	~Channel();
 
 	void SetName(const tstring& sChannel);
-	void SetSession(Session* pSession);
+	void SetSession(Session* pSession) { m_pSession = pSession; }
 
 	void ParseNameList(const tstring& sNameList);
-	void AddName(const tstring& sName, bool bOp, bool bVoice);
+	void AddName(const tstring& sName);
 	void RemoveName(const tstring& sName);
 	void ChangeName(const tstring& sOldName, const tstring& sNewName);
 
@@ -27,6 +27,7 @@ public:
 	bool IsOn(const tstring& sUser);
 	bool IsVoice(const tstring& sUser);
 	bool IsOp(const tstring& sUser);
+	tstring GetHighestUserMode(const tstring& sUser);
 
 protected:
 

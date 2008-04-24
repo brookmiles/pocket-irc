@@ -36,13 +36,17 @@ void Channel::ParseNameList(const tstring& stringIn)
 
 	for(std::vector<tstring>::iterator i = names.begin(); i != names.end(); ++i)
 	{
-		AddName(StripNick(*i, _T("@+")), NickHasMode(*i, '@'), NickHasMode(*i, '+'));
+		AddName(*i);
 	}
 }
 
-void Channel::AddName(const tstring& sName, bool bOp, bool bVoice)
+void Channel::AddName(const tstring& sUserString)
 {
-	m_nickList.AddNick(sName, bOp, bVoice);
+	tstring symbols;
+	m_pSession->GetChannelUserModes(NULL, &symbols);
+
+	tstring sNick = StripNick(sUserString, symbols);
+	m_nickList.AddNick(sNick, NickHasMode(sUserString, '@'), NickHasMode(sUserString, '+'));
 }
 
 void Channel::RemoveName(const tstring& sName)
@@ -138,6 +142,22 @@ bool Channel::IsOp(const tstring& sUser)
 		return pEntry->op;
 	}
 	return false;
+}
+
+tstring Channel::GetHighestUserMode(const tstring& sUser)
+{
+	if(IsOp(sUser))
+	{
+		return _T("@");
+	}
+	else if(IsVoice(sUser))
+	{
+		return _T("+");
+	}
+	else
+	{
+		return _T("");
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
