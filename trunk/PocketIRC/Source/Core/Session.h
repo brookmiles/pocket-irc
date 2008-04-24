@@ -28,16 +28,16 @@ public:
 	void Pass(const tstring& sPass);
 	void User(const tstring& sNick, const tstring& sName);
 	void Nick(const tstring& sNick);
-	void Join(const tstring& sChannel, const tstring& sKey = tstring(0));
-	void Part(const tstring& sChannel, const tstring& sMsg = tstring(0));
-	void Kick(const tstring& sChannel, const tstring& sUser, const tstring& sReason = tstring(0));
+	void Join(const tstring& sChannel, const tstring& sKey = tstring());
+	void Part(const tstring& sChannel, const tstring& sMsg = tstring());
+	void Kick(const tstring& sChannel, const tstring& sUser, const tstring& sReason = tstring());
 	void Invite(const tstring& sUser, const tstring& sChannel);
-	void Topic(const tstring& sChannel, const tstring& sTopic = tstring(0));
+	void Topic(const tstring& sChannel, const tstring& sTopic = tstring());
 	void PrivMsg(const tstring& sTarget, const tstring& sMsg);
 	void Action(const tstring& sTarget, const tstring& sMsg);
 	void Notice(const tstring& sTarget, const tstring& sMsg);
-	void CTCP(const tstring& sTarget, const tstring& sCmd, const tstring& sMsg = tstring(0));
-	void CTCPReply(const tstring& sTarget, const tstring& sCmd, const tstring& sMsg = tstring(0));
+	void CTCP(const tstring& sTarget, const tstring& sCmd, const tstring& sMsg = tstring());
+	void CTCPReply(const tstring& sTarget, const tstring& sCmd, const tstring& sMsg = tstring());
 	void CTCPPing(const tstring& sTarget);
 	void Whois(const tstring& sTarget);
 	void Mode(const tstring& sTarget, const tstring& sModes);
@@ -51,12 +51,22 @@ public:
 	const tstring& GetNick() const;
 	void SetNick(const tstring& sNick);
 	bool IsMe(const tstring& sNick);
+
 	bool IsConnected() { return m_bConnected; }
+	DWORD GetIdleTime() { return GetTickCount() - m_lastActivity; }
+
+	// Channels you're on
 	Channel* GetChannel(const tstring& sChannel) const;
+
+	// Channels from /list results
 	const std::vector<ChannelListEntry*>& GetChannelList() { return m_vecChannelList; }
 	void ClearChannelList();
 
-	DWORD GetIdleTime() { return GetTickCount() - m_lastActivity; }
+	tstring GetChannelTypes();
+	void GetChannelUserModes(tstring* letters, tstring* symbols);
+
+	bool HasServerCapability(const tstring& cap);
+	tstring GetServerCapability(const tstring& cap);
 
 //INetworkEventNotify
 	// OnEvent - Accept an incoming event
@@ -73,6 +83,7 @@ protected:
 
 	Channel* CreateChannelObject(const tstring& sChannel);
 	void DestroyChannelObject(const tstring& sChannel);
+	void InitDefaultServerCapabilities();
 
 	void OnConnect(const NetworkEvent& event);
 	void OnDisconnect(const NetworkEvent& event);
@@ -91,10 +102,13 @@ protected:
 
 	void OnRplNamReply(const NetworkEvent& event);
 	void OnRplWelcome(const NetworkEvent& event);
+	void OnRplProtoCtl(const NetworkEvent& event);
 	void OnRplListStart(const NetworkEvent& event);
 	void OnRplList(const NetworkEvent& event);
 
 private:
+	std::map<tstring, tstring> m_mapServerCaps;
+
 	tstring m_sNick;
 	std::vector<Channel*> m_vecChannels;
 	std::vector<ChannelListEntry*> m_vecChannelList;

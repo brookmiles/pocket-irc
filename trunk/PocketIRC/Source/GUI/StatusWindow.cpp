@@ -89,45 +89,55 @@ bool StatusWindow::OnTabMenuCommand(UINT idCmd)
 	switch(idCmd)
 	{
 		case ID_SAY:
-		case ID_STATUS_JOIN:
-		case ID_STATUS_QUERY:
 		{
+			// This should probably go away, but it's a best guess and legacy behaviour
 			tstring sParam1 = GetWord(sInput, 0);
 			if(sParam1.size())
 			{
-				if(IsChannel(sParam1) && idCmd != ID_STATUS_QUERY)
+				if(IsChannelString(sParam1))
 				{
 					tstring sParam2 = GetWord(sInput, 1);
 
 					m_pMainWindow->GetSession()->Join(sParam1, sParam2);
 					m_pMainWindow->ClearInput();
 				}
-				else if(IsNick(sParam1) && idCmd != ID_STATUS_JOIN)
-				{
-					m_pMainWindow->OpenQuery(sParam1);
-					m_pMainWindow->ClearInput();
-				}
+			}
+		}
+		break;
+		case ID_STATUS_JOIN:
+		{
+			tstring sParam1 = GetWord(sInput, 0);
+			if(sParam1.size())
+			{
+				tstring sParam2 = GetWord(sInput, 1);
+
+				m_pMainWindow->GetSession()->Join(sParam1, sParam2);
+				m_pMainWindow->ClearInput();
+			}
+		}
+		break;
+		case ID_STATUS_QUERY:
+		{
+			tstring sParam1 = GetWord(sInput, 0);
+			if(sParam1.size())
+			{
+				m_pMainWindow->OpenQuery(sParam1);
+				m_pMainWindow->ClearInput();
 			}
 		}
 		break;
 		case ID_STATUS_WHOIS:
 		{
 			tstring sParam1 = GetWord(sInput, 0);
-			if(IsNick(sParam1))
-			{
-				m_pMainWindow->GetSession()->Whois(sParam1);
-				m_pMainWindow->ClearInput();
-			}
+			m_pMainWindow->GetSession()->Whois(sParam1);
+			m_pMainWindow->ClearInput();
 		}
 		break;
 		case ID_STATUS_NICK:
 		{
 			tstring sParam1 = GetWord(sInput, 0);
-			if(IsNick(sParam1))
-			{
-				m_pMainWindow->GetSession()->Nick(sParam1);
-				m_pMainWindow->ClearInput();
-			}
+			m_pMainWindow->GetSession()->Nick(sParam1);
+			m_pMainWindow->ClearInput();
 		}
 		break;
 		case ID_STATUS_MODESELF:

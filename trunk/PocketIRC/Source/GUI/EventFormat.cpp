@@ -176,7 +176,7 @@ tstring GetEventKey(const NetworkEvent& network)
 		case IRC_CMD_PRIVMSG:
 		case IRC_CMD_NOTICE:
 		case IRC_CTCP_ACTION:
-			if(IsChannel(network.GetParam(0)))
+			if(IsChannelString(network.GetParam(0)))
 			{
 				return network.GetParam(0);
 			}

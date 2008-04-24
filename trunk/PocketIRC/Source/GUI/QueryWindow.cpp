@@ -7,34 +7,6 @@
 #include "resource.h"
 
 /////////////////////////////////////////////////////////////////////////////
-//	IDisplayWindowFactory
-/////////////////////////////////////////////////////////////////////////////
-
-//IDisplayWindow* QueryWindowFactory::CreateDisplayWindow(const tstring& sKey, 
-//	const tstring& sTitle, LPARAM lParam)
-//{
-//	_TRACE("QueryWindowFactory(0x%08X)::CreateDisplayWindow(\"%s\", \"%s\", 0x%08X)", this, sKey.c_str(), sTitle.c_str(), lParam);
-//
-//	if(IsNick(sKey))
-//	{
-//		QueryWindow* pWindow = new QueryWindow;
-//
-//	// Call order here is important
-//		pWindow->SetQuery((IQuery*)lParam);
-//		pWindow->SetMainWindow(m_pMainWindow);
-//
-//		pWindow->SetKey(sKey);
-//		pWindow->SetTitle(sTitle);
-//
-//		pWindow->Create();
-//
-//		return pWindow;
-//	}
-//	return NULL;
-//}
-
-
-/////////////////////////////////////////////////////////////////////////////
 //	Constructor and Destructor
 /////////////////////////////////////////////////////////////////////////////
 
@@ -140,7 +112,7 @@ bool QueryWindow::OnTabMenuCommand(UINT idCmd)
 		break;
 		case ID_QUERY_INVITE:
 		{
-			if(IsChannel(sInput))
+			if(IsChannelString(sInput))
 			{
 				m_pMainWindow->GetSession()->Invite(m_sUser, sInput);
 				m_pMainWindow->ClearInput();

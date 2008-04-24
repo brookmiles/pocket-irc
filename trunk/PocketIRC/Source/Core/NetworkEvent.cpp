@@ -98,8 +98,9 @@ int NetworkEvent::EventStringToID(const tstring& sEvent)
 
 		if(idString == idUnknown)
 		{
-			int idParsed = _ttoi(sEvent.c_str());
-			if(idParsed > 0)
+			TCHAR* end = 0;
+			int idParsed = _tcstol(sEvent.c_str(), &end, 10);
+			if(*end == 0 && idParsed > 0)
 			{
 				idEvent = idParsed;
 			}
@@ -235,7 +236,13 @@ UINT NetworkEvent::AddParam(const tstring& sParam)
 const tstring& NetworkEvent::GetParam(UINT iParam) const
 {
 	_ASSERTE(iParam < GetParamCount());
-	return m_vecParams[iParam];
+	if(iParam < GetParamCount())
+	{
+		return m_vecParams[iParam];
+	}
+
+	static const tstring empty;
+	return empty;
 }
 
 UINT NetworkEvent::GetParamCount() const

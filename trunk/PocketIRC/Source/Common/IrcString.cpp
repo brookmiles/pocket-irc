@@ -1,9 +1,6 @@
 #include "PocketIRC.h"
 #include "IrcString.h"
-
-// These are pretty useless, "standard" my ass
-//static const TCHAR validchars[] = _T("abcdefghijklmnopqsrtuvwxyzABCDEFGHIJKLMNOPQSRTUVWXYZ1234567890^[]{}\\|`_-@.");
-//static const TCHAR validfirst[] = _T("abcdefghijklmnopqsrtuvwxyzABCDEFGHIJKLMNOPQSRTUVWXYZ^[]{}\\|`_");
+#include "StringUtil.h"
 
 int IrcStringGetWord(LPTSTR dst, LPCTSTR src, int iMaxLen, LPCTSTR* ppEnd)
 {
@@ -24,7 +21,6 @@ int IrcStringGetWord(LPTSTR dst, LPCTSTR src, int iMaxLen, LPCTSTR* ppEnd)
 	return i;
 }
 
-
 // I have seen non-breaking spaces used in EFNet channels, so we can't arbitrarily skip whitespace.  
 // IRC protocol specifies a single spaces as a parameter seperator
 LPCTSTR IrcStringSkipSpaces(LPCTSTR psz)
@@ -35,13 +31,7 @@ LPCTSTR IrcStringSkipSpaces(LPCTSTR psz)
 	return seek;
 }
 
-bool IsNick(const tstring& sNick)
-{
-	return !IsChannel(sNick);
-}
-
-
-bool IsChannel(const tstring& sChannel)
+bool IsChannelString(const tstring& sChannel)
 {
 	switch(sChannel[0])
 	{
@@ -53,13 +43,6 @@ bool IsChannel(const tstring& sChannel)
 	default:
 		return false;
 	}
-}
-
-bool IsUserString(const tstring& sUser)
-{
-	tstring::size_type c;
-	return ((c = sUser.find_first_of('!')) != tstring::npos) && 
-		((c = sUser.find_first_of('@', ++c)) != tstring::npos);
 }
 
 tstring GetPrefixNick(const tstring& sPrefix)
@@ -125,20 +108,21 @@ tstring StripNick(const tstring& sNick, const tstring& sModeChars)
 	return _T("");
 }
 
+bool NickHasMode(const tstring& sNick, TCHAR mode)
+{
+	return (sNick.find_first_of(mode) != tstring::npos);
+}
+
 bool IsUrl(const tstring& sUrl)
 {
 	tstring url = _T("http://");
-	if(sUrl.compare(0, url.size(), url))
+	if(Compare(sUrl, url, false))
 		return true;
 
 	url = _T("www.");
-	if(sUrl.compare(0, url.size(), url))
+	if(Compare(sUrl, url, false))
 		return true;
 	
 	return false;
 }
 
-bool NickHasMode(const tstring& sNick, TCHAR mode)
-{
-	return (sNick.find_first_of(mode) != tstring::npos);
-}
