@@ -9,6 +9,11 @@ o Starting with version 1.2, older Pocket PC 2000 and Pocket PC 2002 devices are
 
 VERSION HISTORY
 
+1.2.6
+o NEW: Recognize some server capability strings such as channel and user modes
+o FIXED: Some bugs
+o CHANGED: use stl::string
+
 1.2.5 (2007-11-27)
 o FIXED: Query windows incorrectly sent messages to the old nick after a user changed their nickname
 o FIXED: Incorrect handling of user names containing non-breaking spaces

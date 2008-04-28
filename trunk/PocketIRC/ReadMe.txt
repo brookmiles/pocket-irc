@@ -6,8 +6,6 @@ o DCC not recognised in some formats, notice type maybe?
 o Replace "[ ... ]" with "" in channel list
 o Unlamify "Trying..." and other status messages
 
-o Another test
-
 TODO
 
 o Multiple codepage support
