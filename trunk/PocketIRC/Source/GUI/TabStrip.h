@@ -38,6 +38,8 @@ public:
 	bool SetTabColor(UINT uIndex, COLORREF color, bool bRedraw);
 	bool SetTabText(UINT uIndex, const tstring& sText, bool bRedraw);
 
+	UINT GetCount() const { return m_vecItems.size(); }
+
 	bool GetCurSel(UINT* pResult);
 	void SetCurSel(UINT uIndex);
 

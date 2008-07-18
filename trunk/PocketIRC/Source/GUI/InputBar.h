@@ -18,6 +18,14 @@ class InputBar
 
 		void RestoreSipState();
 
+		// for switching tabs using left/right when no text is entered
+		enum { WM_SWITCH_WINDOW = WM_USER + 1 };
+
+		enum WindowSwitchType : WPARAM
+		{
+			WINDOW_SWITCH_LEFT = 0,
+			WINDOW_SWITCH_RIGHT = 1
+		};
 	private:
 		WNDPROC m_pfnDefEditProc;
 		WNDPROC m_pfnDefMenuBarProc;
