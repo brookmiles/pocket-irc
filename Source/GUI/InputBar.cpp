@@ -87,6 +87,15 @@ LRESULT CALLBACK InputBar::EditSubClassProc(UINT msg, WPARAM wParam, LPARAM lPar
 						}
 					}
 				}
+				break;
+			case VK_LEFT:
+			case VK_RIGHT:
+				{
+					if (GetWindowTextLength(m_hEdit) == 0)
+						SendMessage(m_hCmdParent, WM_SWITCH_WINDOW,
+							wParam == VK_LEFT ? WINDOW_SWITCH_LEFT : WINDOW_SWITCH_RIGHT, 0);
+				}
+				break;
 			}
 			break;
 		case WM_LBUTTONDOWN:

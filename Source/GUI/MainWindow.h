@@ -97,6 +97,7 @@ private:
 	void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 	void OnHelp(WPARAM wParam, LPARAM lParam);
 	void OnTimer(WPARAM wParam, LPARAM lParam);
+	void OnSwitchWindow(WPARAM wParam, LPARAM lParam);
 
 	void OptionsChanged();
 	void Connect();

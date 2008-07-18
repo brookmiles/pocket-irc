@@ -889,6 +889,7 @@ LRESULT MainWindow::WndProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		HANDLEMSG(WM_INITMENUPOPUP, OnInitMenuPopup);
 		HANDLEMSG(WM_HELP, OnHelp);
 		HANDLEMSG(WM_TIMER, OnTimer);
+		HANDLEMSG(InputBar::WM_SWITCH_WINDOW, OnSwitchWindow);
 		default:
 			return DefWindowProc(m_hwnd, msg, wParam, lParam);
 	}
@@ -1247,6 +1248,28 @@ void MainWindow::OnTimer(WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	}
+}
+
+void MainWindow::OnSwitchWindow(WPARAM wParam, LPARAM lParam)
+{
+	UINT nSel = -1;
+	if (!m_TabStrip.GetCurSel(&nSel))
+		return;
+
+	switch (wParam)
+	{
+	case InputBar::WINDOW_SWITCH_LEFT:
+		if (nSel > 0)
+			nSel--;
+		break;
+	case InputBar::WINDOW_SWITCH_RIGHT:
+		if (nSel < m_TabStrip.GetCount() - 1)
+			nSel++;
+		break;
+	}
+
+	m_TabStrip.SetCurSel(nSel);
+	m_TabStrip.UpdateSelection();
 }
 
 void MainWindow::Connect()
