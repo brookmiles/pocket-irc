@@ -1,6 +1,6 @@
 
 BUGS
-o Test svn commit hook
+
 o Can't Send/Receive files from storage card
 o DCC not recognised in some formats, notice type maybe?
 o Replace "[ ... ]" with "" in channel list
