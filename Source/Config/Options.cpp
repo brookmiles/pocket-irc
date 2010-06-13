@@ -208,15 +208,16 @@ void Options::UpdateResourceCache()
 
 bool Options::IsRegistered()
 {
-#ifndef DEBUG
-	DWORD dwCode = 0x0BADBABE;
-	DWORD dwReg = 0;
-	dwReg = _tcstoul(g_Options.GetRegCode().c_str(), NULL, 16);
-
-	return (~dwReg == dwCode) || PresButan();
-#else
+//#ifndef DEBUG
+//	DWORD dwCode = 0x0BADBABE;
+//	DWORD dwReg = 0;
+//	dwReg = _tcstoul(g_Options.GetRegCode().c_str(), NULL, 16);
+//
+//	return (~dwReg == dwCode) || PresButan();
+//#else
+	// Always registered as of 2010-06-12 - Brook 
 	return true;
-#endif
+//#endif
 }
 
 bool Options::PresButan()
