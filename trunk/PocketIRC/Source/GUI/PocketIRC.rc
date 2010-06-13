@@ -461,15 +461,15 @@ IDD_OPTIONS_ABOUT DIALOG  0, 0, 160, 100
 STYLE DS_SETFONT | DS_CONTROL | WS_CHILD | WS_GROUP
 FONT 8, "Tahoma"
 BEGIN
-    LTEXT           "IM IN UR POCKETS CHATTING UR IRCS",IDC_STATIC,3,81,154,19
+    LTEXT           "This program is free to use.",IDC_STATIC,3,81,154,19
     LTEXT           "1.2",IDC_ABOOT_VERSION,66,9,88,8
-    EDITTEXT        IDC_ABOOT_REGCODE,3,66,154,14,ES_AUTOHSCROLL
-    LTEXT           "Registration Code",IDC_STATIC,3,56,154,8
+    EDITTEXT        IDC_ABOOT_REGCODE,3,66,154,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
+    LTEXT           "Registration Code",IDC_STATIC,3,56,154,8,NOT WS_VISIBLE
     LTEXT           "http://pocketirc.com/",IDC_STATIC,25,42,132,8
     LTEXT           "Code North Software",IDC_STATIC,26,18,77,8
-    LTEXT           "Copyright © 2007 Brook Miles",IDC_STATIC,26,27,132,8
+    LTEXT           "Copyright © 2010 Brook Miles",IDC_STATIC,26,27,132,8
     LTEXT           "Pocket IRC",IDC_STATIC,26,9,38,8
-    ICON            IDI_APP,IDC_STATIC,3,9,20,20
+    ICON            IDI_APP,IDC_STATIC,3,9,21,20
 END
 
 IDD_CHOOSECOLOR DIALOG  0, 0, 160, 150
@@ -547,7 +547,7 @@ BEGIN
     PUSHBUTTON      "Clear",IDC_DCCLIST_CLEAR,121,39,36,14
 END
 
-IDD_OPTIONS_DCC DIALOG  0, 0, 155, 100
+IDD_OPTIONS_DCC DIALOG  0, 0, 155, 101
 STYLE DS_SETFONT | DS_CONTROL | WS_CHILD | WS_GROUP
 FONT 8, "Tahoma"
 BEGIN
@@ -563,7 +563,7 @@ BEGIN
     RTEXT           "(unknown)",IDC_DCC_LOCALIP,84,37,68,8
     RTEXT           "(unknown)",IDC_DCC_REMOTEIP,80,50,72,8
     CTEXT           "to",IDC_STATIC,98,6,13,8
-    LTEXT           "To SEND files and CHATs, your IP address and firewall (if any) must be configured correctly.",IDC_STATIC,3,82,149,18
+    LTEXT           "To SEND files and CHATs, your router, firewall and ISP must all allow incoming connections to your device's IP address.",IDC_STATIC,3,75,149,26
     LTEXT           "Ignore all",IDC_STATIC,3,63,35,8
     LTEXT           "requests",IDC_STATIC,109,63,34,8
 END
