@@ -538,7 +538,7 @@ LRESULT ChannelsDlg::OnNotify(WPARAM wParam, LPARAM lParam)
 						{
 							if(!chan)
 							{
-								chan = list.AddChannel(lvdi->item.pszText, false);
+								chan = list.AddChannel(lvdi->item.pszText);
 								ListView_SetItemParam(lpnmh->hwndFrom, lvdi->item.iItem, (LPARAM)chan);
 								ListView_SetItemText(lpnmh->hwndFrom, lvdi->item.iItem, 1, _T("No"));
 							}
