@@ -1,18 +1,16 @@
-You must have Microsoft ActiveSync installed on this computer in order to install Pocket IRC. This program will copy Pocket IRC files to your computer and launch ActiveSync to install them on your device.
+You must have Microsoft ActiveSync or Windows Mobile Device Center installed on this computer in order to install Pocket IRC. This program will copy Pocket IRC files to your computer and launch ActiveSync to install them on your device.
 
-Visit http://pocketirc.com/ for more info, or to register your copy of Pocket IRC!
+o Pocket PC 2003 or Windows Mobile 5 or later device with touchscreen is required
+o Version 1.1 supports Pocket PC 2000/2002 devices, available from http://pocketirc.com/
 
-KNOWN ISSUES
+Version History
 
-o A Pocket PC style device with a touchscreen is required.
-o Starting with version 1.2, older Pocket PC 2000 and Pocket PC 2002 devices are no longer supported. To run Pocket IRC on these devices please download version 1.1 from http://pocketirc.com/
-
-VERSION HISTORY
-
-1.2.6
+1.3 (2010-06-18)
+o NEW: PocketIRC is now FREE, and a registration code is no longer required
+o NEW: When the input box is empty, the left and right arrows will navigate between tabs (added by Roger Clark)
 o NEW: Recognize some server capability strings such as channel and user modes
-o FIXED: Some bugs
-o CHANGED: use stl::string
+o FIXED: Some other bugs I don't remember
+o CHANGED: Internal refactoring to use standard string classes
 
 1.2.5 (2007-11-27)
 o FIXED: Query windows incorrectly sent messages to the old nick after a user changed their nickname
