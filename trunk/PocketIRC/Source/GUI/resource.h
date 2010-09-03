@@ -133,6 +133,9 @@
 #define IDC_OPTIONS_PANE                1101
 #define IDC_CHANNELS_VSCROLL            1102
 #define IDC_CHANNELS_LIST_COUNT         1104
+#define IDC_OPTIONS_UTF8                1105
+#define IDC_OPTIONS_UTF8ENCODING        1105
+#define IDC_OPTIONS_SYSTEMENCODING      1106
 #define ID_IRC                          40001
 #define IDS_CAP_IRC                     40003
 #define ID_IRC_EXIT                     40004
@@ -251,7 +254,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        136
 #define _APS_NEXT_COMMAND_VALUE         40139
-#define _APS_NEXT_CONTROL_VALUE         1105
+#define _APS_NEXT_CONTROL_VALUE         1107
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
