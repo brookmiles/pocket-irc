@@ -5,6 +5,11 @@ o Version 1.1 supports Pocket PC 2000/2002 devices, available from http://pocket
 
 Version History
 
+1.3.1 (2010-09-02)
+o NEW: UTF8 encoding option
+o FIXED: URL context menu works again
+o FIXED: Improved nick detection for user context menu
+
 1.3 (2010-06-18)
 o NEW: PocketIRC is now FREE, and a registration code is no longer required
 o NEW: When the input box is empty, the left and right arrows will navigate between tabs (added by Roger Clark)

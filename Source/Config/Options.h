@@ -48,6 +48,9 @@ public:
 	HostList& GetHostList() { return m_lstHosts; }
 	void SetDefaultHost(const tstring& sHost, USHORT uPort, const tstring& sPass);
 
+	void SetUTF8(bool bUTF8) { m_bUTF8 = bUTF8; }
+	bool GetUTF8() { return m_bUTF8; }
+
 // Channel Favourites
 
 	FavouriteChannelList& GetFavouriteChannelList() { return m_favChannels; }
@@ -121,7 +124,7 @@ public:
 	void SetIgnoreSend(bool bIgnoreSend) { m_bIgnoreSend = bIgnoreSend; }
 	bool GetIgnoreSend() { return m_bIgnoreSend; }
 
-// Aboot
+// About
 
 	void SetRegCode(const tstring& sRegCode) { m_sRegCode = sRegCode; }
 	const tstring& GetRegCode() { return m_sRegCode; }
@@ -131,6 +134,7 @@ protected:
 	tstring	m_sRealName;
 	HostList m_lstHosts;
 	tstring	m_sQuitMsg;
+	bool m_bUTF8;
 
 	FavouriteChannelList m_favChannels;
 	UINT m_nChanListMinUsers;

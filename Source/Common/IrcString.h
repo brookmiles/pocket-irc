@@ -8,7 +8,8 @@ bool IsChannelString(const tstring& sChannel);
 tstring GetPrefixNick(const tstring& sPrefix);
 tstring GetPrefixHost(const tstring& sPrefix);
 tstring GetPrefixIdent(const tstring& sPrefix);
-tstring StripNick(const tstring& sNick, const tstring& sModeChars);
+tstring StripNickModes(const tstring& sNick, const tstring& sModeChars);
+tstring StripNickModesAndInvalidChars(const tstring& sNick, const tstring& sModeChars);
 bool NickHasMode(const tstring& sNick, TCHAR mode);
 bool IsUrl(const tstring& sUrl);
 

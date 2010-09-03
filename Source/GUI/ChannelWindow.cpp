@@ -342,7 +342,7 @@ LRESULT ChannelWindow::OnNotify(WPARAM wParam, LPARAM lParam)
 						// Modify pt in place, map to screen coords
 						MapWindowPoints(m_hwnd, NULL, &pt, 1);
 
-						tstring sNick = StripNick(str, GetUserModes());
+						tstring sNick = StripNickModesAndInvalidChars(str, GetUserModes());
 						int index = GetNickListIndex(sNick);
 						if(index >= 0)
 						{
@@ -399,7 +399,7 @@ void ChannelWindow::OnUserAdd(const tstring& sNewUser)
 {
 	_TRACE("ChannelWindow(0x%08X)::OnUserAdd(%s)", this, sNewUser.c_str());
 
-	tstring sUser = StripNick(sNewUser, GetUserModes());
+	tstring sUser = StripNickModes(sNewUser, GetUserModes());
 
 	if(m_pMainWindow->GetSession()->IsMe(sUser))
 	{
@@ -636,7 +636,7 @@ tstring ChannelWindow::GetNickListEntry(int index)
 	tstring sNick;
 	if(ListBoxGetString(m_hNickList, index, sNick))
 	{
-		return StripNick(sNick, GetUserModes());
+		return StripNickModes(sNick, GetUserModes());
 	}
 	return NULL;
 }
@@ -652,7 +652,7 @@ int ChannelWindow::GetNickListIndex(const tstring& sUser)
 		tstring sNick;
 		if(ListBoxGetString(m_hNickList, i, sTest))
 		{
-			if(Compare(sUser, StripNick(sTest, GetUserModes()), false))
+			if(Compare(sUser, StripNickModes(sTest, GetUserModes()), false))
 			{
 				return i;
 			}

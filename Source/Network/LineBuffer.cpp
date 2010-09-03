@@ -1,5 +1,7 @@
 #include "PocketIRC.h"
+#include "Config/Options.h"
 #include "LineBuffer.h"
+#include "StringConv.h"
 
 /////////////////////////////////////////////////////////////////////////////
 //	Constructor and Destructor
@@ -32,10 +34,11 @@ void LineBuffer::OnRead(BYTE *pData, UINT nSize)
 			break;
 			case '\n':
 			{
-				USES_CONVERSION;
-
 				m_szIRCLineBuffer[m_nUsed] = 0;
-				OnLineRead(A2CT((char*)m_szIRCLineBuffer));
+
+				// TODO really shouldn't be reading global options from here :/
+				tstring tstr = g_Options.GetUTF8() ? UTF8ToTCHAR((char*)m_szIRCLineBuffer) : MBToTCHAR((char*)m_szIRCLineBuffer);
+				OnLineRead(tstr.c_str());
 				m_nUsed = 0;
 			}
 			break;

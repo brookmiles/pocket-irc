@@ -45,7 +45,7 @@ void Channel::AddName(const tstring& sUserString)
 	tstring symbols;
 	m_pSession->GetChannelUserModes(NULL, &symbols);
 
-	tstring sNick = StripNick(sUserString, symbols);
+	tstring sNick = StripNickModes(sUserString, symbols);
 	m_nickList.AddNick(sNick, NickHasMode(sUserString, '@'), NickHasMode(sUserString, '+'));
 }
 

@@ -332,6 +332,7 @@ const Options& Options::operator=(Options& from)
 	SetNick(from.GetNick());
 	SetRealName(from.GetRealName());
 	SetQuitMsg(from.GetQuitMsg());
+	SetUTF8(from.GetUTF8());
 	m_lstHosts = from.GetHostList();
 
 	// Channels
@@ -431,6 +432,7 @@ HRESULT Options::Save(HKEY hkRoot, const tstring& sKeyName)
 	key.SetString(_T("RealName"), m_sRealName);
 	key.SetString(_T("NickName"), m_sNick);
 	key.SetString(_T("QuitMsg"), m_sQuitMsg);
+	key.SetBool(_T("UTF8"), m_bUTF8);
 
 	// Host List
 	RegKey keyHosts(key, _T("Host"));
@@ -532,6 +534,7 @@ HRESULT Options::Load(HKEY hkRoot, const tstring& sKeyName)
 	m_sRealName = key.GetString(_T("RealName"), POCKETIRC_DEF_REALNAME);
 	m_sNick = key.GetString(_T("NickName"), POCKETIRC_DEF_NICK);
 	m_sQuitMsg = key.GetString(_T("QuitMsg"), POCKETIRC_DEF_QUIT_MESSAGE);
+	m_bUTF8 = key.GetBool(_T("UTF8"), true);
 
 	// Host List
 	RegKey keyHosts(key, _T("Host"));

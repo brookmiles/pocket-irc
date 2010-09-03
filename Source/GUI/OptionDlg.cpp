@@ -283,6 +283,8 @@ void OptionDlg::OnInitDialog(WPARAM wParam, LPARAM lParam)
 
 	SetEditMenuSubclass(GetDlgItem(hDlgServer, IDC_OPTIONS_QUITMSG), true);
 
+	CheckRadioButton(hDlgServer, IDC_OPTIONS_UTF8ENCODING, IDC_OPTIONS_SYSTEMENCODING, m_pOptions->GetUTF8() ? IDC_OPTIONS_UTF8ENCODING : IDC_OPTIONS_SYSTEMENCODING);
+
 	Host* pHost = NULL;
 	HostList& lstHosts = m_pOptions->GetHostList();
 
@@ -506,6 +508,7 @@ void OptionDlg::OnOk()
 	GetDlgItemText(hDlgServer, IDC_OPTIONS_QUITMSG, szQuitMsgBuf, sizeof(szQuitMsgBuf));
 	m_pOptions->SetQuitMsg(szQuitMsgBuf);
 
+	m_pOptions->SetUTF8(IsDlgButtonChecked(hDlgServer, IDC_OPTIONS_UTF8ENCODING) == TRUE);
 
 // Display Settings
 	HWND hDlgDisplay = GetDlg(IDC_OPTIONS_DISPLAYDLG);

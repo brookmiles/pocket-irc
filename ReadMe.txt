@@ -1,6 +1,7 @@
 
 BUGS
 
+o WM6.5 the keyboard button disappears - phigan on #pocketpc - use hardware button to bring up home/taskmanager
 o Can't Send/Receive files from storage card
 o DCC not recognised in some formats, notice type maybe?
 o Replace "[ ... ]" with "" in channel list

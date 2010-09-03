@@ -1,5 +1,7 @@
 #include "PocketIRC.h"
+#include "Config/Options.h"
 #include "Writer.h"
+#include "StringConv.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // Constructor/Destructor
@@ -38,12 +40,11 @@ void Writer::Write(const tstring& sMsg)
 	_ASSERTE(sMsg.c_str() != NULL);
 	_TRACE("Writer(0x%08X)::Raw(\"%s\")", this, sMsg.c_str());
 
-	tstring msgWithReturn = sMsg;
-	msgWithReturn.append(_T("\r\n"));
+	// TODO really shouldn't be reading global options from here :/
+	std::string msgWithReturn = g_Options.GetUTF8() ? TCHARToUTF8(sMsg) : TCHARToMB(sMsg);
+	msgWithReturn.append("\r\n");
 
-	USES_CONVERSION;
-	const char* ansiMsg = T2CA(msgWithReturn.c_str());
-	m_pTransport->Write((BYTE*)ansiMsg, strlen(ansiMsg));
+	m_pTransport->Write((BYTE*)msgWithReturn.c_str(), msgWithReturn.size());
 }
 
 void Writer::WriteEvent(const NetworkEvent& event)

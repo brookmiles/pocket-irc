@@ -129,7 +129,16 @@ HRESULT MainWindow::Create()
 		SetDefaultWindow(pWindow);
 
 		pWindow->Print(_T("Welcome to ") APP_NAME _T(" ") APP_VERSION_STRING);
-		pWindow->Print(_T("Tap Help on your Start menu for tips on getting started."));
+		Host* pHost = g_Options.GetHostList().GetDefault();
+		if(pHost == NULL)
+		{
+			pWindow->Print(_T("Tap the IRC menu below, and choose Options to add a server."));
+			pWindow->Print(_T("Visit http://www.irchelp.org if you don't know the name of the server you wish to connect to."));
+		}
+		else
+		{
+			pWindow->Print(_T("Tap the IRC menu below, and choose Connect to go online."));
+		}
 
 		UpdateSize();
 

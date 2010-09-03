@@ -126,9 +126,9 @@ HRESULT HostList::RemoveHost(Host* pHost)
 		{
 			m_listHosts.erase(i);
 
-			if(pHost == m_pDefault)
+			if(pHost == GetDefault())
 			{
-				m_pDefault = NULL;
+				SetDefault(NULL);
 			}
 
 			delete pHost;
@@ -150,6 +150,7 @@ void HostList::Clear()
 	}
 
 	m_listHosts.clear();
+	SetDefault(NULL);
 }
 
 

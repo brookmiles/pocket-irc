@@ -98,12 +98,26 @@ tstring GetPrefixHost(const tstring& sPrefix)
 	return _T("");
 }
 
-tstring StripNick(const tstring& sNick, const tstring& sModeChars)
+tstring StripNickModes(const tstring& sNick, const tstring& sModeChars)
 {
 	tstring::size_type start = sNick.find_first_not_of(sModeChars);
 	if(start != tstring::npos)
 	{
 		return sNick.substr(start);
+	}
+	return _T("");
+}
+
+tstring StripNickModesAndInvalidChars(const tstring& sNick, const tstring& sModeChars)
+{
+	tstring invalidChars = _T("<>,.()*!#$%&:;\"\'/?");
+	tstring::size_type start = sNick.find_first_not_of(sModeChars + invalidChars);
+	tstring::size_type end = sNick.find_last_not_of(sModeChars + invalidChars);
+
+	if(start != tstring::npos)
+	{
+		end = end != tstring::npos ? end - start + 1 : tstring::npos;
+		return sNick.substr(start, end);
 	}
 	return _T("");
 }
@@ -115,14 +129,18 @@ bool NickHasMode(const tstring& sNick, TCHAR mode)
 
 bool IsUrl(const tstring& sUrl)
 {
-	tstring url = _T("http://");
-	if(Compare(sUrl, url, false))
-		return true;
+	TCHAR* urlPrefixes[] = {
+		_T("http://"),
+		_T("https://"),
+		_T("www.")
+	};
 
-	url = _T("www.");
-	if(Compare(sUrl, url, false))
-		return true;
-	
+	for(int i = 0; i < sizeof(urlPrefixes)/sizeof(*urlPrefixes); ++i)
+	{
+		tstring pref = urlPrefixes[i];
+		if(Compare(sUrl.substr(0, pref.size()), pref, false))
+			return true;
+	}
 	return false;
 }
 
